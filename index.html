@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Minha Receita Psiquiátrica</title>
+    <title>Dr. Marcelo Medeiros - Psiquiatria Online</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#008080"/>
     <script>
@@ -15,48 +15,81 @@
             .catch((err) => { console.log("SW registration failed: ", err); });
         });
       }
-      // Tenta iniciar o download automático do APK ao abrir a página
-      window.addEventListener("load", () => {
-        const apkUrl = "/minha-receita-psiquiatrica.apk";
-        try {
-          const a = document.createElement("a");
-          a.href = apkUrl;
-          a.download = "minha-receita-psiquiatrica.apk";
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-        } catch (e) { console.log("Auto-download bloqueado pelo navegador.", e); }
-      });
     </script>
     <style>
       body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol'; margin:0; background:#f7f9fb;}
       header{padding:24px; text-align:center; background:white; box-shadow:0 1px 6px rgba(0,0,0,.06);}
       main{max-width:920px; margin:24px auto; padding:0 16px;}
-      .card{background:white; border-radius:16px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,.08);}
-      ul{padding-left:18px;}
-      .download a{display:inline-block; margin-top:12px; padding:12px 16px; border-radius:12px; text-decoration:none; background:#0ea5a6; color:white;}
-      .logo{height:64px; width:64px; border-radius:12px; object-fit:contain; background:#fff;}
+      .card{background:white; border-radius:16px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,.08); margin-bottom:20px;}
+      ul{padding-left:18px; margin:15px 0;}
+      li{margin-bottom:10px; padding:12px; background:#f8fafc; border-radius:8px; border-left:4px solid #0ea5a6;}
+      .price{font-weight:bold; color:#0f766e; font-size:1.1em;}
+      .download a{display:inline-block; margin-top:12px; padding:12px 24px; border-radius:12px; text-decoration:none; background:#0ea5a6; color:white; font-weight:bold;}
+      .logo{height:80px; width:80px; border-radius:16px; object-fit:cover; border:3px solid #0ea5a6;}
       .row{display:flex; gap:16px; align-items:center; justify-content:center;}
+      .small-note{font-size:0.85em; color:#6b7280; margin-top:5px; font-style:italic;}
+      .badge{background:#dcfce7; color:#166534; padding:2px 8px; border-radius:12px; font-size:0.8em; margin-left:8px;}
+      .warning{background:#fef3c7; padding:10px; border-radius:8px; margin-top:15px; font-size:0.9em; border-left:4px solid #d97706;}
     </style>
   </head>
   <body>
     <header>
       <div class="row">
-        <img src="/icons/android-chrome-192x192.png" class="logo" alt="Logo"/>
-        <h1>Minha Receita Psiquiátrica</h1>
+        <!-- 1. LOGO ATUALIZADA (WhatsApp) -->
+        <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" class="logo" alt="Dr. Marcelo Medeiros"/>
+        <div>
+          <h1 style="margin:0; color:#0f766e;">Dr. Marcelo Medeiros</h1>
+          <p style="margin:5px 0 0 0; color:#6b7280;">Psiquiatria Online | CRM 47960</p>
+        </div>
       </div>
-      <p>Aplicativo para solicitação de receitas e laudos médicos do Dr. Marcelo Medeiros.</p>
+      <p>Aplicativo para consultas online, receitas e laudos psiquiátricos.</p>
     </header>
     <main>
       <div class="card">
         <h2>Serviços Disponíveis</h2>
+        
+        <!-- 2. CONSULTA COM FIDELIZAÇÃO -->
         <ul>
-          <li><strong>Laudo com RQE:</strong> R$300</li>
-          <li><strong>Atestado:</strong> R$85</li>
+          <li>
+            <strong>Consulta Online (30min)</strong><br>
+            <span class="price">R$ 99,90</span> - Sem fidelização<br>
+            <span class="small-note">Após fidelização: <strong>R$ 79,90</strong> por consulta</span>
+          </li>
+          
+          <!-- 3. LAUDO SEM RQE -->
+          <li>
+            <strong>Laudo Psiquiátrico (sem RQE)</strong> <span class="badge">Novo</span><br>
+            <span class="price">R$ 80,00</span><br>
+            <span class="small-note">Elaborado após anamnese detalhada</span>
+          </li>
+          
+          <!-- 4. LAUDO COM RQE (ATESTADO REMOVIDO) -->
+          <li>
+            <strong>Laudo Psiquiátrico (com RQE)</strong><br>
+            <span class="price">R$ 250,00</span><br>
+            <span class="small-note">Elaborado após avaliação completa</span>
+          </li>
         </ul>
+        
+        <!-- 6. INSTALAÇÃO -->
         <div class="download">
-          <a href="/minha-receita-psiquiatrica.apk" download>Baixar APK</a>
+          <p><strong>Baixe o aplicativo completo:</strong></p>
+          <a href="/minha-receita-psiquiatrica.apk" download>📱 Baixar APK do App</a>
+          <div class="warning">
+            ⚠️ Após anexar o comprovante no app, <strong>envie apenas pelo WhatsApp</strong> para confirmação.
+          </div>
         </div>
+      </div>
+      
+      <!-- 7. BOTÃO VOLTAR (placeholder para React) -->
+      <div class="card" style="text-align:center;">
+        <h3>⚠️ Correções Necessárias no Código React</h3>
+        <p>Para implementar todas as funcionalidades, é necessário editar o arquivo <code>src/main.jsx</code>:</p>
+        <ul style="text-align:left;">
+          <li><strong>Botão "Voltar":</strong> Adicionar em todas as páginas do formulário</li>
+          <li><strong>Seletores obrigatórios:</strong> Corrigir "Pensamentos sobre morte" e "Percepção"</li>
+          <li><strong>Fluxo WhatsApp:</strong> Remover opção de e-mail, manter apenas WhatsApp</li>
+        </ul>
       </div>
     </main>
     <div id="root"></div>
