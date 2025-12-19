@@ -1,104 +1,323 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dr. Marcelo Medeiros - Psiquiatria Online</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Marcelo Medeiros - App Psiquiátrico</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#008080"/>
-    <script>
-      if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker.register("/service-worker.js")
-            .then((registration) => { console.log("SW registered: ", registration); })
-            .catch((err) => { console.log("SW registration failed: ", err); });
-        });
-      }
-    </script>
-    <style>
-      body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol'; margin:0; background:#f7f9fb;}
-      header{padding:24px; text-align:center; background:white; box-shadow:0 1px 6px rgba(0,0,0,.06);}
-      main{max-width:920px; margin:24px auto; padding:0 16px;}
-      .card{background:white; border-radius:16px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,.08); margin-bottom:20px;}
-      ul{padding-left:18px; margin:15px 0;}
-      li{margin-bottom:10px; padding:12px; background:#f8fafc; border-radius:8px; border-left:4px solid #0ea5a6;}
-      .price{font-weight:bold; color:#0f766e; font-size:1.1em;}
-      .download a{display:inline-block; margin-top:12px; padding:12px 24px; border-radius:12px; text-decoration:none; background:#0ea5a6; color:white; font-weight:bold;}
-      .logo{height:80px; width:80px; border-radius:16px; object-fit:cover; border:3px solid #0ea5a6;}
-      .row{display:flex; gap:16px; align-items:center; justify-content:center;}
-      .small-note{font-size:0.85em; color:#6b7280; margin-top:5px; font-style:italic;}
-      .badge{background:#dcfce7; color:#166534; padding:2px 8px; border-radius:12px; font-size:0.8em; margin-left:8px;}
-      .warning{background:#fef3c7; padding:10px; border-radius:8px; margin-top:15px; font-size:0.9em; border-left:4px solid #d97706;}
-    </style>
-  </head>
-  <body>
-    <header>
-      <div class="row">
-        <!-- LOGO ATUALIZADA -->
-        <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" class="logo" alt="Dr. Marcelo Medeiros"/>
-        <div>
-          <h1 style="margin:0; color:#0f766e;">Dr. Marcelo Medeiros</h1>
-          <p style="margin:5px 0 0 0; color:#6b7280;">Psiquiatria Online | CRM 47960</p>
-        </div>
-      </div>
-      <p>Aplicativo para consultas online, receitas e laudos psiquiátricos.</p>
-    </header>
-    <main>
-      <div class="card">
-        <h2>Serviços Disponíveis</h2>
-        
-        <!-- CONSULTA COM FIDELIZAÇÃO -->
-        <ul>
-          <li>
-            <strong>Consulta Online (30min)</strong><br>
-            <span class="price">R$ 99,90</span> - Sem fidelização<br>
-            <span class="small-note">Após fidelização: <strong>R$ 79,90</strong> por consulta</span>
-          </li>
-          
-          <!-- LAUDO SEM RQE -->
-          <li>
-            <strong>Laudo Psiquiátrico (sem RQE)</strong> <span class="badge">Novo</span><br>
-            <span class="price">R$ 80,00</span><br>
-            <span class="small-note">Elaborado após anamnese detalhada</span>
-          </li>
-          
-          <!-- LAUDO COM RQE -->
-          <li>
-            <strong>Laudo Psiquiátrico (com RQE)</strong><br>
-            <span class="price">R$ 250,00</span><br>
-            <span class="small-note">Elaborado após avaliação completa</span>
-          </li>
-        </ul>
-        
-        <!-- INSTALAÇÃO -->
-        <div class="download">
-          <p><strong>Baixe o aplicativo completo:</strong></p>
-          <a href="/minha-receita-psiquiatrica.apk" download>📱 Baixar APK do App</a>
-          <div class="warning">
-            ⚠️ Após anexar o comprovante no app, <strong>envie apenas pelo WhatsApp</strong> para confirmação.
-          </div>
-        </div>
-      </div>
-      
-      <!-- BOTÃO VOLTAR -->
-      <div class="card" style="text-align:center;">
-        <h3>⚠️ Correções Necessárias no Código React</h3>
-        <p>Para implementar todas as funcionalidades, é necessário editar o arquivo <code>src/main.jsx</code>:</p>
-        <ul style="text-align:left;">
-          <li><strong>Botão "Voltar":</strong> Adicionar em todas as páginas do formulário</li>
-          <li><strong>Seletores obrigatórios:</strong> Corrigir "Pensamentos sobre morte" e "Percepção"</li>
-          <li><strong>Fluxo WhatsApp:</strong> Remover opção de e-mail, manter apenas WhatsApp</li>
-        </ul>
-      </div>
-    </main>
-    <div id="root"></div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- REACT CDN - DEVE VIR PRIMEIRO! -->
+    <style>
+        :root {
+            --whatsapp-green: #25d366;
+            --teal-primary: #0d9488;
+            --dark-teal: #0f766e;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            line-height: 1.6; 
+            color: #333;
+            background: #f7f9fb;
+        }
+        
+        /* WhatsApp Flutuante */
+        .whatsapp-float {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--whatsapp-green);
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 35px;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .whatsapp-float:hover { 
+            background-color: #128C7E;
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
+        }
+        
+        /* Cabeçalho */
+        .app-header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            border-bottom: 3px solid var(--teal-primary);
+        }
+        
+        .doctor-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--teal-primary);
+            box-shadow: 0 5px 15px rgba(13, 148, 136, 0.2);
+        }
+        
+        /* Botão WhatsApp */
+        .whatsapp-btn {
+            background: linear-gradient(135deg, var(--whatsapp-green), #128C7E);
+            color: white;
+            padding: 14px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);
+            color: white;
+        }
+        
+        /* Serviços */
+        .service-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+            height: 100%;
+            background: white;
+            margin-bottom: 20px;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(13, 148, 136, 0.15);
+            border-color: var(--teal-primary);
+        }
+        
+        .price-tag {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--dark-teal);
+            margin: 15px 0;
+        }
+        
+        /* Badge */
+        .badge-credencial {
+            background: linear-gradient(135deg, var(--teal-primary), var(--dark-teal));
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        /* Container do React */
+        #root {
+            min-height: 500px;
+            margin: 30px 0;
+        }
+        
+        /* Estilos do React App */
+        .react-app-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- WhatsApp Flutuante -->
+    <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20gostaria%20de%20agendar%20uma%20consulta%20online%20de%2030%20minutos%20(R$%2099,90)" 
+       class="whatsapp-float" target="_blank" title="Agende pelo WhatsApp">
+       <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Cabeçalho com sua foto -->
+    <header class="app-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center">
+                    <!-- SUA FOTO DO IMGBB AQUI -->
+                    <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" 
+                         class="doctor-photo" 
+                         alt="Dr. Marcelo Medeiros">
+                </div>
+                <div class="col-md-6">
+                    <h1 class="h3 fw-900 mb-2" style="color: var(--dark-teal);">
+                        Dr. Marcelo Medeiros
+                    </h1>
+                    <p class="mb-1 fw-600" style="color: #4b5563;">
+                        Psiquiatria Online | CRM 47960
+                    </p>
+                    <p class="mb-0 small text-muted">
+                        Pós-graduação em Psiquiatria pelo Hospital Albert Einstein
+                    </p>
+                    <div class="mt-2">
+                        <span class="badge-credencial me-2">CRM 47960</span>
+                        <span class="badge-credencial">Atendimento Online</span>
+                    </div>
+                </div>
+                <div class="col-md-3 text-end">
+                    <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20gostaria%20de%20agendar%20uma%20consulta%20online%20de%2030%20minutos%20(R$%2099,90)" 
+                       class="whatsapp-btn" target="_blank">
+                        <i class="fab fa-whatsapp me-2"></i> Agendar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Seção de Serviços -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center h2 fw-900 mb-5" style="color: var(--dark-teal);">
+                Serviços Psiquiátricos
+            </h2>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <i class="fas fa-video fa-3x mb-3" style="color: var(--teal-primary);"></i>
+                        <h3 class="h5 fw-800 mb-3">Consulta Online</h3>
+                        <div class="price-tag">R$ 99,90</div>
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-clock me-1"></i> 30 minutos por videochamada<br>
+                            <i class="fas fa-stethoscope me-1"></i> Diagnóstico especializado<br>
+                            <i class="fas fa-file-medical me-1"></i> Acompanhamento completo
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <i class="fas fa-file-contract fa-3x mb-3" style="color: var(--teal-primary);"></i>
+                        <h3 class="h5 fw-800 mb-3">Laudo Psiquiátrico</h3>
+                        <div class="price-tag">R$ 80,00</div>
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-certificate me-1"></i> Sem RQE<br>
+                            <i class="fas fa-clipboard-check me-1"></i> Elaboração detalhada<br>
+                            <i class="fas fa-shield-alt me-1"></i> Documento oficial
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="service-card">
+                        <i class="fas fa-file-signature fa-3x mb-3" style="color: var(--teal-primary);"></i>
+                        <h3 class="h5 fw-800 mb-3">Laudo com RQE</h3>
+                        <div class="price-tag">R$ 250,00</div>
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-award me-1"></i> Com Registro de Qualificação<br>
+                            <i class="fas fa-search me-1"></i> Avaliação completa<br>
+                            <i class="fas fa-gavel me-1"></i> Para fins legais
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMULÁRIO REACT AQUI -->
+    <section class="py-4">
+        <div class="container">
+            <div class="react-app-container">
+                <h2 class="text-center h3 fw-900 mb-4" style="color: var(--dark-teal);">
+                    📋 Formulário de Consulta Online
+                </h2>
+                <div id="root"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instruções -->
+    <section class="py-5 bg-light">
+        <div class="container text-center">
+            <h3 class="h4 fw-800 mb-4" style="color: var(--dark-teal);">
+                ⚠️ Instruções Importantes
+            </h3>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="alert alert-info" style="border-left: 4px solid var(--teal-primary);">
+                        <p class="mb-2"><strong>1.</strong> Preencha todo o formulário acima</p>
+                        <p class="mb-2"><strong>2.</strong> No final, clique no botão do WhatsApp</p>
+                        <p class="mb-2"><strong>3.</strong> Anexe o comprovante de pagamento no app primeiro</p>
+                        <p class="mb-0"><strong>4.</strong> Depois envie a mensagem pelo WhatsApp para confirmação</p>
+                    </div>
+                    <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20tenho%20dúvidas%20sobre%20as%20consultas%20online" 
+                       class="whatsapp-btn mt-3" target="_blank">
+                        <i class="fab fa-whatsapp me-2"></i> Tirar Dúvidas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h3 class="h5 fw-900 mb-2">Dr. Marcelo Medeiros</h3>
+                    <p class="small text-white-50 mb-0">
+                        Atendimento online conforme resoluções do CFM e Código de Ética Médica
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="mailto:marcelomedeirossaudeefitness@gmail.com" 
+                       class="text-white d-block mb-1 small">
+                        <i class="fas fa-envelope me-1"></i> E-mail profissional
+                    </a>
+                    <a href="https://wa.me/554491339060" 
+                       class="text-white d-block small">
+                        <i class="fab fa-whatsapp me-1"></i> WhatsApp para dúvidas
+                    </a>
+                </div>
+            </div>
+            <hr class="my-3 opacity-25">
+            <p class="text-center small text-white-50 mb-0">
+                <i class="fas fa-exclamation-triangle me-1"></i> 
+                Para emergências, procure um pronto-socorro ou ligue 188 (CVV)
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- React CDN -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     
-    <!-- MEU APP - DEVE VIR DEPOIS DO REACT! -->
+    <!-- Meu App React -->
     <script src="./main.jsx"></script>
-  </body>
+    
+    <script>
+        // Service Worker para PWA
+        if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/service-worker.js")
+                    .then((registration) => { 
+                        console.log("App carregado com sucesso!"); 
+                    })
+                    .catch((err) => { 
+                        console.log("SW registration failed: ", err); 
+                    });
+            });
+        }
+    </script>
+</body>
 </html>
