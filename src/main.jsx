@@ -3,49 +3,32 @@ import ReactDOM from 'react-dom/client';
 import { useState } from 'react';
 
 function App() {
-  // Estados para controle do formulário
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    // Dados do paciente
     nome: '',
     idade: '',
     diagnostico: '',
-    
-    // Seção 1 - 10 queixas principais
     queixas: [],
-    
-    // Seção 2 - História psiquiátrica
     inicioSintomas: '',
     tratamentosAnteriores: '',
     medicacaoAtual: '',
-    
-    // Seção 3 - Avaliação de risco
-    pensamentosMorte: '', // OBRIGATÓRIO - FIXO
+    pensamentosMorte: '',
     planosSuicida: '',
     tentativasPrevias: '',
-    
-    // Seção 4 - Percepção
-    percepRealidade: '', // OBRIGATÓRIO - FIXO
+    percepRealidade: '',
     alucinacoes: '',
     delírios: '',
-    
-    // Seção 5 - Funcionalidade
     impactoSocial: '',
     impactoProfissional: '',
-    
-    // Seção 6 - Conduta
     medicacaoPrescrita: [],
     dose: '',
     posologia: '',
     recomendacoes: '',
-    
-    // Pagamento
     valorConsulta: '99.90',
     valorLaudo: '0',
-    formaPagamento: 'whatsapp' // SÓ WHATSAPP
+    formaPagamento: 'whatsapp'
   });
 
-  // Listas para seleção
   const queixasOptions = [
     "Ansiedade excessiva", "Tristeza persistente", "Insônia", 
     "Irritabilidade", "Dificuldade de concentração", "Fadiga constante",
@@ -55,7 +38,6 @@ function App() {
     "Despersonalização", "Paranoia", "Apatia", "Autoagressão"
   ];
 
-  // Medicamentos comuns
   const medicamentosOptions = [
     "Sertralina", "Escitalopram", "Fluoxetina", "Paroxetina",
     "Venlafaxina", "Duloxetina", "Bupropiona", "Mirtazapina",
@@ -65,11 +47,9 @@ function App() {
     "Metilfenidato", "Atomoxetina", "Modafinila"
   ];
 
-  // Função para navegação
   const nextStep = () => setStep(prev => prev + 1);
   const prevStep = () => setStep(prev => prev - 1);
 
-  // Função para atualizar dados do formulário
   const handleChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -77,7 +57,6 @@ function App() {
     }));
   };
 
-  // Função para alternar seleção de queixas
   const toggleQueixa = (queixa) => {
     setFormData(prev => {
       const updated = prev.queixas.includes(queixa)
@@ -87,7 +66,6 @@ function App() {
     });
   };
 
-  // Função para alternar seleção de medicamentos
   const toggleMedicamento = (med) => {
     setFormData(prev => {
       const updated = prev.medicacaoPrescrita.includes(med)
@@ -97,7 +75,6 @@ function App() {
     });
   };
 
-  // Função para gerar mensagem do WhatsApp
   const generateWhatsAppMessage = () => {
     const { nome, idade, diagnostico, queixas, pensamentosMorte, percepRealidade, medicacaoPrescrita, dose, posologia, recomendacoes } = formData;
     
@@ -128,21 +105,18 @@ function App() {
 Por favor, confirme o recebimento.`;
   };
 
-  // Função para enviar via WhatsApp
   const sendToWhatsApp = () => {
     const message = generateWhatsAppMessage();
     const encoded = encodeURIComponent(message);
     window.open(`https://wa.me/554491339060?text=${encoded}`, '_blank');
   };
 
-  // Renderização condicional por etapa
   const renderStep = () => {
     switch(step) {
       case 1:
         return (
           <div className="step">
             <h2>📋 Dados do Paciente</h2>
-            
             <div className="form-group">
               <label>Nome completo *</label>
               <input 
@@ -152,7 +126,6 @@ Por favor, confirme o recebimento.`;
                 required
               />
             </div>
-            
             <div className="form-group">
               <label>Idade *</label>
               <input 
@@ -164,7 +137,6 @@ Por favor, confirme o recebimento.`;
                 required
               />
             </div>
-            
             <div className="form-group">
               <label>Diagnóstico principal *</label>
               <input 
@@ -175,7 +147,6 @@ Por favor, confirme o recebimento.`;
                 required
               />
             </div>
-            
             <div className="button-group">
               <button onClick={nextStep}>Próximo →</button>
             </div>
@@ -186,8 +157,7 @@ Por favor, confirme o recebimento.`;
         return (
           <div className="step">
             <h2>🔍 Queixas Principais (máx. 10)</h2>
-            <p>Selecione até 10 queixas principais do paciente:</p>
-            
+            <p>Selecione até 10 queixas principais:</p>
             <div className="checkbox-grid">
               {queixasOptions.map((queixa, index) => (
                 <div key={index} className="checkbox-item">
@@ -202,9 +172,7 @@ Por favor, confirme o recebimento.`;
                 </div>
               ))}
             </div>
-            
             <p className="counter">Selecionadas: {formData.queixas.length}/10</p>
-            
             <div className="button-group">
               <button onClick={prevStep}>← Voltar</button>
               <button onClick={nextStep}>Próximo →</button>
@@ -216,7 +184,6 @@ Por favor, confirme o recebimento.`;
         return (
           <div className="step">
             <h2>⚠️ Avaliação de Risco (OBRIGATÓRIO)</h2>
-            
             <div className="form-group">
               <label>Pensamentos sobre morte/autodestrutivos *</label>
               <select 
@@ -231,7 +198,6 @@ Por favor, confirme o recebimento.`;
                 <option value="Tentativa prévia">Tentativa prévia</option>
               </select>
             </div>
-            
             <div className="form-group">
               <label>Planos suicidas específicos</label>
               <input 
@@ -241,7 +207,6 @@ Por favor, confirme o recebimento.`;
                 placeholder="Descreva se houver"
               />
             </div>
-            
             <div className="button-group">
               <button onClick={prevStep}>← Voltar</button>
               <button onClick={nextStep}>Próximo →</button>
@@ -253,7 +218,6 @@ Por favor, confirme o recebimento.`;
         return (
           <div className="step">
             <h2>🧠 Percepção da Realidade (OBRIGATÓRIO)</h2>
-            
             <div className="form-group">
               <label>Percepção da realidade/orientação *</label>
               <select 
@@ -268,7 +232,6 @@ Por favor, confirme o recebimento.`;
                 <option value="Gravemente comprometida">Gravemente comprometida</option>
               </select>
             </div>
-            
             <div className="form-group">
               <label>Alucinações (se houver)</label>
               <input 
@@ -278,7 +241,6 @@ Por favor, confirme o recebimento.`;
                 placeholder="Descreva tipo e frequência"
               />
             </div>
-            
             <div className="button-group">
               <button onClick={prevStep}>← Voltar</button>
               <button onClick={nextStep}>Próximo →</button>
@@ -290,11 +252,9 @@ Por favor, confirme o recebimento.`;
         return (
           <div className="step">
             <h2>💊 Conduta Terapêutica</h2>
-            
             <div className="form-group">
               <label>Medicação prescrita *</label>
               <p>Selecione os medicamentos:</p>
-              
               <div className="checkbox-grid">
                 {medicamentosOptions.map((med, index) => (
                   <div key={index} className="checkbox-item">
@@ -309,7 +269,6 @@ Por favor, confirme o recebimento.`;
                 ))}
               </div>
             </div>
-            
             <div className="form-group">
               <label>Dose</label>
               <input 
@@ -319,7 +278,6 @@ Por favor, confirme o recebimento.`;
                 placeholder="Ex: 50mg"
               />
             </div>
-            
             <div className="form-group">
               <label>Posologia</label>
               <input 
@@ -329,7 +287,6 @@ Por favor, confirme o recebimento.`;
                 placeholder="Ex: 1x ao dia"
               />
             </div>
-            
             <div className="button-group">
               <button onClick={prevStep}>← Voltar</button>
               <button onClick={nextStep}>Próximo →</button>
@@ -341,13 +298,11 @@ Por favor, confirme o recebimento.`;
         return (
           <div className="step">
             <h2>💰 Pagamento</h2>
-            
             <div className="price-summary">
               <div className="price-item">
                 <span>Consulta Online (30min)</span>
                 <span>R$ {formData.valorConsulta}</span>
               </div>
-              
               <div className="price-item">
                 <span>Laudo Psiquiátrico (sem RQE)</span>
                 <span>
@@ -358,7 +313,6 @@ Por favor, confirme o recebimento.`;
                   /> R$ 80,00
                 </span>
               </div>
-              
               <div className="price-item">
                 <span>Laudo Psiquiátrico (com RQE)</span>
                 <span>
@@ -369,7 +323,6 @@ Por favor, confirme o recebimento.`;
                   /> R$ 250,00
                 </span>
               </div>
-              
               <div className="price-total">
                 <strong>TOTAL</strong>
                 <strong>
@@ -377,12 +330,10 @@ Por favor, confirme o recebimento.`;
                 </strong>
               </div>
             </div>
-            
             <div className="warning-box">
               ⚠️ <strong>Importante:</strong> Anexe o comprovante no app primeiro, 
               depois envie a mensagem pelo WhatsApp para confirmação.
             </div>
-            
             <div className="button-group">
               <button onClick={prevStep}>← Voltar</button>
               <button onClick={sendToWhatsApp} className="whatsapp-btn">
@@ -402,11 +353,9 @@ Por favor, confirme o recebimento.`;
       <div className="progress-bar">
         <div className="progress" style={{ width: `${(step / 6) * 100}%` }}></div>
       </div>
-      
       <div className="step-indicator">
         Etapa {step} de 6
       </div>
-      
       <div className="form-container">
         {renderStep()}
       </div>
@@ -414,182 +363,37 @@ Por favor, confirme o recebimento.`;
   );
 }
 
-// Adicionar CSS inline para o app
 const style = document.createElement('style');
 style.textContent = `
-  .app-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 0 16px;
-  }
-  
-  .progress-bar {
-    height: 8px;
-    background: #e5e7eb;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    overflow: hidden;
-  }
-  
-  .progress {
-    height: 100%;
-    background: #0d9488;
-    transition: width 0.3s;
-  }
-  
-  .step-indicator {
-    text-align: center;
-    color: #6b7280;
-    margin-bottom: 30px;
-    font-weight: 600;
-  }
-  
-  .form-container {
-    background: white;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  }
-  
-  .step h2 {
-    color: #0f766e;
-    margin-top: 0;
-    margin-bottom: 25px;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #374151;
-  }
-  
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #e5e7eb;
-    border-radius: 10px;
-    font-size: 16px;
-    transition: border 0.3s;
-  }
-  
-  .form-group input:focus,
-  .form-group select:focus {
-    border-color: #0d9488;
-    outline: none;
-  }
-  
-  .checkbox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-    margin: 20px 0;
-  }
-  
-  .checkbox-item {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background: #f8fafc;
-    border-radius: 8px;
-    border: 2px solid #e5e7eb;
-  }
-  
-  .checkbox-item input[type="checkbox"] {
-    margin-right: 10px;
-    transform: scale(1.2);
-  }
-  
-  .button-group {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-    gap: 15px;
-  }
-  
-  button {
-    padding: 14px 28px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    flex: 1;
-  }
-  
-  button:first-child {
-    background: #f3f4f6;
-    color: #4b5563;
-  }
-  
-  button:first-child:hover {
-    background: #e5e7eb;
-  }
-  
-  button:last-child:not(.whatsapp-btn) {
-    background: #0d9488;
-    color: white;
-  }
-  
-  button:last-child:not(.whatsapp-btn):hover {
-    background: #0f766e;
-  }
-  
-  .whatsapp-btn {
-    background: #25d366 !important;
-    color: white !important;
-  }
-  
-  .whatsapp-btn:hover {
-    background: #128C7E !important;
-  }
-  
-  .counter {
-    text-align: center;
-    color: #6b7280;
-    font-style: italic;
-  }
-  
-  .price-summary {
-    background: #f8fafc;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px 0;
-  }
-  
-  .price-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  
-  .price-total {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 0;
-    font-size: 1.2em;
-    color: #0f766e;
-  }
-  
-  .warning-box {
-    background: #fef3c7;
-    border-left: 4px solid #d97706;
-    padding: 15px;
-    border-radius: 8px;
-    margin: 20px 0;
-  }
+  .app-container { max-width: 800px; margin: 20px auto; padding: 0 16px; }
+  .progress-bar { height: 8px; background: #e5e7eb; border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
+  .progress { height: 100%; background: #0d9488; transition: width 0.3s; }
+  .step-indicator { text-align: center; color: #6b7280; margin-bottom: 30px; font-weight: 600; }
+  .form-container { background: white; border-radius: 16px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .step h2 { color: #0f766e; margin-top: 0; margin-bottom: 25px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #374151; }
+  .form-group input, .form-group select { width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 16px; }
+  .form-group input:focus, .form-group select:focus { border-color: #0d9488; outline: none; }
+  .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
+  .checkbox-item { display: flex; align-items: center; padding: 10px; background: #f8fafc; border-radius: 8px; border: 2px solid #e5e7eb; }
+  .checkbox-item input[type="checkbox"] { margin-right: 10px; transform: scale(1.2); }
+  .button-group { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
+  button { padding: 14px 28px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; flex: 1; }
+  button:first-child { background: #f3f4f6; color: #4b5563; }
+  button:first-child:hover { background: #e5e7eb; }
+  button:last-child:not(.whatsapp-btn) { background: #0d9488; color: white; }
+  button:last-child:not(.whatsapp-btn):hover { background: #0f766e; }
+  .whatsapp-btn { background: #25d366 !important; color: white !important; }
+  .whatsapp-btn:hover { background: #128C7E !important; }
+  .counter { text-align: center; color: #6b7280; font-style: italic; }
+  .price-summary { background: #f8fafc; padding: 20px; border-radius: 10px; margin: 20px 0; }
+  .price-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e5e7eb; }
+  .price-total { display: flex; justify-content: space-between; padding: 15px 0; font-size: 1.2em; color: #0f766e; }
+  .warning-box { background: #fef3c7; border-left: 4px solid #d97706; padding: 15px; border-radius: 8px; margin: 20px 0; }
 `;
 document.head.appendChild(style);
 
-// Renderizar o app
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
