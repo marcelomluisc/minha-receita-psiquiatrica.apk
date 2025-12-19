@@ -35,7 +35,7 @@
   <body>
     <header>
       <div class="row">
-        <!-- 1. LOGO ATUALIZADA (WhatsApp) -->
+        <!-- LOGO ATUALIZADA -->
         <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" class="logo" alt="Dr. Marcelo Medeiros"/>
         <div>
           <h1 style="margin:0; color:#0f766e;">Dr. Marcelo Medeiros</h1>
@@ -48,7 +48,7 @@
       <div class="card">
         <h2>Serviços Disponíveis</h2>
         
-        <!-- 2. CONSULTA COM FIDELIZAÇÃO -->
+        <!-- CONSULTA COM FIDELIZAÇÃO -->
         <ul>
           <li>
             <strong>Consulta Online (30min)</strong><br>
@@ -56,14 +56,14 @@
             <span class="small-note">Após fidelização: <strong>R$ 79,90</strong> por consulta</span>
           </li>
           
-          <!-- 3. LAUDO SEM RQE -->
+          <!-- LAUDO SEM RQE -->
           <li>
             <strong>Laudo Psiquiátrico (sem RQE)</strong> <span class="badge">Novo</span><br>
             <span class="price">R$ 80,00</span><br>
             <span class="small-note">Elaborado após anamnese detalhada</span>
           </li>
           
-          <!-- 4. LAUDO COM RQE (ATESTADO REMOVIDO) -->
+          <!-- LAUDO COM RQE -->
           <li>
             <strong>Laudo Psiquiátrico (com RQE)</strong><br>
             <span class="price">R$ 250,00</span><br>
@@ -71,7 +71,7 @@
           </li>
         </ul>
         
-        <!-- 6. INSTALAÇÃO -->
+        <!-- INSTALAÇÃO -->
         <div class="download">
           <p><strong>Baixe o aplicativo completo:</strong></p>
           <a href="/minha-receita-psiquiatrica.apk" download>📱 Baixar APK do App</a>
@@ -81,7 +81,7 @@
         </div>
       </div>
       
-      <!-- 7. BOTÃO VOLTAR (placeholder para React) -->
+      <!-- BOTÃO VOLTAR -->
       <div class="card" style="text-align:center;">
         <h3>⚠️ Correções Necessárias no Código React</h3>
         <p>Para implementar todas as funcionalidades, é necessário editar o arquivo <code>src/main.jsx</code>:</p>
@@ -93,6 +93,12 @@
       </div>
     </main>
     <div id="root"></div>
-    <script type="module" src="./main.jsx"></script>
+    
+    <!-- REACT CDN - DEVE VIR PRIMEIRO! -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- MEU APP - DEVE VIR DEPOIS DO REACT! -->
+    <script src="./main.jsx"></script>
   </body>
 </html>
