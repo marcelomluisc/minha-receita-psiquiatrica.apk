@@ -1,767 +1,180 @@
-// app.js - APP DEFINITIVO DO DR. MARCELO MEDEIROS
-const { useState, useEffect } = React;
-
-function App() {
-  // Estados principais
-  const [step, setStep] = useState(1);
-  const [showTerms, setShowTerms] = useState(true);
-  const [selectedService, setSelectedService] = useState(null);
-  
-  // Dados do formulário - ANAMNESE COMPLETA
-  const [formData, setFormData] = useState({
-    // Dados pessoais
-    nome: '',
-    idade: '',
-    telefone: '',
-    email: '',
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Psiquiátrica - Dr. Marcelo Medeiros</title>
     
-    // Seleção de serviço
-    servico: '',
+    <!-- React e ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    // Estado atual
-    estadoAtual: '',
-    estabilidade: '',
-    
-    // Sintomas (Checklist)
-    sintomasAnsiosos: [],
-    sintomasDepressivos: [],
-    sintomasHumor: [],
-    pensamentosMorte: '',
-    percepRealidade: '',
-    
-    // Anamnese detalhada
-    queixaPrincipal: '',
-    historicoPsiquiatrico: '',
-    medicacaoAtual: '',
-    comorbidades: '',
-    
-    // Avaliação de risco
-    riscoSuicida: '',
-    planosSuicidas: '',
-    tentativasAnteriores: '',
-    
-    // Conduta
-    medicacaoPrescrita: [],
-    dose: '',
-    posologia: '',
-    recomendacoes: '',
-    
-    // Pagamento
-    valorConsulta: '99.90',
-    valorLaudo: '0'
-  });
-
-  // Serviços disponíveis
-  const servicos = [
-    { id: 'consulta', nome: 'Consulta Online (30min)', valor: '99.90', descricao: 'Videochamada + diagnóstico' },
-    { id: 'laudoSemRQE', nome: 'Laudo Psiquiátrico (sem RQE)', valor: '80.00', descricao: 'Documento oficial' },
-    { id: 'laudoComRQE', nome: 'Laudo Psiquiátrico (com RQE)', valor: '250.00', descricao: 'Com registro de qualificação' }
-  ];
-
-  // Listas para checkboxes
-  const sintomasAnsiososLista = [
-    "Ansiedade excessiva", "Preocupação constante", "Ataques de pânico",
-    "Medos intensos", "Inquietação", "Tensão muscular",
-    "Insônia", "Irritabilidade", "Dificuldade de concentração"
-  ];
-
-  const sintomasDepressivosLista = [
-    "Tristeza persistente", "Perda de interesse", "Fadiga constante",
-    "Alterações de apetite", "Problemas de sono", "Sentimentos de culpa",
-    "Dificuldade de concentração", "Pensamentos de morte", "Apatia"
-  ];
-
-  const medicamentosLista = [
-    "Sertralina", "Escitalopram", "Fluoxetina", "Paroxetina",
-    "Venlafaxina", "Duloxetina", "Bupropiona", "Mirtazapina",
-    "Clonazepam", "Alprazolam", "Quetiapina", "Olanzapina",
-    "Valproato", "Lamotrigina", "Lítio", "Metilfenidato"
-  ];
-
-  // Funções de navegação
-  const nextStep = () => setStep(prev => prev + 1);
-  const prevStep = () => setStep(prev => prev - 1);
-  
-  const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const toggleCheckbox = (field, value) => {
-    setFormData(prev => {
-      const current = prev[field] || [];
-      const updated = current.includes(value)
-        ? current.filter(item => item !== value)
-        : [...current, value];
-      return { ...prev, [field]: updated };
-    });
-  };
-
-  const selectService = (servico) => {
-    setSelectedService(servico);
-    handleChange('servico', servico.id);
-    
-    // Define valores automaticamente
-    if (servico.id === 'consulta') {
-      handleChange('valorConsulta', servico.valor);
-      handleChange('valorLaudo', '0');
-    } else if (servico.id === 'laudoSemRQE') {
-      handleChange('valorConsulta', '0');
-      handleChange('valorLaudo', '80.00');
-    } else if (servico.id === 'laudoComRQE') {
-      handleChange('valorConsulta', '0');
-      handleChange('valorLaudo', '250.00');
-    }
-    
-    nextStep();
-  };
-
-  // Gerar mensagem WhatsApp
-  const generateWhatsAppMessage = () => {
-    const total = (parseFloat(formData.valorConsulta) + parseFloat(formData.valorLaudo)).toFixed(2);
-    
-    let message = `*CONSULTA PSIQUIÁTRICA - DR. MARCELO MEDEIROS*\n\n`;
-    
-    message += `*PACIENTE:* ${formData.nome}\n`;
-    message += `*IDADE:* ${formData.idade}\n`;
-    message += `*TELEFONE:* ${formData.telefone}\n\n`;
-    
-    message += `*SERVIÇO:* ${selectedService?.nome || 'Não selecionado'}\n\n`;
-    
-    message += `*ESTADO ATUAL:* ${formData.estadoAtual}\n`;
-    message += `*ESTABILIDADE:* ${formData.estabilidade}\n\n`;
-    
-    if (formData.sintomasAnsiosos.length > 0) {
-      message += `*SINTOMAS ANSIOSOS:* ${formData.sintomasAnsiosos.join(', ')}\n`;
-    }
-    
-    if (formData.sintomasDepressivos.length > 0) {
-      message += `*SINTOMAS DEPRESSIVOS:* ${formData.sintomasDepressivos.join(', ')}\n`;
-    }
-    
-    if (formData.sintomasHumor.length > 0) {
-      message += `*SINTOMAS DE HUMOR:* ${formData.sintomasHumor.join(', ')}\n`;
-    }
-    
-    message += `*PENSAMENTOS SOBRE MORTE:* ${formData.pensamentosMorte}\n`;
-    message += `*PERCEPÇÃO DA REALIDADE:* ${formData.percepRealidade}\n\n`;
-    
-    message += `*QUEIXA PRINCIPAL:* ${formData.queixaPrincipal}\n\n`;
-    
-    if (formData.riscoSuicida) {
-      message += `*AVALIAÇÃO DE RISCO:* ${formData.riscoSuicida}\n`;
-      if (formData.planosSuicidas) message += `*PLANOS SUICIDAS:* ${formData.planosSuicidas}\n`;
-      if (formData.tentativasAnteriores) message += `*TENTATIVAS ANTERIORES:* ${formData.tentativasAnteriores}\n\n`;
-    }
-    
-    if (formData.medicacaoPrescrita.length > 0) {
-      message += `*MEDICAÇÃO PRESCRITA:* ${formData.medicacaoPrescrita.join(', ')}\n`;
-      message += `*DOSE:* ${formData.dose}\n`;
-      message += `*POSOLOGIA:* ${formData.posologia}\n\n`;
-    }
-    
-    message += `*VALOR CONSULTA:* R$ ${formData.valorConsulta}\n`;
-    message += `*VALOR LAUDO:* R$ ${formData.valorLaudo}\n`;
-    message += `*TOTAL:* R$ ${total}\n\n`;
-    
-    message += `*COMPROVANTE ANEXADO NO APP*\n`;
-    message += `Por favor, confirme o recebimento.`;
-    
-    return message;
-  };
-
-  const sendToWhatsApp = () => {
-    const message = generateWhatsAppMessage();
-    const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/554491339060?text=${encoded}`, '_blank');
-  };
-
-  // Modal de Termos
-  const TermsModal = () => (
-    React.createElement('div', {
-      className: 'fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4'
-    },
-      React.createElement('div', {
-        className: 'bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl'
-      },
-        React.createElement('div', { className: 'text-center mb-4' },
-          React.createElement('i', { className: 'fas fa-shield-alt text-4xl text-teal-600 mb-3' }),
-          React.createElement('h2', { className: 'text-xl font-bold text-gray-800 mb-2' }, 'Termos de Consentimento'),
-          React.createElement('p', { className: 'text-sm text-gray-600' }, 'Leia e aceite para continuar')
-        ),
+    <style>
+        /* TODOS OS ESTILOS AQUI DENTRO */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
-        React.createElement('div', {
-          className: 'h-64 overflow-y-auto bg-gray-50 p-4 rounded-lg text-sm text-gray-700 mb-4'
-        },
-          React.createElement('p', { className: 'font-bold mb-2' }, 'CONSENTIMENTO PARA ATENDIMENTO ONLINE'),
-          React.createElement('p', { className: 'mb-2' }, '1. Concordo que o atendimento online segue as normas do CFM.'),
-          React.createElement('p', { className: 'mb-2' }, '2. Declaro que as informações fornecidas são verdadeiras.'),
-          React.createElement('p', { className: 'mb-2' }, '3. Compreendo que em emergências devo procurar atendimento presencial.'),
-          React.createElement('p', { className: 'mb-2' }, '4. Autorizo o tratamento dos meus dados conforme LGPD.'),
-          React.createElement('p', null, '5. Entendo que o pagamento é pela avaliação médica, não garantindo prescrição.')
-        ),
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
         
-        React.createElement('button', {
-          onClick: () => setShowTerms(false),
-          className: 'w-full py-3 px-4 rounded-lg bg-teal-600 text-white font-bold hover:bg-teal-700 transition-colors'
-        },
-          'Li e Aceito os Termos'
-        )
-      )
-    )
-  );
-
-  // Renderização das etapas
-  const renderStep = () => {
-    switch(step) {
-      case 1: // Seleção de serviço
-        return React.createElement('div', { className: 'step' },
-          React.createElement('div', { className: 'text-center mb-6' },
-            React.createElement('img', {
-              src: 'https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png',
-              className: 'doctor-photo mx-auto mb-4',
-              alt: 'Dr. Marcelo Medeiros',
-              style: {
-                width: '120px',
-                height: '120px',
-                borderRadius: '50%',
-                objectFit: 'cover',
-                border: '4px solid #0d9488',
-                boxShadow: '0 5px 15px rgba(13, 148, 136, 0.2)'
-              }
-            }),
-            React.createElement('h2', { className: 'h3 fw-bold text-teal-800 mb-2' }, 'Dr. Marcelo Medeiros'),
-            React.createElement('p', { className: 'text-muted mb-4' }, 'Psiquiatria Online | CRM 47960')
-          ),
-          
-          React.createElement('h3', { className: 'h4 fw-bold text-center mb-5 text-gray-800' }, 'Selecione o Serviço Desejado'),
-          
-          React.createElement('div', { className: 'row g-4' },
-            servicos.map(servico => 
-              React.createElement('div', { key: servico.id, className: 'col-md-4' },
-                React.createElement('div', {
-                  className: `service-card ${selectedService?.id === servico.id ? 'selected' : ''}`,
-                  onClick: () => selectService(servico),
-                  style: {
-                    cursor: 'pointer',
-                    border: '2px solid #e5e7eb',
-                    borderRadius: '15px',
-                    padding: '25px',
-                    textAlign: 'center',
-                    transition: 'all 0.3s',
-                    background: selectedService?.id === servico.id ? '#f0f9ff' : 'white'
-                  }
-                },
-                  React.createElement('i', { 
-                    className: servico.id === 'consulta' ? 'fas fa-video fa-3x mb-3 text-teal-600' : 
-                              servico.id.includes('laudo') ? 'fas fa-file-contract fa-3x mb-3 text-teal-600' : 
-                              'fas fa-stethoscope fa-3x mb-3 text-teal-600'
-                  }),
-                  React.createElement('h4', { className: 'h5 fw-bold mb-2' }, servico.nome),
-                  React.createElement('div', { 
-                    className: 'price-tag mb-3',
-                    style: { fontSize: '1.8rem', fontWeight: '900', color: '#0f766e' }
-                  }, `R$ ${servico.valor}`),
-                  React.createElement('p', { className: 'text-muted small' }, servico.descricao)
-                )
-              )
-            )
-          ),
-          
-          selectedService && React.createElement('div', { className: 'text-center mt-5' },
-            React.createElement('button', {
-              onClick: nextStep,
-              className: 'whatsapp-btn',
-              style: {
-                background: 'linear-gradient(135deg, #25d366, #128C7E)',
-                color: 'white',
-                padding: '14px 35px',
-                borderRadius: '50px',
-                fontWeight: '700',
-                fontSize: '1.1rem',
-                border: 'none',
-                transition: 'all 0.3s',
-                boxShadow: '0 5px 15px rgba(37, 211, 102, 0.3)'
-              }
-            },
-              'Próximo →'
-            )
-          )
-        );
-
-      case 2: // Dados pessoais
-        return React.createElement('div', { className: 'step' },
-          React.createElement('h3', { className: 'h4 fw-bold mb-4 text-gray-800' }, '📋 Dados do Paciente'),
-          
-          React.createElement('details', { open: true },
-            React.createElement('summary', null, 'Informações Pessoais'),
-            React.createElement('div', { className: 'space-y-3' },
-              // Campo Nome
-              React.createElement('div', null,
-                React.createElement('label', { className: 'form-label fw-bold' }, 'Nome completo *'),
-                React.createElement('input', {
-                  type: 'text',
-                  className: 'form-control',
-                  value: formData.nome,
-                  onChange: (e) => handleChange('nome', e.target.value),
-                  required: true
-                })
-              ),
-              
-              // Campo Idade
-              React.createElement('div', null,
-                React.createElement('label', { className: 'form-label fw-bold' }, 'Idade *'),
-                React.createElement('input', {
-                  type: 'number',
-                  className: 'form-control',
-                  value: formData.idade,
-                  onChange: (e) => handleChange('idade', e.target.value),
-                  min: '1',
-                  max: '120',
-                  required: true
-                })
-              ),
-              
-              // Campo Telefone
-              React.createElement('div', null,
-                React.createElement('label', { className: 'form-label fw-bold' }, 'Telefone (WhatsApp) *'),
-                React.createElement('input', {
-                  type: 'tel',
-                  className: 'form-control',
-                  value: formData.telefone,
-                  onChange: (e) => handleChange('telefone', e.target.value),
-                  required: true
-                })
-              ),
-              
-              // Campo Email
-              React.createElement('div', null,
-                React.createElement('label', { className: 'form-label fw-bold' }, 'Email'),
-                React.createElement('input', {
-                  type: 'email',
-                  className: 'form-control',
-                  value: formData.email,
-                  onChange: (e) => handleChange('email', e.target.value)
-                })
-              )
-            )
-          ),
-          
-          React.createElement('div', { className: 'button-group mt-4' },
-            React.createElement('button', {
-              onClick: prevStep,
-              className: 'btn btn-outline-secondary me-2'
-            }, '← Voltar'),
-            React.createElement('button', {
-              onClick: nextStep,
-              className: 'btn btn-teal',
-              disabled: !formData.nome || !formData.idade || !formData.telefone
-            }, 'Próximo →')
-          )
-        );
-
-      case 3: // Estado atual e sintomas
-        return React.createElement('div', { className: 'step' },
-          React.createElement('h3', { className: 'h4 fw-bold mb-4 text-gray-800' }, '🧠 Estado Atual e Sintomas'),
-          
-          React.createElement('details', { open: true },
-            React.createElement('summary', null, 'Estado Atual'),
-            React.createElement('div', { className: 'space-y-3' },
-              // Estado atual
-              React.createElement('div', null,
-                React.createElement('label', { className: 'form-label fw-bold' }, 'Como você está se sentindo? *'),
-                React.createElement('select', {
-                  className: 'form-select',
-                  value: formData.estadoAtual,
-                  onChange: (e) => handleChange('estadoAtual', e.target.value),
-                  required: true
-                },
-                  React.createElement('option', { value: '' }, 'Selecione...'),
-                  React.createElement('option', { value: 'Estável' }, 'Estável - Sem sintomas novos'),
-                  React.createElement('option', { value: 'Instável' }, 'Instável - Com sintomas novos'),
-                  React.createElement('option', { value: 'Crise' }, 'Em crise - Sintomas intensos')
-                )
-              ),
-              
-              // Estabilidade
-              React.createElement('div', null,
-                React.createElement('label', { className: 'form-label fw-bold' }, 'Está estável com o tratamento atual? *'),
-                React.createElement('select', {
-                  className: 'form-select',
-                  value: formData.estabilidade,
-                  onChange: (e) => handleChange('estabilidade', e.target.value),
-                  required: true
-                },
-                  React.createElement('option', { value: '' }, 'Selecione...'),
-                  React.createElement('option', { value: 'Sim, totalmente' }, 'Sim, totalmente'),
-                  React.createElement('option', { value: 'Parcialmente' }, 'Parcialmente'),
-                  React.createElement('option', { value: 'Não' }, 'Não')
-                )
-              )
-            )
-          ),
-          
-          React.createElement('details', null,
-            React.createElement('summary', null, 'Sintomas Ansiosos'),
-            React.createElement('div', { className: 'row g-2' },
-              sintomasAnsiososLista.map(sintoma =>
-                React.createElement('div', { key: sintoma, className: 'col-md-6' },
-                  React.createElement('div', { className: 'form-check' },
-                    React.createElement('input', {
-                      type: 'checkbox',
-                      className: 'form-check-input',
-                      id: `ansioso-${sintoma}`,
-                      checked: formData.sintomasAnsiosos.includes(sintoma),
-                      onChange: () => toggleCheckbox('sintomasAnsiosos', sintoma)
-                    }),
-                    React.createElement('label', {
-                      className: 'form-check-label',
-                      htmlFor: `ansioso-${sintoma}`
-                    }, sintoma)
-                  )
-                )
-              )
-            )
-          ),
-          
-          React.createElement('details', null,
-            React.createElement('summary', null, 'Sintomas Depressivos'),
-            React.createElement('div', { className: 'row g-2' },
-              sintomasDepressivosLista.map(sintoma =>
-                React.createElement('div', { key: sintoma, className: 'col-md-6' },
-                  React.createElement('div', { className: 'form-check' },
-                    React.createElement('input', {
-                      type: 'checkbox',
-                      className: 'form-check-input',
-                      id: `depressivo-${sintoma}`,
-                      checked: formData.sintomasDepressivos.includes(sintoma),
-                      onChange: () => toggleCheckbox('sintomasDepressivos', sintoma)
-                    }),
-                    React.createElement('label', {
-                      className: 'form-check-label',
-                      htmlFor: `depressivo-${sintoma}`
-                    }, sintoma)
-                  )
-                )
-              )
-            )
-          ),
-          
-          React.createElement('div', { className: 'button-group mt-4' },
-            React.createElement('button', {
-              onClick: prevStep,
-              className: 'btn btn-outline-secondary me-2'
-            }, '← Voltar'),
-            React.createElement('button', {
-              onClick: nextStep,
-              className: 'btn btn-teal',
-              disabled: !formData.estadoAtual || !formData.estabilidade
-            }, 'Próximo →')
-          )
-        );
-
-      case 4: // Avaliação de risco (OBRIGATÓRIO)
-        return React.createElement('div', { className: 'step' },
-          React.createElement('h3', { className: 'h4 fw-bold mb-4 text-gray-800' }, '⚠️ Avaliação de Risco (OBRIGATÓRIO)'),
-          
-          React.createElement('details', { open: true },
-            React.createElement('summary', null, 'Pensamentos sobre Morte/Autodestrutivos *'),
-            React.createElement('div', { className: 'space-y-3' },
-              React.createElement('select', {
-                className: 'form-select',
-                value: formData.pensamentosMorte,
-                onChange: (e) => handleChange('pensamentosMorte', e.target.value),
-                required: true
-              },
-                React.createElement('option', { value: '' }, 'Selecione...'),
-                React.createElement('option', { value: 'Ausentes' }, 'Ausentes'),
-                React.createElement('option', { value: 'Passivos (sem planejamento)' }, 'Passivos (sem planejamento)'),
-                React.createElement('option', { value: 'Ativos (com planejamento)' }, 'Ativos (com planejamento)'),
-                React.createElement('option', { value: 'Tentativa prévia' }, 'Tentativa prévia')
-              ),
-              
-              React.createElement('div', null,
-                React.createElement('label', { className: 'form-label fw-bold' }, 'Se houver, descreva planos específicos:'),
-                React.createElement('textarea', {
-                  className: 'form-control',
-                  rows: '3',
-                  value: formData.planosSuicidas,
-                  onChange: (e) => handleChange('planosSuicidas', e.target.value),
-                  placeholder: 'Descreva se houver planos específicos...'
-                })
-              )
-            )
-          ),
-          
-          React.createElement('details', null,
-            React.createElement('summary', null, 'Percepção da Realidade *'),
-            React.createElement('div', null,
-              React.createElement('select', {
-                className: 'form-select',
-                value: formData.percepRealidade,
-                onChange: (e) => handleChange('percepRealidade', e.target.value),
-                required: true
-              },
-                React.createElement('option', { value: '' }, 'Selecione...'),
-                React.createElement('option', { value: 'Preservada' }, 'Preservada'),
-                React.createElement('option', { value: 'Levemente comprometida' }, 'Levemente comprometida'),
-                React.createElement('option', { value: 'Moderadamente comprometida' }, 'Moderadamente comprometida'),
-                React.createElement('option', { value: 'Gravemente comprometida' }, 'Gravemente comprometida')
-              )
-            )
-          ),
-          
-          React.createElement('details', null,
-            React.createElement('summary', null, 'Queixa Principal'),
-            React.createElement('div', null,
-              React.createElement('textarea', {
-                className: 'form-control',
-                rows: '5',
-                value: formData.queixaPrincipal,
-                onChange: (e) => handleChange('queixaPrincipal', e.target.value),
-                placeholder: 'Descreva detalhadamente sua queixa principal...',
-                required: true
-              })
-            )
-          ),
-          
-          React.createElement('div', { className: 'button-group mt-4' },
-            React.createElement('button', {
-              onClick: prevStep,
-              className: 'btn btn-outline-secondary me-2'
-            }, '← Voltar'),
-            React.createElement('button', {
-              onClick: nextStep,
-              className: 'btn btn-teal',
-              disabled: !formData.pensamentosMorte || !formData.percepRealidade || !formData.queixaPrincipal
-            }, 'Próximo →')
-          )
-        );
-
-      case 5: // Conduta terapêutica
-        return React.createElement('div', { className: 'step' },
-          React.createElement('h3', { className: 'h4 fw-bold mb-4 text-gray-800' }, '💊 Conduta Terapêutica'),
-          
-          React.createElement('details', { open: true },
-            React.createElement('summary', null, 'Medicação Prescrita'),
-            React.createElement('div', null,
-              React.createElement('p', { className: 'text-muted mb-3' }, 'Selecione os medicamentos:'),
-              React.createElement('div', { className: 'row g-2' },
-                medicamentosLista.map(medicamento =>
-                  React.createElement('div', { key: medicamento, className: 'col-md-6' },
-                    React.createElement('div', { className: 'form-check' },
-                      React.createElement('input', {
-                        type: 'checkbox',
-                        className: 'form-check-input',
-                        id: `med-${medicamento}`,
-                        checked: formData.medicacaoPrescrita.includes(medicamento),
-                        onChange: () => toggleCheckbox('medicacaoPrescrita', medicamento)
-                      }),
-                      React.createElement('label', {
-                        className: 'form-check-label',
-                        htmlFor: `med-${medicamento}`
-                      }, medicamento)
-                    )
-                  )
-                )
-              )
-            )
-          ),
-          
-          React.createElement('details', null,
-            React.createElement('summary', null, 'Posologia'),
-            React.createElement('div', { className: 'space-y-3' },
-              React.createElement('div', null,
-                React.createElement('label', { className: 'form-label fw-bold' }, 'Dose:'),
-                React.createElement('input', {
-                  type: 'text',
-                  className: 'form-control',
-                  value: formData.dose,
-                  onChange: (e) => handleChange('dose', e.target.value),
-                  placeholder: 'Ex: 50mg'
-                })
-              ),
-              
-              React.createElement('div', null,
-                React.createElement('label', { className: 'form-label fw-bold' }, 'Posologia:'),
-                React.createElement('input', {
-                  type: 'text',
-                  className: 'form-control',
-                  value: formData.posologia,
-                  onChange: (e) => handleChange('posologia', e.target.value),
-                  placeholder: 'Ex: 1x ao dia'
-                })
-              )
-            )
-          ),
-          
-          React.createElement('details', null,
-            React.createElement('summary', null, 'Recomendações'),
-            React.createElement('div', null,
-              React.createElement('textarea', {
-                className: 'form-control',
-                rows: '4',
-                value: formData.recomendacoes,
-                onChange: (e) => handleChange('recomendacoes', e.target.value),
-                placeholder: 'Recomendações adicionais...'
-              })
-            )
-          ),
-          
-          React.createElement('div', { className: 'button-group mt-4' },
-            React.createElement('button', {
-              onClick: prevStep,
-              className: 'btn btn-outline-secondary me-2'
-            }, '← Voltar'),
-            React.createElement('button', {
-              onClick: nextStep,
-              className: 'btn btn-teal'
-            }, 'Próximo →')
-          )
-        );
-
-      case 6: // Pagamento e envio
-        const total = (parseFloat(formData.valorConsulta) + parseFloat(formData.valorLaudo)).toFixed(2);
+        .app {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
         
-        return React.createElement('div', { className: 'step' },
-          React.createElement('h3', { className: 'h4 fw-bold mb-4 text-gray-800' }, '💰 Resumo e Pagamento'),
-          
-          React.createElement('div', {
-            className: 'price-summary p-4 rounded-lg bg-light mb-4'
-          },
-            React.createElement('div', {
-              className: 'price-item d-flex justify-content-between py-2 border-bottom'
-            },
-              React.createElement('span', null, 'Consulta Online (30min)'),
-              React.createElement('span', { className: 'fw-bold' }, `R$ ${formData.valorConsulta}`)
-            ),
-            
-            formData.valorLaudo !== '0' && React.createElement('div', {
-              className: 'price-item d-flex justify-content-between py-2 border-bottom'
-            },
-              React.createElement('span', null, 
-                formData.valorLaudo === '80.00' ? 'Laudo Psiquiátrico (sem RQE)' : 'Laudo Psiquiátrico (com RQE)'
-              ),
-              React.createElement('span', { className: 'fw-bold' }, `R$ ${formData.valorLaudo}`)
-            ),
-            
-            React.createElement('div', {
-              className: 'price-total d-flex justify-content-between py-3 mt-2'
-            },
-              React.createElement('span', { className: 'fw-bold fs-5' }, 'TOTAL'),
-              React.createElement('span', { className: 'fw-bold fs-5 text-teal-700' }, `R$ ${total}`)
-            )
-          ),
-          
-          React.createElement('div', { className: 'alert alert-warning mb-4' },
-            React.createElement('i', { className: 'fas fa-exclamation-triangle me-2' }),
-            '⚠️ Importante: Anexe o comprovante no app primeiro, depois envie pelo WhatsApp para confirmação.'
-          ),
-          
-          React.createElement('div', { className: 'text-center' },
-            React.createElement('p', { className: 'text-muted mb-4' },
-              'Clique abaixo para gerar a mensagem do WhatsApp com todos os dados:'
-            ),
-            
-            React.createElement('button', {
-              onClick: sendToWhatsApp,
-              className: 'whatsapp-btn mb-3',
-              style: {
-                background: 'linear-gradient(135deg, #25d366, #128C7E)',
-                color: 'white',
-                padding: '15px 40px',
-                borderRadius: '50px',
-                fontWeight: '800',
-                fontSize: '1.2rem',
-                border: 'none',
-                boxShadow: '0 6px 20px rgba(37, 211, 102, 0.4)'
-              }
-            },
-              React.createElement('i', { className: 'fab fa-whatsapp me-2' }),
-              'Enviar via WhatsApp'
-            ),
-            
-            React.createElement('p', { className: 'small text-muted' },
-              'Após enviar, não se esqueça de anexar o comprovante!'
-            )
-          ),
-          
-          React.createElement('div', { className: 'button-group mt-5' },
-            React.createElement('button', {
-              onClick: prevStep,
-              className: 'btn btn-outline-secondary'
-            }, '← Voltar')
-          )
-        );
-
-      default:
-        return React.createElement('div', null, 'Etapa não encontrada');
-    }
-  };
-
-  return React.createElement(React.Fragment, null,
-    showTerms && TermsModal(),
+        /* Modal de Termos */
+        .terms-modal {
+            padding: 40px;
+        }
+        
+        .modal-content {
+            text-align: center;
+        }
+        
+        .modal-content h1 {
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+        
+        .modal-content h2 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .terms-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            margin: 30px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        .btn-accept {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: transform 0.3s;
+        }
+        
+        /* Barra de Progresso */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            position: relative;
+        }
+        
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        /* Serviços */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .service-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        /* Formulários */
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        /* Botões */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Rodapé */
+        .app-footer {
+            background: #f7fafc;
+            padding: 20px;
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+        }
+        
+        /* Adicione mais estilos conforme necessário... */
+    </style>
+</head>
+<body>
+    <div id="root"></div>
     
-    React.createElement('div', {
-      className: 'container py-5',
-      style: { maxWidth: '800px' }
-    },
-      // Barra de progresso
-      React.createElement('div', {
-        className: 'progress mb-4',
-        style: { height: '8px' }
-      },
-        React.createElement('div', {
-          className: 'progress-bar',
-          style: { 
-            width: `${(step / 6) * 100}%`,
-            background: '#0d9488'
-          }
-        })
-      ),
-      
-      // Indicador de etapa
-      React.createElement('div', {
-        className: 'text-center text-muted mb-5'
-      }, `Etapa ${step} de 6`),
-      
-      // Container do formulário
-      React.createElement('div', {
-        className: 'card shadow-lg border-0'
-      },
-        React.createElement('div', { className: 'card-body p-4 p-md-5' },
-          renderStep()
-        )
-      ),
-      
-      // Rodapé
-      step === 6 && React.createElement('div', {
-        className: 'text-center mt-4 text-muted small'
-      },
-        'Dr. Marcelo Medeiros | CRM 47960 | Atendimento online conforme resoluções CFM'
-      )
-    )
-  );
-}
-
-// Adicionar CSS adicional
-const style = document.createElement('style');
-style.textContent = `
-  .container { max-width: 800px; margin: 0 auto; }
-  .card { border-radius: 20px; overflow: hidden; }
-  .progress-bar { transition: width 0.3s ease; }
-  .service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(13, 148, 136, 0.15); }
-  .whatsapp-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5) !important; }
-  .btn-teal { background: #0d9488; color: white; border: none; }
-  .btn-teal:hover { background: #0f766e; color: white; }
-  .btn-teal:disabled { background: #9ca3af; }
-  .price-summary { background: #f8fafc; }
-`;
-
-document.head.appendChild(style);
-
-// Renderizar o app
-ReactDOM.createRoot(document.getElementById('root')).render(
-  React.createElement(React.StrictMode, null,
-    React.createElement(App)
-  )
-);
+    <script type="text/babel">
+        // TODO O CÓDIGO REACT AQUI DENTRO
+        const { useState, useEffect } = React;
+        
+        function App() {
+            // ESTADOS E DADOS AQUI (mesmo código que mostrei anteriormente)
+            const [step, setStep] = useState(1);
+            const [showTerms, setShowTerms] = useState(true);
+            const [selectedService, setSelectedService] = useState(null);
+            // ... todo o resto do código React aqui
+            
+            return (
+                <div className="app">
+                    {/* O conteúdo do app aqui */}
+                </div>
+            );
+        }
+        
+        // Renderizar
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
