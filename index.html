@@ -98,6 +98,7 @@
             height: 100%;
             background: white;
             margin-bottom: 20px;
+            cursor: pointer;
         }
         .service-card:hover {
             transform: translateY(-5px);
@@ -124,7 +125,7 @@
         }
         
         /* Container do React */
-        #root {
+        #app-root {
             min-height: 500px;
             margin: 30px 0;
         }
@@ -136,6 +137,166 @@
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             margin: 30px 0;
+        }
+        
+        /* Modal de Termos */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        /* Estilos do formulário */
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-control, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--teal-primary);
+            outline: none;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .checkbox-item input {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .btn-back {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+        
+        .btn-back:hover {
+            background: #e5e7eb;
+        }
+        
+        .btn-next {
+            background: var(--teal-primary);
+            color: white;
+        }
+        
+        .btn-next:hover {
+            background: var(--dark-teal);
+        }
+        
+        .btn-whatsapp {
+            background: var(--whatsapp-green) !important;
+            color: white !important;
+        }
+        
+        .btn-whatsapp:hover {
+            background: #128C7E !important;
+        }
+        
+        .progress-container {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--teal-primary);
+            transition: width 0.3s;
+        }
+        
+        .step-indicator {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        /* Alertas */
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid;
+        }
+        
+        .alert-info {
+            background: #f0f9ff;
+            border-color: var(--teal-primary);
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            border-color: #d97706;
         }
     </style>
 </head>
@@ -190,7 +351,7 @@
             
             <div class="row">
                 <div class="col-md-4">
-                    <div class="service-card">
+                    <div class="service-card" onclick="selectService('consulta')">
                         <i class="fas fa-video fa-3x mb-3" style="color: var(--teal-primary);"></i>
                         <h3 class="h5 fw-800 mb-3">Consulta Online</h3>
                         <div class="price-tag">R$ 99,90</div>
@@ -199,11 +360,14 @@
                             <i class="fas fa-stethoscope me-1"></i> Diagnóstico especializado<br>
                             <i class="fas fa-file-medical me-1"></i> Acompanhamento completo
                         </p>
+                        <button class="whatsapp-btn" style="padding: 10px 25px; font-size: 0.9rem;">
+                            Selecionar
+                        </button>
                     </div>
                 </div>
                 
                 <div class="col-md-4">
-                    <div class="service-card">
+                    <div class="service-card" onclick="selectService('laudoSemRQE')">
                         <i class="fas fa-file-contract fa-3x mb-3" style="color: var(--teal-primary);"></i>
                         <h3 class="h5 fw-800 mb-3">Laudo Psiquiátrico</h3>
                         <div class="price-tag">R$ 80,00</div>
@@ -212,11 +376,14 @@
                             <i class="fas fa-clipboard-check me-1"></i> Elaboração detalhada<br>
                             <i class="fas fa-shield-alt me-1"></i> Documento oficial
                         </p>
+                        <button class="whatsapp-btn" style="padding: 10px 25px; font-size: 0.9rem;">
+                            Selecionar
+                        </button>
                     </div>
                 </div>
                 
                 <div class="col-md-4">
-                    <div class="service-card">
+                    <div class="service-card" onclick="selectService('laudoComRQE')">
                         <i class="fas fa-file-signature fa-3x mb-3" style="color: var(--teal-primary);"></i>
                         <h3 class="h5 fw-800 mb-3">Laudo com RQE</h3>
                         <div class="price-tag">R$ 250,00</div>
@@ -225,20 +392,26 @@
                             <i class="fas fa-search me-1"></i> Avaliação completa<br>
                             <i class="fas fa-gavel me-1"></i> Para fins legais
                         </p>
+                        <button class="whatsapp-btn" style="padding: 10px 25px; font-size: 0.9rem;">
+                            Selecionar
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FORMULÁRIO REACT AQUI -->
+    <!-- FORMULÁRIO DE ANAMNESE -->
     <section class="py-4">
         <div class="container">
             <div class="react-app-container">
                 <h2 class="text-center h3 fw-900 mb-4" style="color: var(--dark-teal);">
-                    📋 Formulário de Consulta Online
+                    📋 Formulário de Anamnese Psiquiátrica
                 </h2>
-                <div id="root"></div>
+                
+                <div id="app-root">
+                    <!-- Aqui será injetado o formulário dinâmico -->
+                </div>
             </div>
         </div>
     </section>
@@ -251,11 +424,15 @@
             </h3>
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <div class="alert alert-info" style="border-left: 4px solid var(--teal-primary);">
-                        <p class="mb-2"><strong>1.</strong> Preencha todo o formulário acima</p>
-                        <p class="mb-2"><strong>2.</strong> No final, clique no botão do WhatsApp</p>
-                        <p class="mb-2"><strong>3.</strong> Anexe o comprovante de pagamento no app primeiro</p>
-                        <p class="mb-0"><strong>4.</strong> Depois envie a mensagem pelo WhatsApp para confirmação</p>
+                    <div class="alert alert-info">
+                        <p class="mb-2"><strong>1.</strong> Selecione o serviço desejado acima</p>
+                        <p class="mb-2"><strong>2.</strong> Preencha a anamnese completa com atenção</p>
+                        <p class="mb-2"><strong>3.</strong> No final, clique no botão do WhatsApp</p>
+                        <p class="mb-2"><strong>4.</strong> Anexe o comprovante de pagamento no app primeiro</p>
+                        <p class="mb-0"><strong>5.</strong> Depois envie a mensagem pelo WhatsApp para confirmação</p>
+                    </div>
+                    <div class="alert alert-warning">
+                        <p class="mb-0"><strong>⚠️ ATENÇÃO:</strong> Itens marcados com * são OBRIGATÓRIOS</p>
                     </div>
                     <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20tenho%20dúvidas%20sobre%20as%20consultas%20online" 
                        class="whatsapp-btn mt-3" target="_blank">
@@ -298,26 +475,318 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- React CDN -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
-    <!-- Meu App React -->
-    <script src="./main.jsx"></script>
-    
     <script>
-        // Service Worker para PWA
-        if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("/service-worker.js")
-                    .then((registration) => { 
-                        console.log("App carregado com sucesso!"); 
-                    })
-                    .catch((err) => { 
-                        console.log("SW registration failed: ", err); 
-                    });
-            });
+        // DADOS DO APP
+        let selectedService = null;
+        let currentStep = 1;
+        const totalSteps = 6;
+        
+        // Serviços disponíveis
+        const services = {
+            consulta: {
+                id: 'consulta',
+                nome: 'Consulta Online (30min)',
+                valor: '99.90',
+                descricao: 'Videochamada + diagnóstico',
+                stripeLink: 'https://buy.stripe.com/9AQ2bd0nV29U9wUfZ4' // Link Stripe atualizado
+            },
+            laudoSemRQE: {
+                id: 'laudoSemRQE',
+                nome: 'Laudo Psiquiátrico (sem RQE)',
+                valor: '80.00',
+                descricao: 'Documento oficial',
+                stripeLink: 'https://buy.stripe.com/eVa8zx0nV5wA4LWaEQ' // Link Stripe atualizado
+            },
+            laudoComRQE: {
+                id: 'laudoComRQE',
+                nome: 'Laudo Psiquiátrico (com RQE)',
+                valor: '250.00',
+                descricao: 'Com registro de qualificação',
+                stripeLink: 'https://buy.stripe.com/dR6eZjcOq8HJ2Z2aEH' // Link Stripe atualizado
+            }
+        };
+
+        // Dados do formulário
+        let formData = {
+            // Dados pessoais
+            nome: '',
+            idade: '',
+            telefone: '',
+            email: '',
+            
+            // Serviço selecionado
+            servico: '',
+            
+            // Estado atual
+            estadoAtual: '',
+            estabilidadeTratamento: '',
+            
+            // Sintomas
+            sintomasAnsiosos: [],
+            sintomasDepressivos: [],
+            sintomasHumor: [],
+            
+            // Avaliação de risco (OBRIGATÓRIOS)
+            pensamentosMorte: '',
+            percepRealidade: '',
+            
+            // Queixa principal
+            queixaPrincipal: '',
+            
+            // Histórico
+            historicoPsiquiatrico: '',
+            medicacaoAtual: '',
+            comorbidades: '',
+            
+            // Conduta
+            medicacaoPrescrita: [],
+            dose: '',
+            posologia: '',
+            recomendacoes: ''
+        };
+
+        // Listas para checkboxes
+        const sintomasAnsiososLista = [
+            "Ansiedade excessiva", "Preocupação constante", "Ataques de pânico",
+            "Medos intensos", "Inquietação", "Tensão muscular",
+            "Insônia", "Irritabilidade", "Dificuldade de concentração"
+        ];
+
+        const sintomasDepressivosLista = [
+            "Tristeza persistente", "Perda de interesse", "Fadiga constante",
+            "Alterações de apetite", "Problemas de sono", "Sentimentos de culpa",
+            "Dificuldade de concentração", "Pensamentos de morte", "Apatia"
+        ];
+
+        const sintomasHumorLista = [
+            "Variações bruscas de humor", "Euforia excessiva", "Irritabilidade",
+            "Impulsividade", "Agressividade", "Choro fácil"
+        ];
+
+        const medicamentosLista = [
+            "Sertralina", "Escitalopram", "Fluoxetina", "Paroxetina",
+            "Venlafaxina", "Duloxetina", "Bupropiona", "Mirtazapina",
+            "Clonazepam", "Alprazolam", "Quetiapina", "Olanzapina",
+            "Valproato", "Lamotrigina", "Lítio", "Metilfenidato"
+        ];
+
+        // FUNÇÕES PRINCIPAIS
+        function selectService(serviceId) {
+            selectedService = services[serviceId];
+            formData.servico = selectedService.nome;
+            
+            // Mostrar modal de termos
+            showTermsModal();
         }
-    </script>
-</body>
-</html>
+
+        function showTermsModal() {
+            const modalHtml = `
+                <div class="modal-overlay" id="termsModal">
+                    <div class="modal-content">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-shield-alt fa-3x text-teal-600 mb-3"></i>
+                            <h2 class="h4 fw-bold text-gray-800">Termos de Consentimento</h2>
+                            <p class="text-muted">Leia e aceite para continuar</p>
+                        </div>
+                        
+                        <div style="height: 300px; overflow-y: auto; background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <p class="fw-bold mb-2">CONSENTIMENTO PARA ATENDIMENTO ONLINE</p>
+                            <p class="mb-2">Ao continuar, você, paciente, declara estar ciente e concordar com os seguintes termos, em conformidade com as resoluções do Conselho Federal de Medicina (CFM):</p>
+                            <p><strong>1. Natureza do Atendimento:</strong> A solicitação de receita/laudo online não substitui uma consulta completa em casos de emergência ou quadros complexos.</p>
+                            <p class="mb-2"><strong>2. Veracidade das Informações:</strong> Você é o único responsável pela veracidade e exatidão das informações preenchidas.</p>
+                            <p class="mb-2"><strong>3. Sigilo e Privacidade:</strong> Todos os seus dados serão tratados com o mais rigoroso sigilo médico-paciente (LGPD).</p>
+                            <p class="mb-2"><strong>4. Pagamento e Análise:</strong> A análise da sua solicitação será iniciada após a confirmação do pagamento. O pagamento não garante a emissão do documento, que dependerá da análise clínica do médico.</p>
+                            <p class="mb-2"><strong>5. Emergências:</strong> Em caso de emergência, você deve procurar atendimento presencial imediatamente.</p>
+                        </div>
+                        
+                        <button onclick="acceptTerms()" class="btn w-100" style="background: #0d9488; color: white; padding: 12px; font-weight: bold; border-radius: 10px;">
+                            Li e Aceito os Termos
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function acceptTerms() {
+            document.getElementById('termsModal').remove();
+            showAnamneseForm();
+        }
+
+        function showAnamneseForm() {
+            currentStep = 1;
+            updateForm();
+        }
+
+        function updateForm() {
+            const appRoot = document.getElementById('app-root');
+            if (!appRoot) return;
+            
+            let html = `
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: ${(currentStep / totalSteps) * 100}%"></div>
+                </div>
+                
+                <div class="step-indicator">
+                    Etapa ${currentStep} de ${totalSteps}
+                </div>
+            `;
+            
+            switch(currentStep) {
+                case 1: // Dados pessoais
+                    html += `
+                        <div class="form-step active">
+                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">📋 Dados Pessoais</h3>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Nome completo *</label>
+                                <input type="text" class="form-control" id="nome" value="${formData.nome}" 
+                                       onchange="updateField('nome', this.value)" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Idade *</label>
+                                <input type="number" class="form-control" id="idade" value="${formData.idade}" 
+                                       onchange="updateField('idade', this.value)" min="1" max="120" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Telefone (WhatsApp) *</label>
+                                <input type="tel" class="form-control" id="telefone" value="${formData.telefone}" 
+                                       onchange="updateField('telefone', this.value)" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" value="${formData.email}" 
+                                       onchange="updateField('email', this.value)">
+                            </div>
+                            
+                            <div class="button-group">
+                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
+                                <button class="btn btn-next" onclick="nextStep()" 
+                                        ${!formData.nome || !formData.idade || !formData.telefone ? 'disabled' : ''}>
+                                    Próximo →
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 2: // Estado atual
+                    html += `
+                        <div class="form-step active">
+                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">🧠 Estado Atual</h3>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Como você está se sentindo? *</label>
+                                <select class="form-select" id="estadoAtual" onchange="updateField('estadoAtual', this.value)" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Estável" ${formData.estadoAtual === 'Estável' ? 'selected' : ''}>Estável - Sem sintomas novos</option>
+                                    <option value="Instável" ${formData.estadoAtual === 'Instável' ? 'selected' : ''}>Instável - Com sintomas novos</option>
+                                    <option value="Crise" ${formData.estadoAtual === 'Crise' ? 'selected' : ''}>Em crise - Sintomas intensos</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Está estável com o tratamento atual? *</label>
+                                <select class="form-select" id="estabilidadeTratamento" onchange="updateField('estabilidadeTratamento', this.value)" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Sim, totalmente" ${formData.estabilidadeTratamento === 'Sim, totalmente' ? 'selected' : ''}>Sim, totalmente</option>
+                                    <option value="Parcialmente" ${formData.estabilidadeTratamento === 'Parcialmente' ? 'selected' : ''}>Parcialmente</option>
+                                    <option value="Não" ${formData.estabilidadeTratamento === 'Não' ? 'selected' : ''}>Não</option>
+                                </select>
+                            </div>
+                            
+                            <div class="button-group">
+                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
+                                <button class="btn btn-next" onclick="nextStep()" 
+                                        ${!formData.estadoAtual || !formData.estabilidadeTratamento ? 'disabled' : ''}>
+                                    Próximo →
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 3: // Sintomas
+                    html += `
+                        <div class="form-step active">
+                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">🔍 Sintomas Presentes</h3>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Sintomas Ansiosos</label>
+                                <div class="checkbox-group">
+                                    ${sintomasAnsiososLista.map(sintoma => `
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="ansioso-${sintoma}" 
+                                                   ${formData.sintomasAnsiosos.includes(sintoma) ? 'checked' : ''}
+                                                   onchange="toggleCheckbox('sintomasAnsiosos', '${sintoma}')">
+                                            <label for="ansioso-${sintoma}">${sintoma}</label>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Sintomas Depressivos</label>
+                                <div class="checkbox-group">
+                                    ${sintomasDepressivosLista.map(sintoma => `
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="depressivo-${sintoma}" 
+                                                   ${formData.sintomasDepressivos.includes(sintoma) ? 'checked' : ''}
+                                                   onchange="toggleCheckbox('sintomasDepressivos', '${sintoma}')">
+                                            <label for="depressivo-${sintoma}">${sintoma}</label>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Sintomas de Humor</label>
+                                <div class="checkbox-group">
+                                    ${sintomasHumorLista.map(sintoma => `
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="humor-${sintoma}" 
+                                                   ${formData.sintomasHumor.includes(sintoma) ? 'checked' : ''}
+                                                   onchange="toggleCheckbox('sintomasHumor', '${sintoma}')">
+                                            <label for="humor-${sintoma}">${sintoma}</label>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="button-group">
+                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
+                                <button class="btn btn-next" onclick="nextStep()">Próximo →</button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 4: // Avaliação de risco (OBRIGATÓRIO)
+                    html += `
+                        <div class="form-step active">
+                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">⚠️ Avaliação de Risco (OBRIGATÓRIO)</h3>
+                            
+                            <div class="alert alert-warning">
+                                <p class="mb-0">Estes campos são <strong>OBRIGATÓRIOS</strong> para sua segurança</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Pensamentos sobre morte/autodestrutivos *</label>
+                                <select class="form-select" id="pensamentosMorte" onchange="updateField('pensamentosMorte', this.value)" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Ausentes" ${formData.pensamentosMorte === 'Ausentes' ? 'selected' : ''}>Ausentes</option>
+                                    <option value="Passivos (sem planejamento)" ${formData.pensamentosMorte === 'Passivos (sem planejamento)' ? 'selected' : ''}>Passivos (sem planejamento)</option>
+                                    <option value="Ativos (com planejamento)" ${formData.pensamentosMorte === 'Ativos (com planejamento)' ? 'selected' : ''}>Ativos (com planejamento)</option>
+                                    <option value="Tentativa prévia" ${formData.pensamentosMorte === 'Tentativa prévia' ? 'selected' : ''}>Tentativa prévia</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Percepção da realidade/orientação *</label>
+                                <select class="form-select" id="percepRealidade" onchange="updateField('percepRealidade', this.value)" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Preservada"
