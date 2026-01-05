@@ -23,6 +23,7 @@
             line-height: 1.6; 
             color: #333;
             background: #f7f9fb;
+            padding-bottom: 30px;
         }
         
         /* WhatsApp Flutuante */
@@ -124,14 +125,14 @@
             display: inline-block;
         }
         
-        /* Container do React */
-        #app-root {
+        /* Container do Formulário */
+        #form-container {
             min-height: 500px;
             margin: 30px 0;
         }
         
-        /* Estilos do React App */
-        .react-app-container {
+        /* Estilos do Formulário */
+        .form-container {
             background: white;
             border-radius: 20px;
             padding: 30px;
@@ -298,6 +299,54 @@
             background: #fef3c7;
             border-color: #d97706;
         }
+
+        /* Resumo do Pedido */
+        .order-summary {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 2px solid #e5e7eb;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 18px 0;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--dark-teal);
+        }
+
+        .stripe-btn {
+            background: #635bff;
+            color: white;
+            padding: 16px 30px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            width: 100%;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+        }
+
+        .stripe-btn:hover {
+            background: #4f46e5;
+            color: white;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -312,10 +361,11 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-3 text-center">
-                    <!-- SUA FOTO DO IMGBB AQUI -->
+                    <!-- SUA FOTO DO IMGBB AQUI - ATUALIZE ESTE LINK -->
                     <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" 
                          class="doctor-photo" 
-                         alt="Dr. Marcelo Medeiros">
+                         alt="Dr. Marcelo Medeiros"
+                         onerror="this.src='https://via.placeholder.com/120/0d9488/FFFFFF?text=Dr.+Marcelo'">
                 </div>
                 <div class="col-md-6">
                     <h1 class="h3 fw-900 mb-2" style="color: var(--dark-teal);">
@@ -404,13 +454,17 @@
     <!-- FORMULÁRIO DE ANAMNESE -->
     <section class="py-4">
         <div class="container">
-            <div class="react-app-container">
+            <div class="form-container">
                 <h2 class="text-center h3 fw-900 mb-4" style="color: var(--dark-teal);">
                     📋 Formulário de Anamnese Psiquiátrica
                 </h2>
                 
-                <div id="app-root">
-                    <!-- Aqui será injetado o formulário dinâmico -->
+                <div id="form-container">
+                    <!-- Formulário será injetado aqui pelo JavaScript -->
+                    <div class="text-center text-muted" id="form-placeholder">
+                        <i class="fas fa-clipboard-list fa-3x mb-3" style="color: #d1d5db;"></i>
+                        <p>Selecione um serviço acima para iniciar o formulário</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -427,9 +481,9 @@
                     <div class="alert alert-info">
                         <p class="mb-2"><strong>1.</strong> Selecione o serviço desejado acima</p>
                         <p class="mb-2"><strong>2.</strong> Preencha a anamnese completa com atenção</p>
-                        <p class="mb-2"><strong>3.</strong> No final, clique no botão do WhatsApp</p>
-                        <p class="mb-2"><strong>4.</strong> Anexe o comprovante de pagamento no app primeiro</p>
-                        <p class="mb-0"><strong>5.</strong> Depois envie a mensagem pelo WhatsApp para confirmação</p>
+                        <p class="mb-2"><strong>3.</strong> Realize o pagamento pelo link seguro do Stripe</p>
+                        <p class="mb-2"><strong>4.</strong> No final, clique no botão do WhatsApp</p>
+                        <p class="mb-0"><strong>5.</strong> A mensagem será gerada automaticamente informando que o comprovante foi anexado no app</p>
                     </div>
                     <div class="alert alert-warning">
                         <p class="mb-0"><strong>⚠️ ATENÇÃO:</strong> Itens marcados com * são OBRIGATÓRIOS</p>
@@ -481,28 +535,28 @@
         let currentStep = 1;
         const totalSteps = 6;
         
-        // Serviços disponíveis
+        // Serviços disponíveis COM LINKS STRIPE ATUALIZADOS
         const services = {
             consulta: {
                 id: 'consulta',
                 nome: 'Consulta Online (30min)',
                 valor: '99.90',
                 descricao: 'Videochamada + diagnóstico',
-                stripeLink: 'https://buy.stripe.com/9AQ2bd0nV29U9wUfZ4' // Link Stripe atualizado
+                stripeLink: 'https://buy.stripe.com/9AQ2bd0nV29U9wUfZ4'
             },
             laudoSemRQE: {
                 id: 'laudoSemRQE',
                 nome: 'Laudo Psiquiátrico (sem RQE)',
                 valor: '80.00',
                 descricao: 'Documento oficial',
-                stripeLink: 'https://buy.stripe.com/eVa8zx0nV5wA4LWaEQ' // Link Stripe atualizado
+                stripeLink: 'https://buy.stripe.com/eVa8zx0nV5wA4LWaEQ'
             },
             laudoComRQE: {
                 id: 'laudoComRQE',
                 nome: 'Laudo Psiquiátrico (com RQE)',
                 valor: '250.00',
                 descricao: 'Com registro de qualificação',
-                stripeLink: 'https://buy.stripe.com/dR6eZjcOq8HJ2Z2aEH' // Link Stripe atualizado
+                stripeLink: 'https://buy.stripe.com/dR6eZjcOq8HJ2Z2aEH'
             }
         };
 
@@ -584,8 +638,8 @@
                 <div class="modal-overlay" id="termsModal">
                     <div class="modal-content">
                         <div class="text-center mb-4">
-                            <i class="fas fa-shield-alt fa-3x text-teal-600 mb-3"></i>
-                            <h2 class="h4 fw-bold text-gray-800">Termos de Consentimento</h2>
+                            <i class="fas fa-shield-alt fa-3x" style="color: #0d9488; margin-bottom: 15px;"></i>
+                            <h2 class="h4 fw-bold" style="color: #374151;">Termos de Consentimento</h2>
                             <p class="text-muted">Leia e aceite para continuar</p>
                         </div>
                         
@@ -620,8 +674,8 @@
         }
 
         function updateForm() {
-            const appRoot = document.getElementById('app-root');
-            if (!appRoot) return;
+            const formContainer = document.getElementById('form-container');
+            if (!formContainer) return;
             
             let html = `
                 <div class="progress-container">
@@ -789,4 +843,231 @@
                                 <label class="form-label">Percepção da realidade/orientação *</label>
                                 <select class="form-select" id="percepRealidade" onchange="updateField('percepRealidade', this.value)" required>
                                     <option value="">Selecione...</option>
-                                    <option value="Preservada"
+                                    <option value="Preservada" ${formData.percepRealidade === 'Preservada' ? 'selected' : ''}>Preservada</option>
+                                    <option value="Levemente comprometida" ${formData.percepRealidade === 'Levemente comprometida' ? 'selected' : ''}>Levemente comprometida</option>
+                                    <option value="Moderadamente comprometida" ${formData.percepRealidade === 'Moderadamente comprometida' ? 'selected' : ''}>Moderadamente comprometida</option>
+                                    <option value="Gravemente comprometida" ${formData.percepRealidade === 'Gravemente comprometida' ? 'selected' : ''}>Gravemente comprometida</option>
+                                </select>
+                            </div>
+                            
+                            <div class="button-group">
+                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
+                                <button class="btn btn-next" onclick="nextStep()" 
+                                        ${!formData.pensamentosMorte || !formData.percepRealidade ? 'disabled' : ''}>
+                                    Próximo →
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 5: // Histórico e queixa
+                    html += `
+                        <div class="form-step active">
+                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">📝 Histórico e Queixa</h3>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Queixa principal *</label>
+                                <textarea class="form-control" id="queixaPrincipal" rows="3" 
+                                          onchange="updateField('queixaPrincipal', this.value)" 
+                                          required>${formData.queixaPrincipal}</textarea>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Histórico psiquiátrico prévio</label>
+                                <textarea class="form-control" id="historicoPsiquiatrico" rows="3" 
+                                          onchange="updateField('historicoPsiquiatrico', this.value)">${formData.historicoPsiquiatrico}</textarea>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Medicação atual (se houver)</label>
+                                <textarea class="form-control" id="medicacaoAtual" rows="2" 
+                                          onchange="updateField('medicacaoAtual', this.value)">${formData.medicacaoAtual}</textarea>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Comorbidades clínicas conhecidas</label>
+                                <textarea class="form-control" id="comorbidades" rows="2" 
+                                          onchange="updateField('comorbidades', this.value)">${formData.comorbidades}</textarea>
+                            </div>
+                            
+                            <div class="button-group">
+                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
+                                <button class="btn btn-next" onclick="nextStep()" 
+                                        ${!formData.queixaPrincipal ? 'disabled' : ''}>
+                                    Próximo →
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 6: // Pagamento e WhatsApp
+                    html += `
+                        <div class="form-step active">
+                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">💰 Resumo e Pagamento</h3>
+                            
+                            <div class="order-summary">
+                                <div class="summary-item">
+                                    <span>Serviço selecionado:</span>
+                                    <span><strong>${selectedService.nome}</strong></span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Valor:</span>
+                                    <span>R$ ${selectedService.valor}</span>
+                                </div>
+                                <div class="summary-total">
+                                    <span>TOTAL A PAGAR:</span>
+                                    <span>R$ ${selectedService.valor}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <p class="mb-2"><strong>📋 Resumo do Processo:</strong></p>
+                                <p class="mb-1">1. Clique no botão abaixo para pagar via Stripe</p>
+                                <p class="mb-1">2. Após o pagamento, volte para esta página</p>
+                                <p class="mb-0">3. Clique no botão do WhatsApp para enviar seus dados</p>
+                            </div>
+                            
+                            <a href="${selectedService.stripeLink}" class="stripe-btn" target="_blank">
+                                <i class="fas fa-credit-card me-2"></i> Pagar R$ ${selectedService.valor} via Stripe
+                            </a>
+                            
+                            <div class="alert alert-warning">
+                                <p class="mb-0">⚠️ <strong>Após realizar o pagamento no Stripe, clique no botão abaixo</strong></p>
+                            </div>
+                            
+                            <div class="button-group">
+                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
+                                <button class="btn btn-whatsapp" onclick="sendToWhatsApp()">
+                                    <i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            formContainer.innerHTML = html;
+        }
+
+        // Funções auxiliares
+        function updateField(field, value) {
+            formData[field] = value;
+            
+            // Atualizar botão próximo se campos obrigatórios estiverem preenchidos
+            if (currentStep === 1 && field === 'nome' || field === 'idade' || field === 'telefone') {
+                const nextBtn = document.querySelector('.btn-next');
+                if (nextBtn) {
+                    nextBtn.disabled = !(formData.nome && formData.idade && formData.telefone);
+                }
+            }
+            
+            if (currentStep === 2 && (field === 'estadoAtual' || field === 'estabilidadeTratamento')) {
+                const nextBtn = document.querySelector('.btn-next');
+                if (nextBtn) {
+                    nextBtn.disabled = !(formData.estadoAtual && formData.estabilidadeTratamento);
+                }
+            }
+            
+            if (currentStep === 4 && (field === 'pensamentosMorte' || field === 'percepRealidade')) {
+                const nextBtn = document.querySelector('.btn-next');
+                if (nextBtn) {
+                    nextBtn.disabled = !(formData.pensamentosMorte && formData.percepRealidade);
+                }
+            }
+            
+            if (currentStep === 5 && field === 'queixaPrincipal') {
+                const nextBtn = document.querySelector('.btn-next');
+                if (nextBtn) {
+                    nextBtn.disabled = !formData.queixaPrincipal;
+                }
+            }
+        }
+
+        function toggleCheckbox(arrayName, value) {
+            const array = formData[arrayName];
+            const index = array.indexOf(value);
+            
+            if (index === -1) {
+                array.push(value);
+            } else {
+                array.splice(index, 1);
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateForm();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateForm();
+            }
+        }
+
+        function generateWhatsAppMessage() {
+            const sintomasAnsiososText = formData.sintomasAnsiosos.length > 0 ? 
+                formData.sintomasAnsiosos.join(', ') : 'Nenhum relatado';
+            
+            const sintomasDepressivosText = formData.sintomasDepressivos.length > 0 ? 
+                formData.sintomasDepressivos.join(', ') : 'Nenhum relatado';
+            
+            const sintomasHumorText = formData.sintomasHumor.length > 0 ? 
+                formData.sintomasHumor.join(', ') : 'Nenhum relatado';
+            
+            return `*CONSULTA PSIQUIÁTRICA - DR. MARCELO MEDEIROS*
+
+*DADOS DO PACIENTE*
+Nome: ${formData.nome}
+Idade: ${formData.idade}
+Telefone: ${formData.telefone}
+Email: ${formData.email || 'Não informado'}
+
+*SERVIÇO SOLICITADO*
+${formData.servico} - R$ ${selectedService.valor}
+
+*ESTADO ATUAL*
+Estado: ${formData.estadoAtual}
+Estabilidade do tratamento: ${formData.estabilidadeTratamento}
+
+*SINTOMAS RELATADOS*
+Ansiosos: ${sintomasAnsiososText}
+Depressivos: ${sintomasDepressivosText}
+Humor: ${sintomasHumorText}
+
+*AVALIAÇÃO DE RISCO (OBRIGATÓRIO)*
+Pensamentos sobre morte: ${formData.pensamentosMorte}
+Percepção da realidade: ${formData.percepRealidade}
+
+*QUEIXA E HISTÓRICO*
+Queixa principal: ${formData.queixaPrincipal}
+Histórico psiquiátrico: ${formData.historicoPsiquiatrico || 'Não informado'}
+Medicação atual: ${formData.medicacaoAtual || 'Nenhuma'}
+Comorbidades: ${formData.comorbidades || 'Nenhuma'}
+
+*COMPROVANTE DE PAGAMENTO*
+✅ Comprovante do pagamento de R$ ${selectedService.valor} já foi anexado no aplicativo.
+
+Por favor, confirme o recebimento desta solicitação.`;
+        }
+
+        function sendToWhatsApp() {
+            const message = generateWhatsAppMessage();
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/554491339060?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Aplicativo psiquiátrico carregado!');
+        });
+    </script>
+</body>
+</html>
