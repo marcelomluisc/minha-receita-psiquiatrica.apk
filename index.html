@@ -346,6 +346,21 @@
         .field-invalid {
             border-color: #dc2626 !important;
         }
+        
+        .whatsapp-loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f9ff;
+            border-radius: 10px;
+            border-left: 4px solid var(--whatsapp-green);
+        }
+        
+        .whatsapp-fallback {
+            display: none;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -418,10 +433,10 @@
                 <div class="col-md-4">
                     <div class="service-card" onclick="selectService('laudoSemRQE')">
                         <i class="fas fa-file-contract fa-3x mb-3" style="color: var(--teal-primary);"></i>
-                        <h3 class="h5 fw-800 mb-3">Laudo Psiquiátrico</h3>
-                        <div class="price-tag">R$ 80,00</div>
+                        <h3 class="h5 fw-800 mb-3">Laudo sem RQE + Consulta</h3>
+                        <div class="price-tag">R$ 180,00</div>
                         <p class="text-muted mb-3">
-                            <i class="fas fa-certificate me-1"></i> Sem RQE<br>
+                            <i class="fas fa-certificate me-1"></i> Laudo sem RQE + Consulta Online<br>
                             <i class="fas fa-clipboard-check me-1"></i> Elaboração detalhada<br>
                             <i class="fas fa-shield-alt me-1"></i> Documento oficial
                         </p>
@@ -532,9 +547,9 @@
         // DADOS DO APP
         let selectedService = null;
         let currentStep = 1;
-        const totalSteps = 5; // Agora são 5 etapas (sem pagamento)
+        const totalSteps = 5;
         
-        // Serviços disponíveis (SEM LINKS STRIPE)
+        // SERVICOS ATUALIZADOS - VALORES MODIFICADOS
         const services = {
             consulta: {
                 id: 'consulta',
@@ -544,13 +559,13 @@
             },
             laudoSemRQE: {
                 id: 'laudoSemRQE',
-                nome: 'Laudo Psiquiátrico (sem RQE)',
-                valor: '80,00',
-                descricao: 'Documento oficial'
+                nome: 'Laudo sem RQE + Consulta',
+                valor: '180,00', // VALOR ALTERADO DE 80,00 PARA 180,00
+                descricao: 'Laudo sem RQE + Consulta Online'
             },
             laudoComRQE: {
                 id: 'laudoComRQE',
-                nome: 'Laudo Psiquiátrico (com RQE)',
+                nome: 'Laudo com RQE',
                 valor: '250,00',
                 descricao: 'Com registro de qualificação'
             }
@@ -817,7 +832,7 @@
                     `;
                     break;
                     
-                case 4: // Avaliação de risco e queixa
+                case 4: // Avaliação de risco e queixa - OPÇÕES MODIFICADAS
                     html += `
                         <div class="form-step active">
                             <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">⚠️ Avaliação de Risco e Queixa</h3>
@@ -847,9 +862,8 @@
                                         required>
                                     <option value="">Selecione...</option>
                                     <option value="Preservada" ${formData.percepRealidade === 'Preservada' ? 'selected' : ''}>Preservada</option>
-                                    <option value="Levemente comprometida" ${formData.percepRealidade === 'Levemente comprometida' ? 'selected' : ''}>Levemente comprometida</option>
-                                    <option value="Moderadamente comprometida" ${formData.percepRealidade === 'Moderadamente comprometida' ? 'selected' : ''}>Moderadamente comprometida</option>
-                                    <option value="Gravemente comprometida" ${formData.percepRealidade === 'Gravemente comprometida' ? 'selected' : ''}>Gravemente comprometida</option>
+                                    <option value="Há planejamento de morte" ${formData.percepRealidade === 'Há planejamento de morte' ? 'selected' : ''}>Há planejamento de morte</option>
+                                    <option value="Comprometida" ${formData.percepRealidade === 'Comprometida' ? 'selected' : ''}>Comprometida</option>
                                 </select>
                                 <div class="validation-error" id="percepRealidade-error">Por favor, informe sobre a percepção da realidade</div>
                             </div>
@@ -987,9 +1001,25 @@
                                     <p class="mb-0">⚠️ <strong>ATENÇÃO:</strong> O agendamento só será confirmado após o pagamento</p>
                                 </div>
                                 
+                                <div id="whatsapp-loading" class="whatsapp-loading">
+                                    <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
+                                    <p>Abrindo WhatsApp...</p>
+                                </div>
+                                
+                                <div id="whatsapp-fallback" class="whatsapp-fallback alert alert-info" style="display: none;">
+                                    <p><strong>Se o WhatsApp não abriu automaticamente:</strong></p>
+                                    <p>1. Abra o WhatsApp manualmente</p>
+                                    <p>2. Envie mensagem para: <strong>554491339060</strong></p>
+                                    <p>3. Copie o texto abaixo:</p>
+                                    <textarea class="form-control mt-2 mb-2" rows="3" readonly id="whatsapp-text-fallback" style="font-size: 12px;"></textarea>
+                                    <button onclick="copyWhatsAppText()" class="btn btn-sm btn-secondary">
+                                        <i class="fas fa-copy me-1"></i> Copiar Texto
+                                    </button>
+                                </div>
+                                
                                 <div class="button-group">
                                     <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                    <button class="btn btn-whatsapp" onclick="sendToWhatsApp()">
+                                    <button class="btn btn-whatsapp" onclick="sendToWhatsApp()" id="whatsapp-btn">
                                         <i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp
                                     </button>
                                 </div>
@@ -1147,88 +1177,114 @@
             }
         }
 
+        // FUNÇÃO OTIMIZADA PARA WHATSAPP - ABERTURA RÁPIDA
         function generateWhatsAppMessage() {
             const sintomasAnsiososText = formData.sintomasAnsiosos.length > 0 ? 
-                formData.sintomasAnsiosos.join(', ') : 'Nenhum relatado';
+                formData.sintomasAnsiosos.join(', ') : 'Nenhum';
             
             const sintomasDepressivosText = formData.sintomasDepressivos.length > 0 ? 
-                formData.sintomasDepressivos.join(', ') : 'Nenhum relatado';
+                formData.sintomasDepressivos.join(', ') : 'Nenhum';
             
             const sintomasHumorText = formData.sintomasHumor.length > 0 ? 
-                formData.sintomasHumor.join(', ') : 'Nenhum relatado';
+                formData.sintomasHumor.join(', ') : 'Nenhum';
             
-            let historicoText = '';
-            if (formData.historicoPsiquiatrico) {
-                historicoText += `Histórico psiquiátrico: ${formData.historicoPsiquiatrico}\n`;
-            }
-            if (formData.medicacaoAtual) {
-                historicoText += `Medicação atual: ${formData.medicacaoAtual}\n`;
-            }
-            if (formData.comorbidades) {
-                historicoText += `Comorbidades: ${formData.comorbidades}\n`;
-            }
-            if (!historicoText) {
-                historicoText = 'Nenhum histórico adicional informado\n';
-            }
-            
-            return `*NOVA SOLICITAÇÃO DE CONSULTA - DR. MARCELO MEDEIROS*
+            return `NOVA SOLICITAÇÃO - DR. MARCELO MEDEIROS
 
-*DADOS DO PACIENTE*
-👤 Nome: ${formData.nome}
-🎂 Idade: ${formData.idade} anos
-📱 Telefone: ${formData.telefone}
-📧 Email: ${formData.email || 'Não informado'}
+PACIENTE
+Nome: ${formData.nome}
+Idade: ${formData.idade} anos
+Tel: ${formData.telefone}
+${formData.email ? `Email: ${formData.email}` : ''}
 
-*SERVIÇO SOLICITADO*
-🏥 ${formData.servico}
-💰 Valor: R$ ${selectedService.valor}
+SERVIÇO
+${formData.servico}
+Valor: R$ ${selectedService.valor}
 
-*ESTADO ATUAL*
-😊 Estado: ${formData.estadoAtual}
-⚖️ Estabilidade do tratamento: ${formData.estabilidadeTratamento}
+ESTADO
+Estado: ${formData.estadoAtual}
+Estabilidade: ${formData.estabilidadeTratamento}
 
-*SINTOMAS RELATADOS*
-😰 Ansiosos: ${sintomasAnsiososText}
-😔 Depressivos: ${sintomasDepressivosText}
-🎭 Humor: ${sintomasHumorText}
+SINTOMAS
+Ansiosos: ${sintomasAnsiososText}
+Depressivos: ${sintomasDepressivosText}
+Humor: ${sintomasHumorText}
 
-*AVALIAÇÃO DE RISCO (OBRIGATÓRIO)*
-⚠️ Pensamentos sobre morte: ${formData.pensamentosMorte}
-🧠 Percepção da realidade: ${formData.percepRealidade}
+AVALIAÇÃO DE RISCO
+Pensamentos morte: ${formData.pensamentosMorte}
+Percepção realidade: ${formData.percepRealidade}
 
-*QUEIXA PRINCIPAL*
-📝 ${formData.queixaPrincipal}
+QUEIXA PRINCIPAL
+${formData.queixaPrincipal}
 
-*HISTÓRICO ADICIONAL*
-${historicoText}
-*DATA/HORA DO ENVIO*
-📅 ${new Date().toLocaleDateString('pt-BR')}
-⏰ ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+${formData.historicoPsiquiatrico ? `Histórico: ${formData.historicoPsiquiatrico}` : ''}
+${formData.medicacaoAtual ? `Medicação: ${formData.medicacaoAtual}` : ''}
+${formData.comorbidades ? `Comorbidades: ${formData.comorbidades}` : ''}
 
-*PRÓXIMOS PASSOS*
-1. Aguardar confirmação da consulta
-2. Receber dados para pagamento (PIX/Stripe)
-3. Confirmar agendamento após pagamento`;
+Data: ${new Date().toLocaleDateString('pt-BR')}
+Hora: ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
         }
 
+        // FUNÇÃO OTIMIZADA PARA ENVIO RÁPIDO
         function sendToWhatsApp() {
             const message = generateWhatsAppMessage();
             const encodedMessage = encodeURIComponent(message);
+            
+            // URL OTIMIZADA - WhatsApp mobile (mais rápido)
             const whatsappUrl = `https://wa.me/554491339060?text=${encodedMessage}`;
             
-            window.open(whatsappUrl, '_blank');
+            // Mostra loading
+            const loadingEl = document.getElementById('whatsapp-loading');
+            const btn = document.getElementById('whatsapp-btn');
+            const fallbackEl = document.getElementById('whatsapp-fallback');
+            const fallbackText = document.getElementById('whatsapp-text-fallback');
             
-            // Feedback visual
-            const whatsappBtn = document.querySelector('.btn-whatsapp');
-            if (whatsappBtn) {
-                const originalText = whatsappBtn.innerHTML;
-                whatsappBtn.innerHTML = '<i class="fas fa-check me-2"></i> Enviado com Sucesso!';
-                whatsappBtn.style.background = '#10b981';
+            if (loadingEl) loadingEl.style.display = 'block';
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Preparando...';
+                btn.disabled = true;
+            }
+            
+            // Prepara fallback
+            if (fallbackText) fallbackText.value = message;
+            
+            // Abre WhatsApp após pequeno delay para UI
+            setTimeout(() => {
+                // Tenta abrir em nova janela
+                const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
                 
+                // Verifica se abriu
                 setTimeout(() => {
-                    whatsappBtn.innerHTML = originalText;
-                    whatsappBtn.style.background = '';
-                }, 3000);
+                    if (loadingEl) loadingEl.style.display = 'none';
+                    
+                    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                        // Se não abriu, mostra fallback
+                        if (fallbackEl) fallbackEl.style.display = 'block';
+                        if (btn) {
+                            btn.innerHTML = '<i class="fab fa-whatsapp me-2"></i> Tentar Novamente';
+                            btn.disabled = false;
+                        }
+                        alert('WhatsApp não abriu automaticamente. Use o método alternativo abaixo.');
+                    } else {
+                        // Se abriu, restaura botão
+                        if (btn) {
+                            btn.innerHTML = '<i class="fas fa-check me-2"></i> Enviado!';
+                            setTimeout(() => {
+                                btn.innerHTML = '<i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp';
+                                btn.disabled = false;
+                            }, 2000);
+                        }
+                    }
+                }, 1000);
+            }, 500);
+        }
+
+        function copyWhatsAppText() {
+            const textarea = document.getElementById('whatsapp-text-fallback');
+            if (textarea) {
+                textarea.select();
+                textarea.setSelectionRange(0, 99999);
+                document.execCommand('copy');
+                alert('Texto copiado para a área de transferência!');
             }
         }
 
