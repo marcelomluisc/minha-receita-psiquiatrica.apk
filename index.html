@@ -299,6 +299,11 @@
             background: #fef3c7;
             border-color: #d97706;
         }
+        
+        .alert-danger {
+            background: #fef2f2;
+            border-color: #dc2626;
+        }
 
         /* Resumo do Pedido */
         .order-summary {
@@ -325,27 +330,21 @@
             color: var(--dark-teal);
         }
 
-        .stripe-btn {
-            background: #635bff;
-            color: white;
-            padding: 16px 30px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            border: none;
-            width: 100%;
-            margin: 20px 0;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            display: block;
-            text-decoration: none;
+        .required-field::after {
+            content: " *";
+            color: #dc2626;
         }
-
-        .stripe-btn:hover {
-            background: #4f46e5;
-            color: white;
-            transform: translateY(-2px);
+        
+        .validation-error {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .field-invalid {
+            border-color: #dc2626 !important;
         }
     </style>
 </head>
@@ -361,7 +360,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-3 text-center">
-                    <!-- SUA FOTO DO IMGBB AQUI - ATUALIZE ESTE LINK -->
+                    <!-- ATUALIZE ESTE LINK COM SUA FOTO REAL -->
                     <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" 
                          class="doctor-photo" 
                          alt="Dr. Marcelo Medeiros"
@@ -464,6 +463,7 @@
                     <div class="text-center text-muted" id="form-placeholder">
                         <i class="fas fa-clipboard-list fa-3x mb-3" style="color: #d1d5db;"></i>
                         <p>Selecione um serviço acima para iniciar o formulário</p>
+                        <p class="small"><i class="fas fa-exclamation-circle me-1"></i> Todos os campos marcados com * são obrigatórios</p>
                     </div>
                 </div>
             </div>
@@ -480,13 +480,12 @@
                 <div class="col-md-8">
                     <div class="alert alert-info">
                         <p class="mb-2"><strong>1.</strong> Selecione o serviço desejado acima</p>
-                        <p class="mb-2"><strong>2.</strong> Preencha a anamnese completa com atenção</p>
-                        <p class="mb-2"><strong>3.</strong> Realize o pagamento pelo link seguro do Stripe</p>
-                        <p class="mb-2"><strong>4.</strong> No final, clique no botão do WhatsApp</p>
-                        <p class="mb-0"><strong>5.</strong> A mensagem será gerada automaticamente informando que o comprovante foi anexado no app</p>
+                        <p class="mb-2"><strong>2.</strong> Preencha <strong>TODOS</strong> os campos obrigatórios da anamnese (*)</p>
+                        <p class="mb-2"><strong>3.</strong> Ao final, clique no botão do WhatsApp para enviar</p>
+                        <p class="mb-0"><strong>4.</strong> Eu enviarei os dados para pagamento (PIX/Stripe) via WhatsApp</p>
                     </div>
                     <div class="alert alert-warning">
-                        <p class="mb-0"><strong>⚠️ ATENÇÃO:</strong> Itens marcados com * são OBRIGATÓRIOS</p>
+                        <p class="mb-0"><strong>⚠️ ATENÇÃO:</strong> O formulário completo é OBRIGATÓRIO para agendamento</p>
                     </div>
                     <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20tenho%20dúvidas%20sobre%20as%20consultas%20online" 
                        class="whatsapp-btn mt-3" target="_blank">
@@ -533,30 +532,27 @@
         // DADOS DO APP
         let selectedService = null;
         let currentStep = 1;
-        const totalSteps = 6;
+        const totalSteps = 5; // Agora são 5 etapas (sem pagamento)
         
-        // Serviços disponíveis COM LINKS STRIPE ATUALIZADOS
+        // Serviços disponíveis (SEM LINKS STRIPE)
         const services = {
             consulta: {
                 id: 'consulta',
                 nome: 'Consulta Online (30min)',
-                valor: '99.90',
-                descricao: 'Videochamada + diagnóstico',
-                stripeLink: 'https://buy.stripe.com/9AQ2bd0nV29U9wUfZ4'
+                valor: '99,90',
+                descricao: 'Videochamada + diagnóstico'
             },
             laudoSemRQE: {
                 id: 'laudoSemRQE',
                 nome: 'Laudo Psiquiátrico (sem RQE)',
-                valor: '80.00',
-                descricao: 'Documento oficial',
-                stripeLink: 'https://buy.stripe.com/eVa8zx0nV5wA4LWaEQ'
+                valor: '80,00',
+                descricao: 'Documento oficial'
             },
             laudoComRQE: {
                 id: 'laudoComRQE',
                 nome: 'Laudo Psiquiátrico (com RQE)',
-                valor: '250.00',
-                descricao: 'Com registro de qualificação',
-                stripeLink: 'https://buy.stripe.com/dR6eZjcOq8HJ2Z2aEH'
+                valor: '250,00',
+                descricao: 'Com registro de qualificação'
             }
         };
 
@@ -590,13 +586,7 @@
             // Histórico
             historicoPsiquiatrico: '',
             medicacaoAtual: '',
-            comorbidades: '',
-            
-            // Conduta
-            medicacaoPrescrita: [],
-            dose: '',
-            posologia: '',
-            recomendacoes: ''
+            comorbidades: ''
         };
 
         // Listas para checkboxes
@@ -615,13 +605,6 @@
         const sintomasHumorLista = [
             "Variações bruscas de humor", "Euforia excessiva", "Irritabilidade",
             "Impulsividade", "Agressividade", "Choro fácil"
-        ];
-
-        const medicamentosLista = [
-            "Sertralina", "Escitalopram", "Fluoxetina", "Paroxetina",
-            "Venlafaxina", "Duloxetina", "Bupropiona", "Mirtazapina",
-            "Clonazepam", "Alprazolam", "Quetiapina", "Olanzapina",
-            "Valproato", "Lamotrigina", "Lítio", "Metilfenidato"
         ];
 
         // FUNÇÕES PRINCIPAIS
@@ -649,7 +632,7 @@
                             <p><strong>1. Natureza do Atendimento:</strong> A solicitação de receita/laudo online não substitui uma consulta completa em casos de emergência ou quadros complexos.</p>
                             <p class="mb-2"><strong>2. Veracidade das Informações:</strong> Você é o único responsável pela veracidade e exatidão das informações preenchidas.</p>
                             <p class="mb-2"><strong>3. Sigilo e Privacidade:</strong> Todos os seus dados serão tratados com o mais rigoroso sigilo médico-paciente (LGPD).</p>
-                            <p class="mb-2"><strong>4. Pagamento e Análise:</strong> A análise da sua solicitação será iniciada após a confirmação do pagamento. O pagamento não garante a emissão do documento, que dependerá da análise clínica do médico.</p>
+                            <p class="mb-2"><strong>4. Análise Clínica:</strong> O envio deste formulário não garante a emissão do documento, que dependerá da análise clínica do médico.</p>
                             <p class="mb-2"><strong>5. Emergências:</strong> Em caso de emergência, você deve procurar atendimento presencial imediatamente.</p>
                         </div>
                         
@@ -694,33 +677,41 @@
                             <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">📋 Dados Pessoais</h3>
                             
                             <div class="mb-3">
-                                <label class="form-label">Nome completo *</label>
+                                <label class="form-label required-field">Nome completo</label>
                                 <input type="text" class="form-control" id="nome" value="${formData.nome}" 
-                                       onchange="updateField('nome', this.value)" required>
+                                       onchange="validateField('nome', this.value)" 
+                                       onblur="validateField('nome', this.value)"
+                                       required>
+                                <div class="validation-error" id="nome-error">Por favor, informe seu nome completo</div>
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">Idade *</label>
+                                <label class="form-label required-field">Idade</label>
                                 <input type="number" class="form-control" id="idade" value="${formData.idade}" 
-                                       onchange="updateField('idade', this.value)" min="1" max="120" required>
+                                       onchange="validateField('idade', this.value)"
+                                       onblur="validateField('idade', this.value)"
+                                       min="1" max="120" required>
+                                <div class="validation-error" id="idade-error">Por favor, informe sua idade (entre 1 e 120 anos)</div>
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">Telefone (WhatsApp) *</label>
+                                <label class="form-label required-field">Telefone (WhatsApp)</label>
                                 <input type="tel" class="form-control" id="telefone" value="${formData.telefone}" 
-                                       onchange="updateField('telefone', this.value)" required>
+                                       onchange="validateField('telefone', this.value)"
+                                       onblur="validateField('telefone', this.value)"
+                                       placeholder="(11) 99999-9999" required>
+                                <div class="validation-error" id="telefone-error">Por favor, informe um telefone válido</div>
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">Email</label>
+                                <label class="form-label">Email (opcional)</label>
                                 <input type="email" class="form-control" id="email" value="${formData.email}" 
                                        onchange="updateField('email', this.value)">
                             </div>
                             
                             <div class="button-group">
-                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                <button class="btn btn-next" onclick="nextStep()" 
-                                        ${!formData.nome || !formData.idade || !formData.telefone ? 'disabled' : ''}>
+                                <button class="btn btn-back" onclick="prevStep()" disabled>← Voltar</button>
+                                <button class="btn btn-next" onclick="validateStep1()">
                                     Próximo →
                                 </button>
                             </div>
@@ -734,29 +725,35 @@
                             <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">🧠 Estado Atual</h3>
                             
                             <div class="mb-4">
-                                <label class="form-label">Como você está se sentindo? *</label>
-                                <select class="form-select" id="estadoAtual" onchange="updateField('estadoAtual', this.value)" required>
+                                <label class="form-label required-field">Como você está se sentindo?</label>
+                                <select class="form-select" id="estadoAtual" 
+                                        onchange="validateField('estadoAtual', this.value)"
+                                        required>
                                     <option value="">Selecione...</option>
                                     <option value="Estável" ${formData.estadoAtual === 'Estável' ? 'selected' : ''}>Estável - Sem sintomas novos</option>
                                     <option value="Instável" ${formData.estadoAtual === 'Instável' ? 'selected' : ''}>Instável - Com sintomas novos</option>
                                     <option value="Crise" ${formData.estadoAtual === 'Crise' ? 'selected' : ''}>Em crise - Sintomas intensos</option>
                                 </select>
+                                <div class="validation-error" id="estadoAtual-error">Por favor, informe como está se sentindo</div>
                             </div>
                             
                             <div class="mb-4">
-                                <label class="form-label">Está estável com o tratamento atual? *</label>
-                                <select class="form-select" id="estabilidadeTratamento" onchange="updateField('estabilidadeTratamento', this.value)" required>
+                                <label class="form-label required-field">Está estável com o tratamento atual?</label>
+                                <select class="form-select" id="estabilidadeTratamento" 
+                                        onchange="validateField('estabilidadeTratamento', this.value)"
+                                        required>
                                     <option value="">Selecione...</option>
                                     <option value="Sim, totalmente" ${formData.estabilidadeTratamento === 'Sim, totalmente' ? 'selected' : ''}>Sim, totalmente</option>
                                     <option value="Parcialmente" ${formData.estabilidadeTratamento === 'Parcialmente' ? 'selected' : ''}>Parcialmente</option>
                                     <option value="Não" ${formData.estabilidadeTratamento === 'Não' ? 'selected' : ''}>Não</option>
+                                    <option value="Não está em tratamento" ${formData.estabilidadeTratamento === 'Não está em tratamento' ? 'selected' : ''}>Não está em tratamento</option>
                                 </select>
+                                <div class="validation-error" id="estabilidadeTratamento-error">Por favor, informe a estabilidade do tratamento</div>
                             </div>
                             
                             <div class="button-group">
                                 <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                <button class="btn btn-next" onclick="nextStep()" 
-                                        ${!formData.estadoAtual || !formData.estabilidadeTratamento ? 'disabled' : ''}>
+                                <button class="btn btn-next" onclick="validateStep2()">
                                     Próximo →
                                 </button>
                             </div>
@@ -768,16 +765,17 @@
                     html += `
                         <div class="form-step active">
                             <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">🔍 Sintomas Presentes</h3>
+                            <p class="text-muted mb-4">Marque todos os sintomas que você está experienciando (pode não marcar nenhum)</p>
                             
                             <div class="mb-4">
                                 <label class="form-label">Sintomas Ansiosos</label>
                                 <div class="checkbox-group">
                                     ${sintomasAnsiososLista.map(sintoma => `
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="ansioso-${sintoma}" 
+                                            <input type="checkbox" id="ansioso-${sintoma.replace(/\s+/g, '-')}" 
                                                    ${formData.sintomasAnsiosos.includes(sintoma) ? 'checked' : ''}
                                                    onchange="toggleCheckbox('sintomasAnsiosos', '${sintoma}')">
-                                            <label for="ansioso-${sintoma}">${sintoma}</label>
+                                            <label for="ansioso-${sintoma.replace(/\s+/g, '-')}">${sintoma}</label>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -788,10 +786,10 @@
                                 <div class="checkbox-group">
                                     ${sintomasDepressivosLista.map(sintoma => `
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="depressivo-${sintoma}" 
+                                            <input type="checkbox" id="depressivo-${sintoma.replace(/\s+/g, '-')}" 
                                                    ${formData.sintomasDepressivos.includes(sintoma) ? 'checked' : ''}
                                                    onchange="toggleCheckbox('sintomasDepressivos', '${sintoma}')">
-                                            <label for="depressivo-${sintoma}">${sintoma}</label>
+                                            <label for="depressivo-${sintoma.replace(/\s+/g, '-')}">${sintoma}</label>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -802,10 +800,10 @@
                                 <div class="checkbox-group">
                                     ${sintomasHumorLista.map(sintoma => `
                                         <div class="checkbox-item">
-                                            <input type="checkbox" id="humor-${sintoma}" 
+                                            <input type="checkbox" id="humor-${sintoma.replace(/\s+/g, '-')}" 
                                                    ${formData.sintomasHumor.includes(sintoma) ? 'checked' : ''}
                                                    onchange="toggleCheckbox('sintomasHumor', '${sintoma}')">
-                                            <label for="humor-${sintoma}">${sintoma}</label>
+                                            <label for="humor-${sintoma.replace(/\s+/g, '-')}">${sintoma}</label>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -819,170 +817,309 @@
                     `;
                     break;
                     
-                case 4: // Avaliação de risco (OBRIGATÓRIO)
+                case 4: // Avaliação de risco e queixa
                     html += `
                         <div class="form-step active">
-                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">⚠️ Avaliação de Risco (OBRIGATÓRIO)</h3>
+                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">⚠️ Avaliação de Risco e Queixa</h3>
                             
-                            <div class="alert alert-warning">
+                            <div class="alert alert-warning mb-4">
                                 <p class="mb-0">Estes campos são <strong>OBRIGATÓRIOS</strong> para sua segurança</p>
                             </div>
                             
                             <div class="mb-4">
-                                <label class="form-label">Pensamentos sobre morte/autodestrutivos *</label>
-                                <select class="form-select" id="pensamentosMorte" onchange="updateField('pensamentosMorte', this.value)" required>
+                                <label class="form-label required-field">Pensamentos sobre morte/autodestrutivos</label>
+                                <select class="form-select" id="pensamentosMorte" 
+                                        onchange="validateField('pensamentosMorte', this.value)"
+                                        required>
                                     <option value="">Selecione...</option>
                                     <option value="Ausentes" ${formData.pensamentosMorte === 'Ausentes' ? 'selected' : ''}>Ausentes</option>
                                     <option value="Passivos (sem planejamento)" ${formData.pensamentosMorte === 'Passivos (sem planejamento)' ? 'selected' : ''}>Passivos (sem planejamento)</option>
                                     <option value="Ativos (com planejamento)" ${formData.pensamentosMorte === 'Ativos (com planejamento)' ? 'selected' : ''}>Ativos (com planejamento)</option>
                                     <option value="Tentativa prévia" ${formData.pensamentosMorte === 'Tentativa prévia' ? 'selected' : ''}>Tentativa prévia</option>
                                 </select>
+                                <div class="validation-error" id="pensamentosMorte-error">Por favor, informe sobre pensamentos autodestrutivos</div>
                             </div>
                             
                             <div class="mb-4">
-                                <label class="form-label">Percepção da realidade/orientação *</label>
-                                <select class="form-select" id="percepRealidade" onchange="updateField('percepRealidade', this.value)" required>
+                                <label class="form-label required-field">Percepção da realidade/orientação</label>
+                                <select class="form-select" id="percepRealidade" 
+                                        onchange="validateField('percepRealidade', this.value)"
+                                        required>
                                     <option value="">Selecione...</option>
                                     <option value="Preservada" ${formData.percepRealidade === 'Preservada' ? 'selected' : ''}>Preservada</option>
                                     <option value="Levemente comprometida" ${formData.percepRealidade === 'Levemente comprometida' ? 'selected' : ''}>Levemente comprometida</option>
                                     <option value="Moderadamente comprometida" ${formData.percepRealidade === 'Moderadamente comprometida' ? 'selected' : ''}>Moderadamente comprometida</option>
                                     <option value="Gravemente comprometida" ${formData.percepRealidade === 'Gravemente comprometida' ? 'selected' : ''}>Gravemente comprometida</option>
                                 </select>
+                                <div class="validation-error" id="percepRealidade-error">Por favor, informe sobre a percepção da realidade</div>
                             </div>
-                            
-                            <div class="button-group">
-                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                <button class="btn btn-next" onclick="nextStep()" 
-                                        ${!formData.pensamentosMorte || !formData.percepRealidade ? 'disabled' : ''}>
-                                    Próximo →
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                    
-                case 5: // Histórico e queixa
-                    html += `
-                        <div class="form-step active">
-                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">📝 Histórico e Queixa</h3>
                             
                             <div class="mb-4">
-                                <label class="form-label">Queixa principal *</label>
-                                <textarea class="form-control" id="queixaPrincipal" rows="3" 
-                                          onchange="updateField('queixaPrincipal', this.value)" 
+                                <label class="form-label required-field">Queixa principal / Motivo da consulta</label>
+                                <textarea class="form-control" id="queixaPrincipal" rows="4" 
+                                          onchange="validateField('queixaPrincipal', this.value)"
+                                          onblur="validateField('queixaPrincipal', this.value)"
+                                          placeholder="Descreva em detalhes o que está sentindo, há quanto tempo, e o que espera da consulta..."
                                           required>${formData.queixaPrincipal}</textarea>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label">Histórico psiquiátrico prévio</label>
-                                <textarea class="form-control" id="historicoPsiquiatrico" rows="3" 
-                                          onchange="updateField('historicoPsiquiatrico', this.value)">${formData.historicoPsiquiatrico}</textarea>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label">Medicação atual (se houver)</label>
-                                <textarea class="form-control" id="medicacaoAtual" rows="2" 
-                                          onchange="updateField('medicacaoAtual', this.value)">${formData.medicacaoAtual}</textarea>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label">Comorbidades clínicas conhecidas</label>
-                                <textarea class="form-control" id="comorbidades" rows="2" 
-                                          onchange="updateField('comorbidades', this.value)">${formData.comorbidades}</textarea>
+                                <div class="validation-error" id="queixaPrincipal-error">Por favor, descreva sua queixa principal (mínimo 20 caracteres)</div>
                             </div>
                             
                             <div class="button-group">
                                 <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                <button class="btn btn-next" onclick="nextStep()" 
-                                        ${!formData.queixaPrincipal ? 'disabled' : ''}>
-                                    Próximo →
-                                </button>
+                                <button class="btn btn-next" onclick="validateStep4()">Próximo →</button>
                             </div>
                         </div>
                     `;
                     break;
                     
-                case 6: // Pagamento e WhatsApp
-                    html += `
-                        <div class="form-step active">
-                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">💰 Resumo e Pagamento</h3>
-                            
-                            <div class="order-summary">
-                                <div class="summary-item">
-                                    <span>Serviço selecionado:</span>
-                                    <span><strong>${selectedService.nome}</strong></span>
+                case 5: // Histórico e WhatsApp FINAL
+                    // VALIDAÇÃO FINAL - Só mostra WhatsApp se TUDO estiver preenchido
+                    const camposObrigatorios = {
+                        'nome': formData.nome,
+                        'idade': formData.idade,
+                        'telefone': formData.telefone,
+                        'estadoAtual': formData.estadoAtual,
+                        'estabilidadeTratamento': formData.estabilidadeTratamento,
+                        'pensamentosMorte': formData.pensamentosMorte,
+                        'percepRealidade': formData.percepRealidade,
+                        'queixaPrincipal': formData.queixaPrincipal
+                    };
+                    
+                    const camposFaltantes = Object.entries(camposObrigatorios)
+                        .filter(([_, value]) => !value || value.toString().trim() === '')
+                        .map(([key]) => key);
+                    
+                    if (camposFaltantes.length > 0) {
+                        html += `
+                            <div class="form-step active">
+                                <div class="alert alert-danger">
+                                    <h4 class="alert-heading">⚠️ Formulário Incompleto!</h4>
+                                    <p>Para enviar sua solicitação, é necessário preencher <strong>TODOS</strong> os campos obrigatórios.</p>
+                                    <p class="mb-0"><strong>Campos faltantes:</strong> ${camposFaltantes.map(campo => {
+                                        const nomes = {
+                                            'nome': 'Nome completo',
+                                            'idade': 'Idade',
+                                            'telefone': 'Telefone',
+                                            'estadoAtual': 'Estado atual',
+                                            'estabilidadeTratamento': 'Estabilidade do tratamento',
+                                            'pensamentosMorte': 'Pensamentos sobre morte',
+                                            'percepRealidade': 'Percepção da realidade',
+                                            'queixaPrincipal': 'Queixa principal'
+                                        };
+                                        return nomes[campo] || campo;
+                                    }).join(', ')}</p>
                                 </div>
-                                <div class="summary-item">
-                                    <span>Valor:</span>
-                                    <span>R$ ${selectedService.valor}</span>
+                                
+                                <div class="button-group">
+                                    <button class="btn btn-back" onclick="prevStep()">← Voltar para Formulário</button>
+                                    <button class="btn" disabled style="background: #9ca3af; color: white;">
+                                        <i class="fas fa-lock me-2"></i> WhatsApp Bloqueado
+                                    </button>
                                 </div>
-                                <div class="summary-total">
-                                    <span>TOTAL A PAGAR:</span>
-                                    <span>R$ ${selectedService.valor}</span>
+                            </div>
+                        `;
+                    } else {
+                        // TUDO PREENCHIDO - Mostra histórico e WhatsApp
+                        html += `
+                            <div class="form-step active">
+                                <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">📝 Histórico Completo e WhatsApp</h3>
+                                
+                                <div class="order-summary mb-4">
+                                    <h5 class="fw-bold mb-3">📋 Resumo do Paciente</h5>
+                                    
+                                    <div class="mb-3">
+                                        <h6 class="fw-bold">Dados Pessoais</h6>
+                                        <p class="mb-1"><strong>Nome:</strong> ${formData.nome}</p>
+                                        <p class="mb-1"><strong>Idade:</strong> ${formData.idade} anos</p>
+                                        <p class="mb-1"><strong>Telefone:</strong> ${formData.telefone}</p>
+                                        ${formData.email ? `<p class="mb-1"><strong>Email:</strong> ${formData.email}</p>` : ''}
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <h6 class="fw-bold">Serviço Solicitado</h6>
+                                        <p class="mb-0"><strong>${selectedService.nome}</strong> - R$ ${selectedService.valor}</p>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <h6 class="fw-bold">Estado Atual</h6>
+                                        <p class="mb-1"><strong>Estado:</strong> ${formData.estadoAtual}</p>
+                                        <p class="mb-0"><strong>Estabilidade do tratamento:</strong> ${formData.estabilidadeTratamento}</p>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <h6 class="fw-bold">Avaliação de Risco</h6>
+                                        <p class="mb-1"><strong>Pensamentos sobre morte:</strong> ${formData.pensamentosMorte}</p>
+                                        <p class="mb-0"><strong>Percepção da realidade:</strong> ${formData.percepRealidade}</p>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <h6 class="fw-bold">Queixa Principal</h6>
+                                        <p class="mb-0" style="white-space: pre-line;">${formData.queixaPrincipal}</p>
+                                    </div>
+                                    
+                                    ${formData.historicoPsiquiatrico || formData.medicacaoAtual || formData.comorbidades ? `
+                                    <div class="mb-3">
+                                        <h6 class="fw-bold">Histórico Adicional</h6>
+                                        ${formData.historicoPsiquiatrico ? `<p class="mb-1"><strong>Histórico psiquiátrico:</strong> ${formData.historicoPsiquiatrico}</p>` : ''}
+                                        ${formData.medicacaoAtual ? `<p class="mb-1"><strong>Medicação atual:</strong> ${formData.medicacaoAtual}</p>` : ''}
+                                        ${formData.comorbidades ? `<p class="mb-0"><strong>Comorbidades:</strong> ${formData.comorbidades}</p>` : ''}
+                                    </div>
+                                    ` : ''}
+                                    
+                                    ${formData.sintomasAnsiosos.length > 0 || formData.sintomasDepressivos.length > 0 || formData.sintomasHumor.length > 0 ? `
+                                    <div>
+                                        <h6 class="fw-bold">Sintomas Relatados</h6>
+                                        ${formData.sintomasAnsiosos.length > 0 ? `<p class="mb-1"><strong>Ansiosos:</strong> ${formData.sintomasAnsiosos.join(', ')}</p>` : ''}
+                                        ${formData.sintomasDepressivos.length > 0 ? `<p class="mb-1"><strong>Depressivos:</strong> ${formData.sintomasDepressivos.join(', ')}</p>` : ''}
+                                        ${formData.sintomasHumor.length > 0 ? `<p class="mb-0"><strong>Humor:</strong> ${formData.sintomasHumor.join(', ')}</p>` : ''}
+                                    </div>
+                                    ` : ''}
+                                </div>
+                                
+                                <div class="alert alert-info mb-4">
+                                    <p class="mb-2"><strong>📱 Próximo Passo:</strong></p>
+                                    <p class="mb-2">1. Clique no botão abaixo para abrir o WhatsApp</p>
+                                    <p class="mb-2">2. Todos os dados acima serão enviados automaticamente</p>
+                                    <p class="mb-0">3. Eu entrarei em contato com os dados para pagamento (PIX/Stripe)</p>
+                                </div>
+                                
+                                <div class="alert alert-warning mb-4">
+                                    <p class="mb-0">⚠️ <strong>ATENÇÃO:</strong> O agendamento só será confirmado após o pagamento</p>
+                                </div>
+                                
+                                <div class="button-group">
+                                    <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
+                                    <button class="btn btn-whatsapp" onclick="sendToWhatsApp()">
+                                        <i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp
+                                    </button>
                                 </div>
                             </div>
-                            
-                            <div class="alert alert-info">
-                                <p class="mb-2"><strong>📋 Resumo do Processo:</strong></p>
-                                <p class="mb-1">1. Clique no botão abaixo para pagar via Stripe</p>
-                                <p class="mb-1">2. Após o pagamento, volte para esta página</p>
-                                <p class="mb-0">3. Clique no botão do WhatsApp para enviar seus dados</p>
-                            </div>
-                            
-                            <a href="${selectedService.stripeLink}" class="stripe-btn" target="_blank">
-                                <i class="fas fa-credit-card me-2"></i> Pagar R$ ${selectedService.valor} via Stripe
-                            </a>
-                            
-                            <div class="alert alert-warning">
-                                <p class="mb-0">⚠️ <strong>Após realizar o pagamento no Stripe, clique no botão abaixo</strong></p>
-                            </div>
-                            
-                            <div class="button-group">
-                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                <button class="btn btn-whatsapp" onclick="sendToWhatsApp()">
-                                    <i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp
-                                </button>
-                            </div>
-                        </div>
-                    `;
+                        `;
+                    }
                     break;
             }
             
             formContainer.innerHTML = html;
+            
+            // Aplica validação visual aos campos já preenchidos
+            if (currentStep < 5) {
+                Object.keys(camposObrigatorios || {}).forEach(field => {
+                    if (formData[field]) {
+                        validateField(field, formData[field]);
+                    }
+                });
+            }
+        }
+
+        // FUNÇÕES DE VALIDAÇÃO
+        function validateField(field, value) {
+            const input = document.getElementById(field);
+            const errorElement = document.getElementById(`${field}-error`);
+            
+            if (!input || !errorElement) return true;
+            
+            let isValid = true;
+            let errorMessage = '';
+            
+            switch(field) {
+                case 'nome':
+                    isValid = value.trim().length >= 3;
+                    errorMessage = 'Por favor, informe seu nome completo (mínimo 3 caracteres)';
+                    break;
+                    
+                case 'idade':
+                    const age = parseInt(value);
+                    isValid = !isNaN(age) && age >= 1 && age <= 120;
+                    errorMessage = 'Por favor, informe uma idade válida (entre 1 e 120 anos)';
+                    break;
+                    
+                case 'telefone':
+                    const phoneRegex = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
+                    isValid = phoneRegex.test(value.replace(/\s+/g, ''));
+                    errorMessage = 'Por favor, informe um telefone válido (ex: 11 99999-9999)';
+                    break;
+                    
+                case 'estadoAtual':
+                case 'estabilidadeTratamento':
+                case 'pensamentosMorte':
+                case 'percepRealidade':
+                    isValid = value.trim() !== '';
+                    errorMessage = 'Este campo é obrigatório';
+                    break;
+                    
+                case 'queixaPrincipal':
+                    isValid = value.trim().length >= 20;
+                    errorMessage = 'Por favor, descreva sua queixa principal com mais detalhes (mínimo 20 caracteres)';
+                    break;
+            }
+            
+            // Atualiza visualmente
+            if (isValid) {
+                input.classList.remove('field-invalid');
+                errorElement.style.display = 'none';
+            } else {
+                input.classList.add('field-invalid');
+                errorElement.textContent = errorMessage;
+                errorElement.style.display = 'block';
+            }
+            
+            // Atualiza dados
+            updateField(field, value);
+            
+            return isValid;
+        }
+
+        function validateStep1() {
+            const fields = ['nome', 'idade', 'telefone'];
+            let allValid = true;
+            
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                if (input && !validateField(field, input.value)) {
+                    allValid = false;
+                }
+            });
+            
+            if (allValid) {
+                nextStep();
+            }
+        }
+
+        function validateStep2() {
+            const fields = ['estadoAtual', 'estabilidadeTratamento'];
+            let allValid = true;
+            
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                if (input && !validateField(field, input.value)) {
+                    allValid = false;
+                }
+            });
+            
+            if (allValid) {
+                nextStep();
+            }
+        }
+
+        function validateStep4() {
+            const fields = ['pensamentosMorte', 'percepRealidade', 'queixaPrincipal'];
+            let allValid = true;
+            
+            fields.forEach(field => {
+                const input = document.getElementById(field);
+                if (input && !validateField(field, input.value)) {
+                    allValid = false;
+                }
+            });
+            
+            if (allValid) {
+                nextStep();
+            }
         }
 
         // Funções auxiliares
         function updateField(field, value) {
             formData[field] = value;
-            
-            // Atualizar botão próximo se campos obrigatórios estiverem preenchidos
-            if (currentStep === 1 && field === 'nome' || field === 'idade' || field === 'telefone') {
-                const nextBtn = document.querySelector('.btn-next');
-                if (nextBtn) {
-                    nextBtn.disabled = !(formData.nome && formData.idade && formData.telefone);
-                }
-            }
-            
-            if (currentStep === 2 && (field === 'estadoAtual' || field === 'estabilidadeTratamento')) {
-                const nextBtn = document.querySelector('.btn-next');
-                if (nextBtn) {
-                    nextBtn.disabled = !(formData.estadoAtual && formData.estabilidadeTratamento);
-                }
-            }
-            
-            if (currentStep === 4 && (field === 'pensamentosMorte' || field === 'percepRealidade')) {
-                const nextBtn = document.querySelector('.btn-next');
-                if (nextBtn) {
-                    nextBtn.disabled = !(formData.pensamentosMorte && formData.percepRealidade);
-                }
-            }
-            
-            if (currentStep === 5 && field === 'queixaPrincipal') {
-                const nextBtn = document.querySelector('.btn-next');
-                if (nextBtn) {
-                    nextBtn.disabled = !formData.queixaPrincipal;
-                }
-            }
         }
 
         function toggleCheckbox(arrayName, value) {
@@ -1020,40 +1157,58 @@
             const sintomasHumorText = formData.sintomasHumor.length > 0 ? 
                 formData.sintomasHumor.join(', ') : 'Nenhum relatado';
             
-            return `*CONSULTA PSIQUIÁTRICA - DR. MARCELO MEDEIROS*
+            let historicoText = '';
+            if (formData.historicoPsiquiatrico) {
+                historicoText += `Histórico psiquiátrico: ${formData.historicoPsiquiatrico}\n`;
+            }
+            if (formData.medicacaoAtual) {
+                historicoText += `Medicação atual: ${formData.medicacaoAtual}\n`;
+            }
+            if (formData.comorbidades) {
+                historicoText += `Comorbidades: ${formData.comorbidades}\n`;
+            }
+            if (!historicoText) {
+                historicoText = 'Nenhum histórico adicional informado\n';
+            }
+            
+            return `*NOVA SOLICITAÇÃO DE CONSULTA - DR. MARCELO MEDEIROS*
 
 *DADOS DO PACIENTE*
-Nome: ${formData.nome}
-Idade: ${formData.idade}
-Telefone: ${formData.telefone}
-Email: ${formData.email || 'Não informado'}
+👤 Nome: ${formData.nome}
+🎂 Idade: ${formData.idade} anos
+📱 Telefone: ${formData.telefone}
+📧 Email: ${formData.email || 'Não informado'}
 
 *SERVIÇO SOLICITADO*
-${formData.servico} - R$ ${selectedService.valor}
+🏥 ${formData.servico}
+💰 Valor: R$ ${selectedService.valor}
 
 *ESTADO ATUAL*
-Estado: ${formData.estadoAtual}
-Estabilidade do tratamento: ${formData.estabilidadeTratamento}
+😊 Estado: ${formData.estadoAtual}
+⚖️ Estabilidade do tratamento: ${formData.estabilidadeTratamento}
 
 *SINTOMAS RELATADOS*
-Ansiosos: ${sintomasAnsiososText}
-Depressivos: ${sintomasDepressivosText}
-Humor: ${sintomasHumorText}
+😰 Ansiosos: ${sintomasAnsiososText}
+😔 Depressivos: ${sintomasDepressivosText}
+🎭 Humor: ${sintomasHumorText}
 
 *AVALIAÇÃO DE RISCO (OBRIGATÓRIO)*
-Pensamentos sobre morte: ${formData.pensamentosMorte}
-Percepção da realidade: ${formData.percepRealidade}
+⚠️ Pensamentos sobre morte: ${formData.pensamentosMorte}
+🧠 Percepção da realidade: ${formData.percepRealidade}
 
-*QUEIXA E HISTÓRICO*
-Queixa principal: ${formData.queixaPrincipal}
-Histórico psiquiátrico: ${formData.historicoPsiquiatrico || 'Não informado'}
-Medicação atual: ${formData.medicacaoAtual || 'Nenhuma'}
-Comorbidades: ${formData.comorbidades || 'Nenhuma'}
+*QUEIXA PRINCIPAL*
+📝 ${formData.queixaPrincipal}
 
-*COMPROVANTE DE PAGAMENTO*
-✅ Comprovante do pagamento de R$ ${selectedService.valor} já foi anexado no aplicativo.
+*HISTÓRICO ADICIONAL*
+${historicoText}
+*DATA/HORA DO ENVIO*
+📅 ${new Date().toLocaleDateString('pt-BR')}
+⏰ ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
 
-Por favor, confirme o recebimento desta solicitação.`;
+*PRÓXIMOS PASSOS*
+1. Aguardar confirmação da consulta
+2. Receber dados para pagamento (PIX/Stripe)
+3. Confirmar agendamento após pagamento`;
         }
 
         function sendToWhatsApp() {
@@ -1062,11 +1217,24 @@ Por favor, confirme o recebimento desta solicitação.`;
             const whatsappUrl = `https://wa.me/554491339060?text=${encodedMessage}`;
             
             window.open(whatsappUrl, '_blank');
+            
+            // Feedback visual
+            const whatsappBtn = document.querySelector('.btn-whatsapp');
+            if (whatsappBtn) {
+                const originalText = whatsappBtn.innerHTML;
+                whatsappBtn.innerHTML = '<i class="fas fa-check me-2"></i> Enviado com Sucesso!';
+                whatsappBtn.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    whatsappBtn.innerHTML = originalText;
+                    whatsappBtn.style.background = '';
+                }, 3000);
+            }
         }
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Aplicativo psiquiátrico carregado!');
+            console.log('Aplicativo psiquiátrico carregado com validação completa!');
         });
     </script>
 </body>
