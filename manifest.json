@@ -1,20 +1,60 @@
 {
-  "short_name": "App Médico",
-  "name": "Minha Receita Psiquiátrica",
+  "name": "Dr. Marcelo - Anamnese Psiquiátrica",
+  "short_name": "Anamnese Psiquiátrica",
+  "description": "Formulário completo de anamnese psiquiátrica online - Dr. Marcelo Medeiros CRM 47960",
+  "start_url": "/minha-receita-psiquiatrica.apk/",
+  "display": "standalone",
+  "background_color": "#0d9488",
+  "theme_color": "#0d9488",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "/icons/android-chrome-192x192.png",
-      "sizes": "192x192",
+      "src": "https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png",
+      "sizes": "72x72",
       "type": "image/png"
     },
     {
-      "src": "/icons/android-chrome-512x512.png",
-      "sizes": "512x512",
+      "src": "https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png",
+      "sizes": "96x96",
       "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#008080",
-  "background_color": "#ffffff"
+  "categories": ["health", "medical", "productivity"],
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "scope": "/minha-receita-psiquiatrica.apk/",
+  "related_applications": []
 }
