@@ -4,8 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dr. Marcelo Medeiros - App Psiquiátrico</title>
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#008080"/>
+    
+    <!-- ==================== -->
+    <!-- PWA CONFIGURAÇÕES -->
+    <!-- ==================== -->
+    <link rel="manifest" href="/minha-receita-psiquiatrica.apk/manifest.json">
+    <meta name="theme-color" content="#0d9488"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Anamnese Psiquiátrica">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png">
+    <meta name="msapplication-TileImage" content="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png">
+    <meta name="msapplication-TileColor" content="#0d9488">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Anamnese Psiquiátrica">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" sizes="192x192">
+    
+    <!-- ==================== -->
+    <!-- STYLES E SCRIPTS -->
+    <!-- ==================== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -24,6 +41,7 @@
             color: #333;
             background: #f7f9fb;
             padding-bottom: 30px;
+            -webkit-tap-highlight-color: transparent;
         }
         
         /* WhatsApp Flutuante */
@@ -361,9 +379,118 @@
             display: none;
             margin-top: 20px;
         }
+        
+        /* Instalação PWA */
+        .pwa-install-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+            z-index: 999;
+            display: none;
+            border-top: 3px solid var(--teal-primary);
+        }
+        
+        .pwa-close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #6b7280;
+            cursor: pointer;
+        }
+        
+        /* PWA Install Button */
+        .install-app-btn {
+            background: linear-gradient(135deg, var(--teal-primary), var(--dark-teal));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        /* Splash Screen para PWA */
+        .app-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--teal-primary), var(--dark-teal));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+        
+        .splash-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 30px;
+            object-fit: cover;
+            border: 5px solid white;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        .splash-text {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
+    <!-- Splash Screen para PWA -->
+    <div class="app-splash" id="splashScreen">
+        <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" 
+             alt="Dr. Marcelo Medeiros"
+             class="splash-logo">
+        <div class="spinner-border text-white" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+        <div class="splash-text">Dr. Marcelo Medeiros<br>Anamnese Psiquiátrica</div>
+    </div>
+    
+    <!-- Banner de Instalação PWA -->
+    <div class="pwa-install-banner" id="installBanner">
+        <button class="pwa-close" onclick="hideInstallBanner()">×</button>
+        <div class="d-flex align-items-center">
+            <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" 
+                 alt="Ícone do App"
+                 style="width: 50px; height: 50px; border-radius: 10px; margin-right: 15px; border: 2px solid var(--teal-primary);">
+            <div>
+                <h6 class="mb-1 fw-bold">Instalar App de Anamnese</h6>
+                <p class="mb-2 small text-muted">Funciona offline como aplicativo nativo</p>
+                <button class="install-app-btn" onclick="installPWA()">
+                    <i class="fas fa-download"></i> Instalar App
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- WhatsApp Flutuante -->
     <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20gostaria%20de%20agendar%20uma%20consulta%20online%20de%2030%20minutos%20(R$%2099,90)" 
        class="whatsapp-float" target="_blank" title="Agende pelo WhatsApp">
@@ -375,7 +502,6 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-3 text-center">
-                    <!-- ATUALIZE ESTE LINK COM SUA FOTO REAL -->
                     <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" 
                          class="doctor-photo" 
                          alt="Dr. Marcelo Medeiros"
@@ -506,6 +632,13 @@
                        class="whatsapp-btn mt-3" target="_blank">
                         <i class="fab fa-whatsapp me-2"></i> Tirar Dúvidas
                     </a>
+                    
+                    <!-- Botão de Instalação PWA -->
+                    <div class="mt-4">
+                        <button onclick="showInstallInstructions()" class="btn" style="background: #f0f9ff; border: 2px solid var(--teal-primary); color: var(--dark-teal);">
+                            <i class="fas fa-mobile-alt me-2"></i> Como instalar este app no celular
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -544,12 +677,112 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // =============================
+        // CONFIGURAÇÕES PWA
+        // =============================
+        let deferredPrompt;
+        let isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                          window.navigator.standalone === true;
+        
+        // Esconder splash screen após carregamento
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('splashScreen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('splashScreen').style.display = 'none';
+                }, 500);
+                
+                // Mostrar banner de instalação se não estiver instalado
+                if (!isStandalone) {
+                    setTimeout(() => {
+                        showInstallBanner();
+                    }, 3000);
+                }
+            }, 1500);
+        });
+        
+        // Detectar evento de instalação PWA
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+        
+        // Função para instalar PWA
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Usuário aceitou instalar o PWA');
+                        hideInstallBanner();
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+        
+        // Mostrar banner de instalação
+        function showInstallBanner() {
+            if (!isStandalone && deferredPrompt) {
+                document.getElementById('installBanner').style.display = 'block';
+            }
+        }
+        
+        // Esconder banner de instalação
+        function hideInstallBanner() {
+            document.getElementById('installBanner').style.display = 'none';
+        }
+        
+        // Mostrar instruções de instalação
+        function showInstallInstructions() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isAndroid = /android/i.test(navigator.userAgent);
+            
+            let message = '';
+            
+            if (isIOS) {
+                message = `📱 *iPhone/iPad:*
+1. Toque no ícone de compartilhar (📤)
+2. Role para baixo
+3. Toque em "Adicionar à tela de início"
+4. Toque "Adicionar" no canto superior direito
+
+O app aparecerá na sua tela inicial como um aplicativo normal!`;
+            } else if (isAndroid) {
+                message = `📱 *Android:*
+1. Toque nos 3 pontos (⋮) no navegador
+2. Selecione "Adicionar à tela inicial"
+3. Toque em "Adicionar"
+4. Confirme se deseja
+
+O ícone do app será adicionado à sua área de trabalho!`;
+            } else {
+                message = `💻 *Computador:*
+No Chrome/Edge:
+1. Clique no ícone de instalação (📥) na barra de endereços
+2. Clique em "Instalar"
+
+No Safari:
+1. Arquivo → "Adicionar à tela de início"`;
+            }
+            
+            alert(message);
+        }
+        
+        // Detectar se está no modo standalone (já instalado)
+        if (isStandalone) {
+            console.log('App rodando em modo standalone (instalado)');
+            document.body.classList.add('standalone-mode');
+        }
+        
+        // =============================
         // DADOS DO APP
+        // =============================
         let selectedService = null;
         let currentStep = 1;
         const totalSteps = 5;
         
-        // SERVICOS ATUALIZADOS - VALORES MODIFICADOS
+        // SERVICOS ATUALIZADOS
         const services = {
             consulta: {
                 id: 'consulta',
@@ -560,7 +793,7 @@
             laudoSemRQE: {
                 id: 'laudoSemRQE',
                 nome: 'Laudo sem RQE + Consulta',
-                valor: '180,00', // VALOR ALTERADO DE 80,00 PARA 180,00
+                valor: '180,00',
                 descricao: 'Laudo sem RQE + Consulta Online'
             },
             laudoComRQE: {
@@ -573,32 +806,19 @@
 
         // Dados do formulário
         let formData = {
-            // Dados pessoais
             nome: '',
             idade: '',
             telefone: '',
             email: '',
-            
-            // Serviço selecionado
             servico: '',
-            
-            // Estado atual
             estadoAtual: '',
             estabilidadeTratamento: '',
-            
-            // Sintomas
             sintomasAnsiosos: [],
             sintomasDepressivos: [],
             sintomasHumor: [],
-            
-            // Avaliação de risco (OBRIGATÓRIOS)
             pensamentosMorte: '',
             percepRealidade: '',
-            
-            // Queixa principal
             queixaPrincipal: '',
-            
-            // Histórico
             historicoPsiquiatrico: '',
             medicacaoAtual: '',
             comorbidades: ''
@@ -622,12 +842,12 @@
             "Impulsividade", "Agressividade", "Choro fácil"
         ];
 
+        // =============================
         // FUNÇÕES PRINCIPAIS
+        // =============================
         function selectService(serviceId) {
             selectedService = services[serviceId];
             formData.servico = selectedService.nome;
-            
-            // Mostrar modal de termos
             showTermsModal();
         }
 
@@ -869,429 +1089,4 @@
                             </div>
                             
                             <div class="mb-4">
-                                <label class="form-label required-field">Queixa principal / Motivo da consulta</label>
-                                <textarea class="form-control" id="queixaPrincipal" rows="4" 
-                                          onchange="validateField('queixaPrincipal', this.value)"
-                                          onblur="validateField('queixaPrincipal', this.value)"
-                                          placeholder="Descreva em detalhes o que está sentindo, há quanto tempo, e o que espera da consulta..."
-                                          required>${formData.queixaPrincipal}</textarea>
-                                <div class="validation-error" id="queixaPrincipal-error">Por favor, descreva sua queixa principal (mínimo 20 caracteres)</div>
-                            </div>
-                            
-                            <div class="button-group">
-                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                <button class="btn btn-next" onclick="validateStep4()">Próximo →</button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                    
-                case 5: // Histórico e WhatsApp FINAL
-                    // VALIDAÇÃO FINAL - Só mostra WhatsApp se TUDO estiver preenchido
-                    const camposObrigatorios = {
-                        'nome': formData.nome,
-                        'idade': formData.idade,
-                        'telefone': formData.telefone,
-                        'estadoAtual': formData.estadoAtual,
-                        'estabilidadeTratamento': formData.estabilidadeTratamento,
-                        'pensamentosMorte': formData.pensamentosMorte,
-                        'percepRealidade': formData.percepRealidade,
-                        'queixaPrincipal': formData.queixaPrincipal
-                    };
-                    
-                    const camposFaltantes = Object.entries(camposObrigatorios)
-                        .filter(([_, value]) => !value || value.toString().trim() === '')
-                        .map(([key]) => key);
-                    
-                    if (camposFaltantes.length > 0) {
-                        html += `
-                            <div class="form-step active">
-                                <div class="alert alert-danger">
-                                    <h4 class="alert-heading">⚠️ Formulário Incompleto!</h4>
-                                    <p>Para enviar sua solicitação, é necessário preencher <strong>TODOS</strong> os campos obrigatórios.</p>
-                                    <p class="mb-0"><strong>Campos faltantes:</strong> ${camposFaltantes.map(campo => {
-                                        const nomes = {
-                                            'nome': 'Nome completo',
-                                            'idade': 'Idade',
-                                            'telefone': 'Telefone',
-                                            'estadoAtual': 'Estado atual',
-                                            'estabilidadeTratamento': 'Estabilidade do tratamento',
-                                            'pensamentosMorte': 'Pensamentos sobre morte',
-                                            'percepRealidade': 'Percepção da realidade',
-                                            'queixaPrincipal': 'Queixa principal'
-                                        };
-                                        return nomes[campo] || campo;
-                                    }).join(', ')}</p>
-                                </div>
-                                
-                                <div class="button-group">
-                                    <button class="btn btn-back" onclick="prevStep()">← Voltar para Formulário</button>
-                                    <button class="btn" disabled style="background: #9ca3af; color: white;">
-                                        <i class="fas fa-lock me-2"></i> WhatsApp Bloqueado
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        // TUDO PREENCHIDO - Mostra histórico e WhatsApp
-                        html += `
-                            <div class="form-step active">
-                                <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">📝 Histórico Completo e WhatsApp</h3>
-                                
-                                <div class="order-summary mb-4">
-                                    <h5 class="fw-bold mb-3">📋 Resumo do Paciente</h5>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Dados Pessoais</h6>
-                                        <p class="mb-1"><strong>Nome:</strong> ${formData.nome}</p>
-                                        <p class="mb-1"><strong>Idade:</strong> ${formData.idade} anos</p>
-                                        <p class="mb-1"><strong>Telefone:</strong> ${formData.telefone}</p>
-                                        ${formData.email ? `<p class="mb-1"><strong>Email:</strong> ${formData.email}</p>` : ''}
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Serviço Solicitado</h6>
-                                        <p class="mb-0"><strong>${selectedService.nome}</strong> - R$ ${selectedService.valor}</p>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Estado Atual</h6>
-                                        <p class="mb-1"><strong>Estado:</strong> ${formData.estadoAtual}</p>
-                                        <p class="mb-0"><strong>Estabilidade do tratamento:</strong> ${formData.estabilidadeTratamento}</p>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Avaliação de Risco</h6>
-                                        <p class="mb-1"><strong>Pensamentos sobre morte:</strong> ${formData.pensamentosMorte}</p>
-                                        <p class="mb-0"><strong>Percepção da realidade:</strong> ${formData.percepRealidade}</p>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Queixa Principal</h6>
-                                        <p class="mb-0" style="white-space: pre-line;">${formData.queixaPrincipal}</p>
-                                    </div>
-                                    
-                                    ${formData.historicoPsiquiatrico || formData.medicacaoAtual || formData.comorbidades ? `
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Histórico Adicional</h6>
-                                        ${formData.historicoPsiquiatrico ? `<p class="mb-1"><strong>Histórico psiquiátrico:</strong> ${formData.historicoPsiquiatrico}</p>` : ''}
-                                        ${formData.medicacaoAtual ? `<p class="mb-1"><strong>Medicação atual:</strong> ${formData.medicacaoAtual}</p>` : ''}
-                                        ${formData.comorbidades ? `<p class="mb-0"><strong>Comorbidades:</strong> ${formData.comorbidades}</p>` : ''}
-                                    </div>
-                                    ` : ''}
-                                    
-                                    ${formData.sintomasAnsiosos.length > 0 || formData.sintomasDepressivos.length > 0 || formData.sintomasHumor.length > 0 ? `
-                                    <div>
-                                        <h6 class="fw-bold">Sintomas Relatados</h6>
-                                        ${formData.sintomasAnsiosos.length > 0 ? `<p class="mb-1"><strong>Ansiosos:</strong> ${formData.sintomasAnsiosos.join(', ')}</p>` : ''}
-                                        ${formData.sintomasDepressivos.length > 0 ? `<p class="mb-1"><strong>Depressivos:</strong> ${formData.sintomasDepressivos.join(', ')}</p>` : ''}
-                                        ${formData.sintomasHumor.length > 0 ? `<p class="mb-0"><strong>Humor:</strong> ${formData.sintomasHumor.join(', ')}</p>` : ''}
-                                    </div>
-                                    ` : ''}
-                                </div>
-                                
-                                <div class="alert alert-info mb-4">
-                                    <p class="mb-2"><strong>📱 Próximo Passo:</strong></p>
-                                    <p class="mb-2">1. Clique no botão abaixo para abrir o WhatsApp</p>
-                                    <p class="mb-2">2. Todos os dados acima serão enviados automaticamente</p>
-                                    <p class="mb-0">3. Eu entrarei em contato com os dados para pagamento (PIX/Stripe)</p>
-                                </div>
-                                
-                                <div class="alert alert-warning mb-4">
-                                    <p class="mb-0">⚠️ <strong>ATENÇÃO:</strong> O agendamento só será confirmado após o pagamento</p>
-                                </div>
-                                
-                                <div id="whatsapp-loading" class="whatsapp-loading">
-                                    <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
-                                    <p>Abrindo WhatsApp...</p>
-                                </div>
-                                
-                                <div id="whatsapp-fallback" class="whatsapp-fallback alert alert-info" style="display: none;">
-                                    <p><strong>Se o WhatsApp não abriu automaticamente:</strong></p>
-                                    <p>1. Abra o WhatsApp manualmente</p>
-                                    <p>2. Envie mensagem para: <strong>554491339060</strong></p>
-                                    <p>3. Copie o texto abaixo:</p>
-                                    <textarea class="form-control mt-2 mb-2" rows="3" readonly id="whatsapp-text-fallback" style="font-size: 12px;"></textarea>
-                                    <button onclick="copyWhatsAppText()" class="btn btn-sm btn-secondary">
-                                        <i class="fas fa-copy me-1"></i> Copiar Texto
-                                    </button>
-                                </div>
-                                
-                                <div class="button-group">
-                                    <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                    <button class="btn btn-whatsapp" onclick="sendToWhatsApp()" id="whatsapp-btn">
-                                        <i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    break;
-            }
-            
-            formContainer.innerHTML = html;
-            
-            // Aplica validação visual aos campos já preenchidos
-            if (currentStep < 5) {
-                Object.keys(camposObrigatorios || {}).forEach(field => {
-                    if (formData[field]) {
-                        validateField(field, formData[field]);
-                    }
-                });
-            }
-        }
-
-        // FUNÇÕES DE VALIDAÇÃO
-        function validateField(field, value) {
-            const input = document.getElementById(field);
-            const errorElement = document.getElementById(`${field}-error`);
-            
-            if (!input || !errorElement) return true;
-            
-            let isValid = true;
-            let errorMessage = '';
-            
-            switch(field) {
-                case 'nome':
-                    isValid = value.trim().length >= 3;
-                    errorMessage = 'Por favor, informe seu nome completo (mínimo 3 caracteres)';
-                    break;
-                    
-                case 'idade':
-                    const age = parseInt(value);
-                    isValid = !isNaN(age) && age >= 1 && age <= 120;
-                    errorMessage = 'Por favor, informe uma idade válida (entre 1 e 120 anos)';
-                    break;
-                    
-                case 'telefone':
-                    const phoneRegex = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
-                    isValid = phoneRegex.test(value.replace(/\s+/g, ''));
-                    errorMessage = 'Por favor, informe um telefone válido (ex: 11 99999-9999)';
-                    break;
-                    
-                case 'estadoAtual':
-                case 'estabilidadeTratamento':
-                case 'pensamentosMorte':
-                case 'percepRealidade':
-                    isValid = value.trim() !== '';
-                    errorMessage = 'Este campo é obrigatório';
-                    break;
-                    
-                case 'queixaPrincipal':
-                    isValid = value.trim().length >= 20;
-                    errorMessage = 'Por favor, descreva sua queixa principal com mais detalhes (mínimo 20 caracteres)';
-                    break;
-            }
-            
-            // Atualiza visualmente
-            if (isValid) {
-                input.classList.remove('field-invalid');
-                errorElement.style.display = 'none';
-            } else {
-                input.classList.add('field-invalid');
-                errorElement.textContent = errorMessage;
-                errorElement.style.display = 'block';
-            }
-            
-            // Atualiza dados
-            updateField(field, value);
-            
-            return isValid;
-        }
-
-        function validateStep1() {
-            const fields = ['nome', 'idade', 'telefone'];
-            let allValid = true;
-            
-            fields.forEach(field => {
-                const input = document.getElementById(field);
-                if (input && !validateField(field, input.value)) {
-                    allValid = false;
-                }
-            });
-            
-            if (allValid) {
-                nextStep();
-            }
-        }
-
-        function validateStep2() {
-            const fields = ['estadoAtual', 'estabilidadeTratamento'];
-            let allValid = true;
-            
-            fields.forEach(field => {
-                const input = document.getElementById(field);
-                if (input && !validateField(field, input.value)) {
-                    allValid = false;
-                }
-            });
-            
-            if (allValid) {
-                nextStep();
-            }
-        }
-
-        function validateStep4() {
-            const fields = ['pensamentosMorte', 'percepRealidade', 'queixaPrincipal'];
-            let allValid = true;
-            
-            fields.forEach(field => {
-                const input = document.getElementById(field);
-                if (input && !validateField(field, input.value)) {
-                    allValid = false;
-                }
-            });
-            
-            if (allValid) {
-                nextStep();
-            }
-        }
-
-        // Funções auxiliares
-        function updateField(field, value) {
-            formData[field] = value;
-        }
-
-        function toggleCheckbox(arrayName, value) {
-            const array = formData[arrayName];
-            const index = array.indexOf(value);
-            
-            if (index === -1) {
-                array.push(value);
-            } else {
-                array.splice(index, 1);
-            }
-        }
-
-        function nextStep() {
-            if (currentStep < totalSteps) {
-                currentStep++;
-                updateForm();
-            }
-        }
-
-        function prevStep() {
-            if (currentStep > 1) {
-                currentStep--;
-                updateForm();
-            }
-        }
-
-        // FUNÇÃO OTIMIZADA PARA WHATSAPP - ABERTURA RÁPIDA
-        function generateWhatsAppMessage() {
-            const sintomasAnsiososText = formData.sintomasAnsiosos.length > 0 ? 
-                formData.sintomasAnsiosos.join(', ') : 'Nenhum';
-            
-            const sintomasDepressivosText = formData.sintomasDepressivos.length > 0 ? 
-                formData.sintomasDepressivos.join(', ') : 'Nenhum';
-            
-            const sintomasHumorText = formData.sintomasHumor.length > 0 ? 
-                formData.sintomasHumor.join(', ') : 'Nenhum';
-            
-            return `NOVA SOLICITAÇÃO - DR. MARCELO MEDEIROS
-
-PACIENTE
-Nome: ${formData.nome}
-Idade: ${formData.idade} anos
-Tel: ${formData.telefone}
-${formData.email ? `Email: ${formData.email}` : ''}
-
-SERVIÇO
-${formData.servico}
-Valor: R$ ${selectedService.valor}
-
-ESTADO
-Estado: ${formData.estadoAtual}
-Estabilidade: ${formData.estabilidadeTratamento}
-
-SINTOMAS
-Ansiosos: ${sintomasAnsiososText}
-Depressivos: ${sintomasDepressivosText}
-Humor: ${sintomasHumorText}
-
-AVALIAÇÃO DE RISCO
-Pensamentos morte: ${formData.pensamentosMorte}
-Percepção realidade: ${formData.percepRealidade}
-
-QUEIXA PRINCIPAL
-${formData.queixaPrincipal}
-
-${formData.historicoPsiquiatrico ? `Histórico: ${formData.historicoPsiquiatrico}` : ''}
-${formData.medicacaoAtual ? `Medicação: ${formData.medicacaoAtual}` : ''}
-${formData.comorbidades ? `Comorbidades: ${formData.comorbidades}` : ''}
-
-Data: ${new Date().toLocaleDateString('pt-BR')}
-Hora: ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-        }
-
-        // FUNÇÃO OTIMIZADA PARA ENVIO RÁPIDO
-        function sendToWhatsApp() {
-            const message = generateWhatsAppMessage();
-            const encodedMessage = encodeURIComponent(message);
-            
-            // URL OTIMIZADA - WhatsApp mobile (mais rápido)
-            const whatsappUrl = `https://wa.me/554491339060?text=${encodedMessage}`;
-            
-            // Mostra loading
-            const loadingEl = document.getElementById('whatsapp-loading');
-            const btn = document.getElementById('whatsapp-btn');
-            const fallbackEl = document.getElementById('whatsapp-fallback');
-            const fallbackText = document.getElementById('whatsapp-text-fallback');
-            
-            if (loadingEl) loadingEl.style.display = 'block';
-            if (btn) {
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Preparando...';
-                btn.disabled = true;
-            }
-            
-            // Prepara fallback
-            if (fallbackText) fallbackText.value = message;
-            
-            // Abre WhatsApp após pequeno delay para UI
-            setTimeout(() => {
-                // Tenta abrir em nova janela
-                const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-                
-                // Verifica se abriu
-                setTimeout(() => {
-                    if (loadingEl) loadingEl.style.display = 'none';
-                    
-                    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-                        // Se não abriu, mostra fallback
-                        if (fallbackEl) fallbackEl.style.display = 'block';
-                        if (btn) {
-                            btn.innerHTML = '<i class="fab fa-whatsapp me-2"></i> Tentar Novamente';
-                            btn.disabled = false;
-                        }
-                        alert('WhatsApp não abriu automaticamente. Use o método alternativo abaixo.');
-                    } else {
-                        // Se abriu, restaura botão
-                        if (btn) {
-                            btn.innerHTML = '<i class="fas fa-check me-2"></i> Enviado!';
-                            setTimeout(() => {
-                                btn.innerHTML = '<i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp';
-                                btn.disabled = false;
-                            }, 2000);
-                        }
-                    }
-                }, 1000);
-            }, 500);
-        }
-
-        function copyWhatsAppText() {
-            const textarea = document.getElementById('whatsapp-text-fallback');
-            if (textarea) {
-                textarea.select();
-                textarea.setSelectionRange(0, 99999);
-                document.execCommand('copy');
-                alert('Texto copiado para a área de transferência!');
-            }
-        }
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Aplicativo psiquiátrico carregado com validação completa!');
-        });
-    </script>
-</body>
-</html>
+                                <label class="form-label required-field">Queixa principal / Motivo da consult
