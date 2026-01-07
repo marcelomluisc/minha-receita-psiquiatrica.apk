@@ -40,7 +40,7 @@ self.addEventListener('fetch', (event) => {
   // Ignorar requisições não-GET
   if (event.request.method !== 'GET') return;
   
-  // Ignorar requisições para APIs externas
+  // Ignorar requisições para APIs externas específicas
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin && 
       !url.href.includes('cdn.jsdelivr.net') &&
@@ -94,11 +94,6 @@ self.addEventListener('fetch', (event) => {
               return caches.match('/minha-receita-psiquiatrica.apk/index.html');
             }
             
-            // Fallback para ícone
-            if (event.request.url.includes('FOTO-AAAAA.png')) {
-              return caches.match('https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png');
-            }
-            
             return new Response('Offline - Sem conexão', {
               status: 503,
               statusText: 'Service Unavailable',
@@ -131,11 +126,4 @@ self.addEventListener('activate', (event) => {
       return self.clients.claim();
     })
   );
-});
-
-// Mensagem para debug
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
 });
