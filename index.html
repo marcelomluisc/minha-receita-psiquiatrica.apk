@@ -10,15 +10,25 @@
     <!-- ==================== -->
     <link rel="manifest" href="/minha-receita-psiquiatrica.apk/manifest.json">
     <meta name="theme-color" content="#0d9488"/>
+    
+    <!-- Ícone para navegadores desktop/mobile -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png">
+    <link rel="shortcut icon" href="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png" type="image/png">
+    
+    <!-- Apple iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Anamnese Psiquiátrica">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png">
-    <meta name="msapplication-TileImage" content="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png">
+    <link rel="apple-touch-startup-image" href="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png">
+    
+    <!-- Windows -->
+    <meta name="msapplication-TileImage" content="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png">
     <meta name="msapplication-TileColor" content="#0d9488">
+    
+    <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Anamnese Psiquiátrica">
-    <link rel="icon" type="image/png" href="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" sizes="192x192">
     
     <!-- ==================== -->
     <!-- STYLES E SCRIPTS -->
@@ -460,14 +470,32 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+        
+        /* Ajustes para PWA instalado */
+        .standalone-mode .whatsapp-float {
+            bottom: 90px; /* Mais alto para não cobrir botões do PWA */
+        }
+        
+        /* Ajustes mobile */
+        @media (max-width: 768px) {
+            .pwa-install-banner {
+                padding: 12px;
+            }
+            
+            .install-app-btn {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Splash Screen para PWA -->
     <div class="app-splash" id="splashScreen">
-        <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" 
+        <img src="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png" 
              alt="Dr. Marcelo Medeiros"
-             class="splash-logo">
+             class="splash-logo"
+             onerror="this.src='https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png'">
         <div class="spinner-border text-white" style="width: 3rem; height: 3rem;" role="status">
             <span class="visually-hidden">Carregando...</span>
         </div>
@@ -478,9 +506,10 @@
     <div class="pwa-install-banner" id="installBanner">
         <button class="pwa-close" onclick="hideInstallBanner()">×</button>
         <div class="d-flex align-items-center">
-            <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" 
+            <img src="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png" 
                  alt="Ícone do App"
-                 style="width: 50px; height: 50px; border-radius: 10px; margin-right: 15px; border: 2px solid var(--teal-primary);">
+                 style="width: 50px; height: 50px; border-radius: 10px; margin-right: 15px; border: 2px solid var(--teal-primary);"
+                 onerror="this.src='https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png'">
             <div>
                 <h6 class="mb-1 fw-bold">Instalar App de Anamnese</h6>
                 <p class="mb-2 small text-muted">Funciona offline como aplicativo nativo</p>
@@ -502,10 +531,10 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-3 text-center">
-                    <img src="https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png" 
+                    <img src="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png" 
                          class="doctor-photo" 
                          alt="Dr. Marcelo Medeiros"
-                         onerror="this.src='https://via.placeholder.com/120/0d9488/FFFFFF?text=Dr.+Marcelo'">
+                         onerror="this.src='https://i.ibb.co/Stc2YkC/logo-marcelo-medeiros.png'">
                 </div>
                 <div class="col-md-6">
                     <h1 class="h3 fw-900 mb-2" style="color: var(--dark-teal);">
@@ -678,6 +707,21 @@
     
     <script>
         // =============================
+        // REGISTRAR SERVICE WORKER
+        // =============================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/minha-receita-psiquiatrica.apk/sw.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registrado com sucesso:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('❌ Falha ao registrar Service Worker:', error);
+                    });
+            });
+        }
+        
+        // =============================
         // CONFIGURAÇÕES PWA
         // =============================
         let deferredPrompt;
@@ -687,10 +731,13 @@
         // Esconder splash screen após carregamento
         window.addEventListener('load', function() {
             setTimeout(() => {
-                document.getElementById('splashScreen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('splashScreen').style.display = 'none';
-                }, 500);
+                const splash = document.getElementById('splashScreen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => {
+                        splash.style.display = 'none';
+                    }, 500);
+                }
                 
                 // Mostrar banner de instalação se não estiver instalado
                 if (!isStandalone) {
@@ -705,6 +752,12 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
+            console.log('📱 PWA: Evento de instalação detectado');
+            
+            // Mostrar banner após 3 segundos
+            setTimeout(() => {
+                showInstallBanner();
+            }, 3000);
         });
         
         // Função para instalar PWA
@@ -713,24 +766,34 @@
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
-                        console.log('Usuário aceitou instalar o PWA');
+                        console.log('✅ Usuário aceitou instalar o PWA');
                         hideInstallBanner();
                     }
                     deferredPrompt = null;
                 });
+            } else {
+                // Fallback: mostrar instruções
+                showInstallInstructions();
             }
         }
         
         // Mostrar banner de instalação
         function showInstallBanner() {
-            if (!isStandalone && deferredPrompt) {
-                document.getElementById('installBanner').style.display = 'block';
+            if (!isStandalone) {
+                const banner = document.getElementById('installBanner');
+                if (banner) {
+                    banner.style.display = 'block';
+                    console.log('📱 PWA: Mostrando banner de instalação');
+                }
             }
         }
         
         // Esconder banner de instalação
         function hideInstallBanner() {
-            document.getElementById('installBanner').style.display = 'none';
+            const banner = document.getElementById('installBanner');
+            if (banner) {
+                banner.style.display = 'none';
+            }
         }
         
         // Mostrar instruções de instalação
@@ -739,39 +802,69 @@
             const isAndroid = /android/i.test(navigator.userAgent);
             
             let message = '';
+            let icon = '📱';
             
             if (isIOS) {
-                message = `📱 *iPhone/iPad:*
-1. Toque no ícone de compartilhar (📤)
-2. Role para baixo
+                message = `${icon} *iPhone/iPad:*
+
+1. Toque no ícone de compartilhar (📤) na barra do Safari
+2. Role para baixo no menu
 3. Toque em "Adicionar à tela de início"
 4. Toque "Adicionar" no canto superior direito
 
-O app aparecerá na sua tela inicial como um aplicativo normal!`;
+✅ O app aparecerá na sua tela inicial como um aplicativo normal!`;
+                icon = '📱';
             } else if (isAndroid) {
-                message = `📱 *Android:*
-1. Toque nos 3 pontos (⋮) no navegador
+                message = `${icon} *Android:*
+
+1. Toque nos 3 pontos (⋮) no canto superior do Chrome
 2. Selecione "Adicionar à tela inicial"
 3. Toque em "Adicionar"
-4. Confirme se deseja
+4. Confirme se deseja instalar
 
-O ícone do app será adicionado à sua área de trabalho!`;
+✅ O ícone do app será adicionado à sua área de trabalho!`;
+                icon = '🤖';
             } else {
-                message = `💻 *Computador:*
-No Chrome/Edge:
+                message = `${icon} *Computador:*
+
+No *Chrome/Edge:*
 1. Clique no ícone de instalação (📥) na barra de endereços
 2. Clique em "Instalar"
 
-No Safari:
-1. Arquivo → "Adicionar à tela de início"`;
+No *Safari:*
+1. Arquivo → "Adicionar à tela de início"
+
+✅ O app será instalado como um aplicativo desktop!`;
+                icon = '💻';
             }
             
-            alert(message);
+            // Criar modal bonito
+            const modalHtml = `
+                <div class="modal-overlay" id="installModal">
+                    <div class="modal-content">
+                        <div class="text-center mb-4">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">${icon}</div>
+                            <h2 class="h4 fw-bold" style="color: #374151;">Como Instalar o App</h2>
+                            <p class="text-muted">Siga os passos para adicionar à sua área de trabalho</p>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; white-space: pre-line; text-align: left; font-size: 0.95rem;">
+                            ${message}
+                        </div>
+                        
+                        <button onclick="document.getElementById('installModal').remove()" class="btn w-100" style="background: #0d9488; color: white; padding: 12px; font-weight: bold; border-radius: 10px;">
+                            Entendi, Obrigado!
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
         
-        // Detectar se está no modo standalone (já instalado)
+        // Detectar se está em modo standalone (já instalado)
         if (isStandalone) {
-            console.log('App rodando em modo standalone (instalado)');
+            console.log('✅ App rodando em modo standalone (instalado)');
             document.body.classList.add('standalone-mode');
         }
         
@@ -825,676 +918,4 @@ No Safari:
         };
 
         // Listas para checkboxes
-        const sintomasAnsiososLista = [
-            "Ansiedade excessiva", "Preocupação constante", "Ataques de pânico",
-            "Medos intensos", "Inquietação", "Tensão muscular",
-            "Insônia", "Irritabilidade", "Dificuldade de concentração"
-        ];
-
-        const sintomasDepressivosLista = [
-            "Tristeza persistente", "Perda de interesse", "Fadiga constante",
-            "Alterações de apetite", "Problemas de sono", "Sentimentos de culpa",
-            "Dificuldade de concentração", "Pensamentos de morte", "Apatia"
-        ];
-
-        const sintomasHumorLista = [
-            "Variações bruscas de humor", "Euforia excessiva", "Irritabilidade",
-            "Impulsividade", "Agressividade", "Choro fácil"
-        ];
-
-        // =============================
-        // FUNÇÕES PRINCIPAIS
-        // =============================
-        function selectService(serviceId) {
-            selectedService = services[serviceId];
-            formData.servico = selectedService.nome;
-            showTermsModal();
-        }
-
-        function showTermsModal() {
-            const modalHtml = `
-                <div class="modal-overlay" id="termsModal">
-                    <div class="modal-content">
-                        <div class="text-center mb-4">
-                            <i class="fas fa-shield-alt fa-3x" style="color: #0d9488; margin-bottom: 15px;"></i>
-                            <h2 class="h4 fw-bold" style="color: #374151;">Termos de Consentimento</h2>
-                            <p class="text-muted">Leia e aceite para continuar</p>
-                        </div>
-                        
-                        <div style="height: 300px; overflow-y: auto; background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
-                            <p class="fw-bold mb-2">CONSENTIMENTO PARA ATENDIMENTO ONLINE</p>
-                            <p class="mb-2">Ao continuar, você, paciente, declara estar ciente e concordar com os seguintes termos, em conformidade com as resoluções do Conselho Federal de Medicina (CFM):</p>
-                            <p><strong>1. Natureza do Atendimento:</strong> A solicitação de receita/laudo online não substitui uma consulta completa em casos de emergência ou quadros complexos.</p>
-                            <p class="mb-2"><strong>2. Veracidade das Informações:</strong> Você é o único responsável pela veracidade e exatidão das informações preenchidas.</p>
-                            <p class="mb-2"><strong>3. Sigilo e Privacidade:</strong> Todos os seus dados serão tratados com o mais rigoroso sigilo médico-paciente (LGPD).</p>
-                            <p class="mb-2"><strong>4. Análise Clínica:</strong> O envio deste formulário não garante a emissão do documento, que dependerá da análise clínica do médico.</p>
-                            <p class="mb-2"><strong>5. Emergências:</strong> Em caso de emergência, você deve procurar atendimento presencial imediatamente.</p>
-                        </div>
-                        
-                        <button onclick="acceptTerms()" class="btn w-100" style="background: #0d9488; color: white; padding: 12px; font-weight: bold; border-radius: 10px;">
-                            Li e Aceito os Termos
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.insertAdjacentHTML('beforeend', modalHtml);
-        }
-
-        function acceptTerms() {
-            document.getElementById('termsModal').remove();
-            showAnamneseForm();
-        }
-
-        function showAnamneseForm() {
-            currentStep = 1;
-            updateForm();
-        }
-
-        function updateForm() {
-            const formContainer = document.getElementById('form-container');
-            if (!formContainer) return;
-            
-            let html = `
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: ${(currentStep / totalSteps) * 100}%"></div>
-                </div>
-                
-                <div class="step-indicator">
-                    Etapa ${currentStep} de ${totalSteps}
-                </div>
-            `;
-            
-            switch(currentStep) {
-                case 1: // Dados pessoais
-                    html += `
-                        <div class="form-step active">
-                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">📋 Dados Pessoais</h3>
-                            
-                            <div class="mb-3">
-                                <label class="form-label required-field">Nome completo</label>
-                                <input type="text" class="form-control" id="nome" value="${formData.nome}" 
-                                       onchange="validateField('nome', this.value)" 
-                                       onblur="validateField('nome', this.value)"
-                                       required>
-                                <div class="validation-error" id="nome-error">Por favor, informe seu nome completo</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label required-field">Idade</label>
-                                <input type="number" class="form-control" id="idade" value="${formData.idade}" 
-                                       onchange="validateField('idade', this.value)"
-                                       onblur="validateField('idade', this.value)"
-                                       min="1" max="120" required>
-                                <div class="validation-error" id="idade-error">Por favor, informe sua idade (entre 1 e 120 anos)</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label required-field">Telefone (WhatsApp)</label>
-                                <input type="tel" class="form-control" id="telefone" value="${formData.telefone}" 
-                                       onchange="validateField('telefone', this.value)"
-                                       onblur="validateField('telefone', this.value)"
-                                       placeholder="(11) 99999-9999" required>
-                                <div class="validation-error" id="telefone-error">Por favor, informe um telefone válido</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Email (opcional)</label>
-                                <input type="email" class="form-control" id="email" value="${formData.email}" 
-                                       onchange="updateField('email', this.value)">
-                            </div>
-                            
-                            <div class="button-group">
-                                <button class="btn btn-back" onclick="prevStep()" disabled>← Voltar</button>
-                                <button class="btn btn-next" onclick="validateStep1()">
-                                    Próximo →
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                    
-                case 2: // Estado atual
-                    html += `
-                        <div class="form-step active">
-                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">🧠 Estado Atual</h3>
-                            
-                            <div class="mb-4">
-                                <label class="form-label required-field">Como você está se sentindo?</label>
-                                <select class="form-select" id="estadoAtual" 
-                                        onchange="validateField('estadoAtual', this.value)"
-                                        required>
-                                    <option value="">Selecione...</option>
-                                    <option value="Estável" ${formData.estadoAtual === 'Estável' ? 'selected' : ''}>Estável - Sem sintomas novos</option>
-                                    <option value="Instável" ${formData.estadoAtual === 'Instável' ? 'selected' : ''}>Instável - Com sintomas novos</option>
-                                    <option value="Crise" ${formData.estadoAtual === 'Crise' ? 'selected' : ''}>Em crise - Sintomas intensos</option>
-                                </select>
-                                <div class="validation-error" id="estadoAtual-error">Por favor, informe como está se sentindo</div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label required-field">Está estável com o tratamento atual?</label>
-                                <select class="form-select" id="estabilidadeTratamento" 
-                                        onchange="validateField('estabilidadeTratamento', this.value)"
-                                        required>
-                                    <option value="">Selecione...</option>
-                                    <option value="Sim, totalmente" ${formData.estabilidadeTratamento === 'Sim, totalmente' ? 'selected' : ''}>Sim, totalmente</option>
-                                    <option value="Parcialmente" ${formData.estabilidadeTratamento === 'Parcialmente' ? 'selected' : ''}>Parcialmente</option>
-                                    <option value="Não" ${formData.estabilidadeTratamento === 'Não' ? 'selected' : ''}>Não</option>
-                                    <option value="Não está em tratamento" ${formData.estabilidadeTratamento === 'Não está em tratamento' ? 'selected' : ''}>Não está em tratamento</option>
-                                </select>
-                                <div class="validation-error" id="estabilidadeTratamento-error">Por favor, informe a estabilidade do tratamento</div>
-                            </div>
-                            
-                            <div class="button-group">
-                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                <button class="btn btn-next" onclick="validateStep2()">
-                                    Próximo →
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                    
-                case 3: // Sintomas
-                    html += `
-                        <div class="form-step active">
-                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">🔍 Sintomas Presentes</h3>
-                            <p class="text-muted mb-4">Marque todos os sintomas que você está experienciando (pode não marcar nenhum)</p>
-                            
-                            <div class="mb-4">
-                                <label class="form-label">Sintomas Ansiosos</label>
-                                <div class="checkbox-group">
-                                    ${sintomasAnsiososLista.map(sintoma => `
-                                        <div class="checkbox-item">
-                                            <input type="checkbox" id="ansioso-${sintoma.replace(/\s+/g, '-')}" 
-                                                   ${formData.sintomasAnsiosos.includes(sintoma) ? 'checked' : ''}
-                                                   onchange="toggleCheckbox('sintomasAnsiosos', '${sintoma}')">
-                                            <label for="ansioso-${sintoma.replace(/\s+/g, '-')}">${sintoma}</label>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label">Sintomas Depressivos</label>
-                                <div class="checkbox-group">
-                                    ${sintomasDepressivosLista.map(sintoma => `
-                                        <div class="checkbox-item">
-                                            <input type="checkbox" id="depressivo-${sintoma.replace(/\s+/g, '-')}" 
-                                                   ${formData.sintomasDepressivos.includes(sintoma) ? 'checked' : ''}
-                                                   onchange="toggleCheckbox('sintomasDepressivos', '${sintoma}')">
-                                            <label for="depressivo-${sintoma.replace(/\s+/g, '-')}">${sintoma}</label>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label">Sintomas de Humor</label>
-                                <div class="checkbox-group">
-                                    ${sintomasHumorLista.map(sintoma => `
-                                        <div class="checkbox-item">
-                                            <input type="checkbox" id="humor-${sintoma.replace(/\s+/g, '-')}" 
-                                                   ${formData.sintomasHumor.includes(sintoma) ? 'checked' : ''}
-                                                   onchange="toggleCheckbox('sintomasHumor', '${sintoma}')">
-                                            <label for="humor-${sintoma.replace(/\s+/g, '-')}">${sintoma}</label>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                            
-                            <div class="button-group">
-                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                <button class="btn btn-next" onclick="nextStep()">Próximo →</button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                    
-                case 4: // Avaliação de risco e queixa - OPÇÕES MODIFICADAS
-                    html += `
-                        <div class="form-step active">
-                            <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">⚠️ Avaliação de Risco e Queixa</h3>
-                            
-                            <div class="alert alert-warning mb-4">
-                                <p class="mb-0">Estes campos são <strong>OBRIGATÓRIOS</strong> para sua segurança</p>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label required-field">Pensamentos sobre morte/autodestrutivos</label>
-                                <select class="form-select" id="pensamentosMorte" 
-                                        onchange="validateField('pensamentosMorte', this.value)"
-                                        required>
-                                    <option value="">Selecione...</option>
-                                    <option value="Ausentes" ${formData.pensamentosMorte === 'Ausentes' ? 'selected' : ''}>Ausentes</option>
-                                    <option value="Passivos (sem planejamento)" ${formData.pensamentosMorte === 'Passivos (sem planejamento)' ? 'selected' : ''}>Passivos (sem planejamento)</option>
-                                    <option value="Ativos (com planejamento)" ${formData.pensamentosMorte === 'Ativos (com planejamento)' ? 'selected' : ''}>Ativos (com planejamento)</option>
-                                    <option value="Tentativa prévia" ${formData.pensamentosMorte === 'Tentativa prévia' ? 'selected' : ''}>Tentativa prévia</option>
-                                </select>
-                                <div class="validation-error" id="pensamentosMorte-error">Por favor, informe sobre pensamentos autodestrutivos</div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label required-field">Percepção da realidade/orientação</label>
-                                <select class="form-select" id="percepRealidade" 
-                                        onchange="validateField('percepRealidade', this.value)"
-                                        required>
-                                    <option value="">Selecione...</option>
-                                    <option value="Preservada" ${formData.percepRealidade === 'Preservada' ? 'selected' : ''}>Preservada</option>
-                                    <option value="Há planejamento de morte" ${formData.percepRealidade === 'Há planejamento de morte' ? 'selected' : ''}>Há planejamento de morte</option>
-                                    <option value="Comprometida" ${formData.percepRealidade === 'Comprometida' ? 'selected' : ''}>Comprometida</option>
-                                </select>
-                                <div class="validation-error" id="percepRealidade-error">Por favor, informe sobre a percepção da realidade</div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label class="form-label required-field">Queixa principal / Motivo da consulta</label>
-                                <textarea class="form-control" id="queixaPrincipal" rows="4" 
-                                          onchange="validateField('queixaPrincipal', this.value)"
-                                          onblur="validateField('queixaPrincipal', this.value)"
-                                          placeholder="Descreva em detalhes o que está sentindo, há quanto tempo, e o que espera da consulta..."
-                                          required>${formData.queixaPrincipal}</textarea>
-                                <div class="validation-error" id="queixaPrincipal-error">Por favor, descreva sua queixa principal (mínimo 20 caracteres)</div>
-                            </div>
-                            
-                            <div class="button-group">
-                                <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                <button class="btn btn-next" onclick="validateStep4()">Próximo →</button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-                    
-                case 5: // Histórico e WhatsApp FINAL
-                    const camposObrigatorios = {
-                        'nome': formData.nome,
-                        'idade': formData.idade,
-                        'telefone': formData.telefone,
-                        'estadoAtual': formData.estadoAtual,
-                        'estabilidadeTratamento': formData.estabilidadeTratamento,
-                        'pensamentosMorte': formData.pensamentosMorte,
-                        'percepRealidade': formData.percepRealidade,
-                        'queixaPrincipal': formData.queixaPrincipal
-                    };
-                    
-                    const camposFaltantes = Object.entries(camposObrigatorios)
-                        .filter(([_, value]) => !value || value.toString().trim() === '')
-                        .map(([key]) => key);
-                    
-                    if (camposFaltantes.length > 0) {
-                        html += `
-                            <div class="form-step active">
-                                <div class="alert alert-danger">
-                                    <h4 class="alert-heading">⚠️ Formulário Incompleto!</h4>
-                                    <p>Para enviar sua solicitação, é necessário preencher <strong>TODOS</strong> os campos obrigatórios.</p>
-                                    <p class="mb-0"><strong>Campos faltantes:</strong> ${camposFaltantes.map(campo => {
-                                        const nomes = {
-                                            'nome': 'Nome completo',
-                                            'idade': 'Idade',
-                                            'telefone': 'Telefone',
-                                            'estadoAtual': 'Estado atual',
-                                            'estabilidadeTratamento': 'Estabilidade do tratamento',
-                                            'pensamentosMorte': 'Pensamentos sobre morte',
-                                            'percepRealidade': 'Percepção da realidade',
-                                            'queixaPrincipal': 'Queixa principal'
-                                        };
-                                        return nomes[campo] || campo;
-                                    }).join(', ')}</p>
-                                </div>
-                                
-                                <div class="button-group">
-                                    <button class="btn btn-back" onclick="prevStep()">← Voltar para Formulário</button>
-                                    <button class="btn" disabled style="background: #9ca3af; color: white;">
-                                        <i class="fas fa-lock me-2"></i> WhatsApp Bloqueado
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        html += `
-                            <div class="form-step active">
-                                <h3 class="h4 fw-bold mb-4" style="color: var(--dark-teal);">📝 Histórico Completo e WhatsApp</h3>
-                                
-                                <div class="order-summary mb-4">
-                                    <h5 class="fw-bold mb-3">📋 Resumo do Paciente</h5>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Dados Pessoais</h6>
-                                        <p class="mb-1"><strong>Nome:</strong> ${formData.nome}</p>
-                                        <p class="mb-1"><strong>Idade:</strong> ${formData.idade} anos</p>
-                                        <p class="mb-1"><strong>Telefone:</strong> ${formData.telefone}</p>
-                                        ${formData.email ? `<p class="mb-1"><strong>Email:</strong> ${formData.email}</p>` : ''}
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Serviço Solicitado</h6>
-                                        <p class="mb-0"><strong>${selectedService.nome}</strong> - R$ ${selectedService.valor}</p>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Estado Atual</h6>
-                                        <p class="mb-1"><strong>Estado:</strong> ${formData.estadoAtual}</p>
-                                        <p class="mb-0"><strong>Estabilidade do tratamento:</strong> ${formData.estabilidadeTratamento}</p>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Avaliação de Risco</h6>
-                                        <p class="mb-1"><strong>Pensamentos sobre morte:</strong> ${formData.pensamentosMorte}</p>
-                                        <p class="mb-0"><strong>Percepção da realidade:</strong> ${formData.percepRealidade}</p>
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Queixa Principal</h6>
-                                        <p class="mb-0" style="white-space: pre-line;">${formData.queixaPrincipal}</p>
-                                    </div>
-                                    
-                                    ${formData.historicoPsiquiatrico || formData.medicacaoAtual || formData.comorbidades ? `
-                                    <div class="mb-3">
-                                        <h6 class="fw-bold">Histórico Adicional</h6>
-                                        ${formData.historicoPsiquiatrico ? `<p class="mb-1"><strong>Histórico psiquiátrico:</strong> ${formData.historicoPsiquiatrico}</p>` : ''}
-                                        ${formData.medicacaoAtual ? `<p class="mb-1"><strong>Medicação atual:</strong> ${formData.medicacaoAtual}</p>` : ''}
-                                        ${formData.comorbidades ? `<p class="mb-0"><strong>Comorbidades:</strong> ${formData.comorbidades}</p>` : ''}
-                                    </div>
-                                    ` : ''}
-                                    
-                                    ${formData.sintomasAnsiosos.length > 0 || formData.sintomasDepressivos.length > 0 || formData.sintomasHumor.length > 0 ? `
-                                    <div>
-                                        <h6 class="fw-bold">Sintomas Relatados</h6>
-                                        ${formData.sintomasAnsiosos.length > 0 ? `<p class="mb-1"><strong>Ansiosos:</strong> ${formData.sintomasAnsiosos.join(', ')}</p>` : ''}
-                                        ${formData.sintomasDepressivos.length > 0 ? `<p class="mb-1"><strong>Depressivos:</strong> ${formData.sintomasDepressivos.join(', ')}</p>` : ''}
-                                        ${formData.sintomasHumor.length > 0 ? `<p class="mb-0"><strong>Humor:</strong> ${formData.sintomasHumor.join(', ')}</p>` : ''}
-                                    </div>
-                                    ` : ''}
-                                </div>
-                                
-                                <div class="alert alert-info mb-4">
-                                    <p class="mb-2"><strong>📱 Próximo Passo:</strong></p>
-                                    <p class="mb-2">1. Clique no botão abaixo para abrir o WhatsApp</p>
-                                    <p class="mb-2">2. Todos os dados acima serão enviados automaticamente</p>
-                                    <p class="mb-0">3. Eu entrarei em contato com os dados para pagamento (PIX/Stripe)</p>
-                                </div>
-                                
-                                <div class="alert alert-warning mb-4">
-                                    <p class="mb-0">⚠️ <strong>ATENÇÃO:</strong> O agendamento só será confirmado após o pagamento</p>
-                                </div>
-                                
-                                <div id="whatsapp-loading" class="whatsapp-loading">
-                                    <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
-                                    <p>Abrindo WhatsApp...</p>
-                                </div>
-                                
-                                <div id="whatsapp-fallback" class="whatsapp-fallback alert alert-info" style="display: none;">
-                                    <p><strong>Se o WhatsApp não abriu automaticamente:</strong></p>
-                                    <p>1. Abra o WhatsApp manualmente</p>
-                                    <p>2. Envie mensagem para: <strong>554491339060</strong></p>
-                                    <p>3. Copie o texto abaixo:</p>
-                                    <textarea class="form-control mt-2 mb-2" rows="3" readonly id="whatsapp-text-fallback" style="font-size: 12px;"></textarea>
-                                    <button onclick="copyWhatsAppText()" class="btn btn-sm btn-secondary">
-                                        <i class="fas fa-copy me-1"></i> Copiar Texto
-                                    </button>
-                                </div>
-                                
-                                <div class="button-group">
-                                    <button class="btn btn-back" onclick="prevStep()">← Voltar</button>
-                                    <button class="btn btn-whatsapp" onclick="sendToWhatsApp()" id="whatsapp-btn">
-                                        <i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    break;
-            }
-            
-            formContainer.innerHTML = html;
-            
-            if (currentStep < 5) {
-                Object.keys(camposObrigatorios || {}).forEach(field => {
-                    if (formData[field]) {
-                        validateField(field, formData[field]);
-                    }
-                });
-            }
-        }
-
-        // =============================
-        // FUNÇÕES AUXILIARES
-        // =============================
-        function validateField(field, value) {
-            const input = document.getElementById(field);
-            const errorElement = document.getElementById(`${field}-error`);
-            
-            if (!input || !errorElement) return true;
-            
-            let isValid = true;
-            let errorMessage = '';
-            
-            switch(field) {
-                case 'nome':
-                    isValid = value.trim().length >= 3;
-                    errorMessage = 'Por favor, informe seu nome completo (mínimo 3 caracteres)';
-                    break;
-                    
-                case 'idade':
-                    const age = parseInt(value);
-                    isValid = !isNaN(age) && age >= 1 && age <= 120;
-                    errorMessage = 'Por favor, informe uma idade válida (entre 1 e 120 anos)';
-                    break;
-                    
-                case 'telefone':
-                    const phoneRegex = /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/;
-                    isValid = phoneRegex.test(value.replace(/\s+/g, ''));
-                    errorMessage = 'Por favor, informe um telefone válido (ex: 11 99999-9999)';
-                    break;
-                    
-                case 'estadoAtual':
-                case 'estabilidadeTratamento':
-                case 'pensamentosMorte':
-                case 'percepRealidade':
-                    isValid = value.trim() !== '';
-                    errorMessage = 'Este campo é obrigatório';
-                    break;
-                    
-                case 'queixaPrincipal':
-                    isValid = value.trim().length >= 20;
-                    errorMessage = 'Por favor, descreva sua queixa principal com mais detalhes (mínimo 20 caracteres)';
-                    break;
-            }
-            
-            if (isValid) {
-                input.classList.remove('field-invalid');
-                errorElement.style.display = 'none';
-            } else {
-                input.classList.add('field-invalid');
-                errorElement.textContent = errorMessage;
-                errorElement.style.display = 'block';
-            }
-            
-            updateField(field, value);
-            return isValid;
-        }
-
-        function validateStep1() {
-            const fields = ['nome', 'idade', 'telefone'];
-            let allValid = true;
-            
-            fields.forEach(field => {
-                const input = document.getElementById(field);
-                if (input && !validateField(field, input.value)) {
-                    allValid = false;
-                }
-            });
-            
-            if (allValid) nextStep();
-        }
-
-        function validateStep2() {
-            const fields = ['estadoAtual', 'estabilidadeTratamento'];
-            let allValid = true;
-            
-            fields.forEach(field => {
-                const input = document.getElementById(field);
-                if (input && !validateField(field, input.value)) {
-                    allValid = false;
-                }
-            });
-            
-            if (allValid) nextStep();
-        }
-
-        function validateStep4() {
-            const fields = ['pensamentosMorte', 'percepRealidade', 'queixaPrincipal'];
-            let allValid = true;
-            
-            fields.forEach(field => {
-                const input = document.getElementById(field);
-                if (input && !validateField(field, input.value)) {
-                    allValid = false;
-                }
-            });
-            
-            if (allValid) nextStep();
-        }
-
-        function updateField(field, value) {
-            formData[field] = value;
-        }
-
-        function toggleCheckbox(arrayName, value) {
-            const array = formData[arrayName];
-            const index = array.indexOf(value);
-            
-            if (index === -1) {
-                array.push(value);
-            } else {
-                array.splice(index, 1);
-            }
-        }
-
-        function nextStep() {
-            if (currentStep < totalSteps) {
-                currentStep++;
-                updateForm();
-            }
-        }
-
-        function prevStep() {
-            if (currentStep > 1) {
-                currentStep--;
-                updateForm();
-            }
-        }
-
-        function generateWhatsAppMessage() {
-            const sintomasAnsiososText = formData.sintomasAnsiosos.length > 0 ? 
-                formData.sintomasAnsiosos.join(', ') : 'Nenhum';
-            
-            const sintomasDepressivosText = formData.sintomasDepressivos.length > 0 ? 
-                formData.sintomasDepressivos.join(', ') : 'Nenhum';
-            
-            const sintomasHumorText = formData.sintomasHumor.length > 0 ? 
-                formData.sintomasHumor.join(', ') : 'Nenhum';
-            
-            return `NOVA SOLICITAÇÃO - DR. MARCELO MEDEIROS
-
-PACIENTE
-Nome: ${formData.nome}
-Idade: ${formData.idade} anos
-Tel: ${formData.telefone}
-${formData.email ? `Email: ${formData.email}` : ''}
-
-SERVIÇO
-${formData.servico}
-Valor: R$ ${selectedService.valor}
-
-ESTADO
-Estado: ${formData.estadoAtual}
-Estabilidade: ${formData.estabilidadeTratamento}
-
-SINTOMAS
-Ansiosos: ${sintomasAnsiososText}
-Depressivos: ${sintomasDepressivosText}
-Humor: ${sintomasHumorText}
-
-AVALIAÇÃO DE RISCO
-Pensamentos morte: ${formData.pensamentosMorte}
-Percepção realidade: ${formData.percepRealidade}
-
-QUEIXA PRINCIPAL
-${formData.queixaPrincipal}
-
-${formData.historicoPsiquiatrico ? `Histórico: ${formData.historicoPsiquiatrico}` : ''}
-${formData.medicacaoAtual ? `Medicação: ${formData.medicacaoAtual}` : ''}
-${formData.comorbidades ? `Comorbidades: ${formData.comorbidades}` : ''}
-
-Data: ${new Date().toLocaleDateString('pt-BR')}
-Hora: ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-        }
-
-        function sendToWhatsApp() {
-            const message = generateWhatsAppMessage();
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/554491339060?text=${encodedMessage}`;
-            
-            const loadingEl = document.getElementById('whatsapp-loading');
-            const btn = document.getElementById('whatsapp-btn');
-            const fallbackEl = document.getElementById('whatsapp-fallback');
-            const fallbackText = document.getElementById('whatsapp-text-fallback');
-            
-            if (loadingEl) loadingEl.style.display = 'block';
-            if (btn) {
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Preparando...';
-                btn.disabled = true;
-            }
-            
-            if (fallbackText) fallbackText.value = message;
-            
-            setTimeout(() => {
-                const newWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-                
-                setTimeout(() => {
-                    if (loadingEl) loadingEl.style.display = 'none';
-                    
-                    if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
-                        if (fallbackEl) fallbackEl.style.display = 'block';
-                        if (btn) {
-                            btn.innerHTML = '<i class="fab fa-whatsapp me-2"></i> Tentar Novamente';
-                            btn.disabled = false;
-                        }
-                        alert('WhatsApp não abriu automaticamente. Use o método alternativo abaixo.');
-                    } else {
-                        if (btn) {
-                            btn.innerHTML = '<i class="fas fa-check me-2"></i> Enviado!';
-                            setTimeout(() => {
-                                btn.innerHTML = '<i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp';
-                                btn.disabled = false;
-                            }, 2000);
-                        }
-                    }
-                }, 1000);
-            }, 500);
-        }
-
-        function copyWhatsAppText() {
-            const textarea = document.getElementById('whatsapp-text-fallback');
-            if (textarea) {
-                textarea.select();
-                textarea.setSelectionRange(0, 99999);
-                document.execCommand('copy');
-                alert('Texto copiado para a área de transferência!');
-            }
-        }
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('App psiquiátrico carregado com PWA configurado!');
-            
-            // Verificar se está em modo standalone
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('✅ App rodando em modo PWA (instalado)');
-            }
-        });
-    </script>
-</body>
-</html>
+        const sintomasAns
