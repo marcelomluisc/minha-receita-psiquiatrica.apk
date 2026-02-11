@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Marcelo Medeiros - Psiquiatria Online</title>
+    <title>Dr. Marcelo Medeiros - App Psiquiátrico</title>
     
     <!-- ==================== -->
     <!-- PWA CONFIGURAÇÕES -->
     <!-- ==================== -->
     <link rel="manifest" href="/minha-receita-psiquiatrica.apk/manifest.json">
-    <meta name="theme-color" content="#4A90E2"/>
+    <meta name="theme-color" content="#0d9488"/>
     
     <!-- Ícone para navegadores desktop/mobile -->
     <link rel="icon" type="image/png" href="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png">
@@ -18,324 +18,209 @@
     <!-- Apple iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Dr. Marcelo - Psiquiatria">
+    <meta name="apple-mobile-web-app-title" content="Anamnese Psiquiátrica">
     <link rel="apple-touch-icon" href="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png">
+    <link rel="apple-touch-startup-image" href="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png">
     
     <!-- Windows -->
     <meta name="msapplication-TileImage" content="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png">
-    <meta name="msapplication-TileColor" content="#4A90E2">
+    <meta name="msapplication-TileColor" content="#0d9488">
     
     <!-- Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Dr. Marcelo - Psiquiatria">
+    <meta name="application-name" content="Anamnese Psiquiátrica">
     
     <!-- ==================== -->
     <!-- STYLES E SCRIPTS -->
     <!-- ==================== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            /* Cores principais - azul calmo + verde WhatsApp */
-            --primary-blue: #4A90E2;
-            --light-blue: #E8F4F8;
-            --soft-blue: #B8D4E8;
-            --dark-blue: #2E5A8A;
-            --whatsapp-green: #25D366;
-            --success-green: #10B981;
-            --warning-orange: #F59E0B;
-            --danger-red: #EF4444;
-            
-            /* Cores neutras */
-            --bg-light: #F7FAFC;
-            --bg-white: #FFFFFF;
-            --text-dark: #1F2937;
-            --text-gray: #6B7280;
-            --border-light: #E5E7EB;
+            --whatsapp-green: #25d366;
+            --teal-primary: #0d9488;
+            --dark-teal: #0f766e;
         }
         
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: 'Poppins', sans-serif; 
+            font-family: 'Inter', sans-serif; 
             line-height: 1.6; 
-            color: var(--text-dark);
-            background: linear-gradient(135deg, var(--light-blue) 0%, #FFFFFF 100%);
+            color: #333;
+            background: #f7f9fb;
             padding-bottom: 30px;
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* ==================== */
-        /* WHATSAPP FLUTUANTE */
-        /* ==================== */
+        /* WhatsApp Flutuante */
         .whatsapp-float {
             position: fixed;
-            width: 65px;
-            height: 65px;
+            width: 70px;
+            height: 70px;
             bottom: 25px;
             right: 25px;
-            background: linear-gradient(135deg, var(--whatsapp-green), #128C7E);
+            background-color: var(--whatsapp-green);
             color: #FFF;
-            border-radius: 50%;
+            border-radius: 50px;
             text-align: center;
-            font-size: 32px;
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
+            font-size: 35px;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
             z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            transition: all 0.3s ease;
-            animation: pulse-whatsapp 2s infinite;
+            transition: all 0.3s;
         }
-        
         .whatsapp-float:hover { 
-            background: linear-gradient(135deg, #128C7E, var(--whatsapp-green));
-            transform: scale(1.15);
-            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
+            background-color: #128C7E;
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.6);
         }
         
-        @keyframes pulse-whatsapp {
-            0%, 100% { box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4); }
-            50% { box-shadow: 0 6px 35px rgba(37, 211, 102, 0.6); }
-        }
-        
-        /* ==================== */
-        /* CABEÇALHO */
-        /* ==================== */
+        /* Cabeçalho */
         .app-header {
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
-            padding: 30px 0;
-            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.3);
-            border-bottom: 4px solid var(--soft-blue);
-            color: white;
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            border-bottom: 3px solid var(--teal-primary);
         }
         
         .doctor-photo {
-            width: 130px;
-            height: 130px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border: 4px solid var(--teal-primary);
+            box-shadow: 0 5px 15px rgba(13, 148, 136, 0.2);
         }
         
-        .badge-credencial {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-block;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        /* ==================== */
-        /* BOTÕES */
-        /* ==================== */
+        /* Botão WhatsApp */
         .whatsapp-btn {
             background: linear-gradient(135deg, var(--whatsapp-green), #128C7E);
             color: white;
             padding: 14px 35px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             border: none;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
             box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
         }
-        
         .whatsapp-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(37, 211, 102, 0.5);
             color: white;
         }
         
-        /* ==================== */
-        /* CARDS DE SERVIÇO */
-        /* ==================== */
+        /* Serviços */
         .service-card {
-            background: white;
-            border: 3px solid var(--border-light);
-            border-radius: 20px;
-            padding: 30px;
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 25px;
             text-align: center;
-            transition: all 0.4s ease;
+            transition: all 0.3s;
             height: 100%;
-            margin-bottom: 25px;
+            background: white;
+            margin-bottom: 20px;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
         }
-        
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary-blue), var(--whatsapp-green));
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-        
         .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(74, 144, 226, 0.2);
-            border-color: var(--primary-blue);
-        }
-        
-        .service-card:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .service-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--light-blue), var(--soft-blue));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2.5rem;
-            color: var(--primary-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(13, 148, 136, 0.15);
+            border-color: var(--teal-primary);
         }
         
         .price-tag {
             font-size: 2.8rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 18px 0;
+            color: var(--dark-teal);
+            margin: 15px 0;
         }
         
-        .price-label {
-            font-size: 0.9rem;
-            color: var(--text-gray);
-            font-weight: 500;
-        }
-        
-        /* ==================== */
-        /* SEÇÃO EDUCATIVA */
-        /* ==================== */
-        .info-section {
-            background: white;
+        /* Badge */
+        .badge-credencial {
+            background: linear-gradient(135deg, var(--teal-primary), var(--dark-teal));
+            color: white;
+            padding: 5px 12px;
             border-radius: 20px;
-            padding: 40px;
-            margin: 40px 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-        
-        .info-card {
-            background: var(--light-blue);
-            border-left: 5px solid var(--primary-blue);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-        }
-        
-        .info-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.15);
-        }
-        
-        .info-icon {
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            font-size: 1.8rem;
-        }
-        
-        .accordion-button {
-            background: var(--light-blue) !important;
-            color: var(--text-dark) !important;
+            font-size: 0.8rem;
             font-weight: 600;
-            border: none;
+            display: inline-block;
         }
         
-        .accordion-button:not(.collapsed) {
-            background: var(--primary-blue) !important;
-            color: white !important;
+        /* Container do Formulário */
+        #form-container {
+            min-height: 500px;
+            margin: 30px 0;
         }
         
-        .accordion-body {
-            background: white;
-            border-left: 3px solid var(--primary-blue);
-        }
-        
-        /* ==================== */
-        /* FORMULÁRIO */
-        /* ==================== */
+        /* Estilos do Formulário */
         .form-container {
             background: white;
             border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 10px 40px rgba(74, 144, 226, 0.1);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             margin: 30px 0;
-            border: 2px solid var(--border-light);
         }
         
+        /* Modal de Termos */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        /* Estilos do formulário */
         .form-step {
             display: none;
         }
         
         .form-step.active {
             display: block;
-            animation: fadeIn 0.4s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .form-label {
             font-weight: 600;
-            color: var(--text-dark);
+            color: #374151;
             margin-bottom: 8px;
             display: block;
         }
         
-        .required-field::after {
-            content: " *";
-            color: var(--danger-red);
-        }
-        
         .form-control, .form-select {
             width: 100%;
-            padding: 14px 18px;
-            border: 2px solid var(--border-light);
-            border-radius: 12px;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
             font-size: 16px;
             margin-bottom: 20px;
-            transition: all 0.3s;
-            background: var(--bg-light);
         }
         
         .form-control:focus, .form-select:focus {
-            border-color: var(--primary-blue);
+            border-color: var(--teal-primary);
             outline: none;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
         
         .checkbox-group {
@@ -348,23 +233,15 @@
         .checkbox-item {
             display: flex;
             align-items: center;
-            padding: 12px;
-            background: var(--light-blue);
-            border-radius: 10px;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .checkbox-item:hover {
-            border-color: var(--primary-blue);
-            background: white;
+            padding: 10px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
         }
         
         .checkbox-item input {
             margin-right: 10px;
-            transform: scale(1.3);
-            cursor: pointer;
+            transform: scale(1.2);
         }
         
         .button-group {
@@ -377,7 +254,7 @@
         .btn {
             padding: 14px 28px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -386,124 +263,108 @@
         }
         
         .btn-back {
-            background: var(--bg-light);
-            color: var(--text-gray);
-            border: 2px solid var(--border-light);
+            background: #f3f4f6;
+            color: #4b5563;
         }
         
         .btn-back:hover {
-            background: var(--border-light);
+            background: #e5e7eb;
         }
         
         .btn-next {
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            background: var(--teal-primary);
             color: white;
         }
         
         .btn-next:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+            background: var(--dark-teal);
         }
         
         .btn-whatsapp {
-            background: linear-gradient(135deg, var(--whatsapp-green), #128C7E) !important;
+            background: var(--whatsapp-green) !important;
             color: white !important;
         }
         
         .btn-whatsapp:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+            background: #128C7E !important;
         }
         
         .progress-container {
-            height: 10px;
-            background: var(--border-light);
-            border-radius: 10px;
-            margin-bottom: 25px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            margin-bottom: 20px;
             overflow: hidden;
         }
         
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary-blue), var(--whatsapp-green));
-            transition: width 0.4s ease;
-            border-radius: 10px;
+            background: var(--teal-primary);
+            transition: width 0.3s;
         }
         
         .step-indicator {
             text-align: center;
-            color: var(--text-gray);
+            color: #6b7280;
             margin-bottom: 30px;
             font-weight: 600;
-            font-size: 1.1rem;
         }
         
-        /* ==================== */
-        /* ALERTAS */
-        /* ==================== */
+        /* Alertas */
         .alert {
-            padding: 18px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 10px;
             margin: 20px 0;
-            border-left: 5px solid;
+            border-left: 4px solid;
         }
         
         .alert-info {
-            background: var(--light-blue);
-            border-color: var(--primary-blue);
-            color: var(--dark-blue);
+            background: #f0f9ff;
+            border-color: var(--teal-primary);
         }
         
         .alert-warning {
-            background: #FEF3C7;
-            border-color: var(--warning-orange);
-            color: #92400E;
+            background: #fef3c7;
+            border-color: #d97706;
         }
         
         .alert-danger {
-            background: #FEE2E2;
-            border-color: var(--danger-red);
-            color: #991B1B;
+            background: #fef2f2;
+            border-color: #dc2626;
         }
-        
-        .alert-success {
-            background: #D1FAE5;
-            border-color: var(--success-green);
-            color: #065F46;
-        }
-        
-        /* ==================== */
-        /* RESUMO DO PEDIDO */
-        /* ==================== */
+
+        /* Resumo do Pedido */
         .order-summary {
-            background: var(--light-blue);
-            padding: 30px;
+            background: #f8fafc;
+            padding: 25px;
             border-radius: 15px;
             margin: 25px 0;
-            border: 3px solid var(--soft-blue);
+            border: 2px solid #e5e7eb;
         }
-        
+
         .summary-item {
             display: flex;
             justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 2px solid var(--soft-blue);
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
         }
-        
+
         .summary-total {
             display: flex;
             justify-content: space-between;
-            padding: 20px 0;
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: var(--primary-blue);
+            padding: 18px 0;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--dark-teal);
+        }
+
+        .required-field::after {
+            content: " *";
+            color: #dc2626;
         }
         
-        /* ==================== */
-        /* VALIDAÇÃO */
-        /* ==================== */
         .validation-error {
-            color: var(--danger-red);
+            color: #dc2626;
             font-size: 0.875rem;
             margin-top: -15px;
             margin-bottom: 15px;
@@ -511,42 +372,55 @@
         }
         
         .field-invalid {
-            border-color: var(--danger-red) !important;
-            background: #FEE2E2 !important;
+            border-color: #dc2626 !important;
         }
         
-        /* ==================== */
-        /* PWA */
-        /* ==================== */
+        .whatsapp-loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f9ff;
+            border-radius: 10px;
+            border-left: 4px solid var(--whatsapp-green);
+        }
+        
+        .whatsapp-fallback {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        /* Instalação PWA */
         .pwa-install-banner {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             background: white;
-            padding: 18px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            padding: 15px;
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
             z-index: 999;
             display: none;
-            border-top: 4px solid var(--primary-blue);
+            border-top: 3px solid var(--teal-primary);
         }
         
         .pwa-close {
             position: absolute;
-            right: 15px;
-            top: 15px;
+            right: 10px;
+            top: 10px;
             background: none;
             border: none;
-            font-size: 1.3rem;
-            color: var(--text-gray);
+            font-size: 1.2rem;
+            color: #6b7280;
             cursor: pointer;
         }
         
+        /* PWA Install Button */
         .install-app-btn {
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            background: linear-gradient(135deg, var(--teal-primary), var(--dark-teal));
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 25px;
             font-weight: 600;
             cursor: pointer;
@@ -557,13 +431,14 @@
             margin-top: 10px;
         }
         
+        /* Splash Screen para PWA */
         .app-splash {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            background: linear-gradient(135deg, var(--teal-primary), var(--dark-teal));
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -584,10 +459,29 @@
         
         .splash-text {
             color: white;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             text-align: center;
             margin-top: 20px;
+        }
+        
+        /* Fallback para splash screen */
+        .splash-error {
+            display: none;
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .splash-error button {
+            background: white;
+            color: var(--teal-primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+            cursor: pointer;
         }
         
         @keyframes pulse {
@@ -596,130 +490,105 @@
             100% { transform: scale(1); }
         }
         
-        /* ==================== */
-        /* SEÇÃO DE BENEFÍCIOS */
-        /* ==================== */
-        .benefit-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            border: 2px solid var(--border-light);
-            transition: all 0.3s;
-            height: 100%;
+        /* Ajustes para PWA instalado */
+        .standalone-mode .whatsapp-float {
+            bottom: 90px; /* Mais alto para não cobrir botões do PWA */
         }
         
-        .benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.15);
-            border-color: var(--primary-blue);
-        }
-        
-        .benefit-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: var(--primary-blue);
-        }
-        
-        /* ==================== */
-        /* RESPONSIVO */
-        /* ==================== */
+        /* Ajustes mobile */
         @media (max-width: 768px) {
+            .pwa-install-banner {
+                padding: 12px;
+            }
+            
+            .install-app-btn {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+            }
+            
             .doctor-photo {
                 width: 100px;
                 height: 100px;
             }
             
             .whatsapp-float {
-                width: 55px;
-                height: 55px;
-                font-size: 28px;
-                bottom: 20px;
-                right: 20px;
-            }
-            
-            .service-card {
-                padding: 25px;
-            }
-            
-            .price-tag {
-                font-size: 2.2rem;
-            }
-            
-            .info-section {
-                padding: 25px;
-            }
-            
-            .form-container {
-                padding: 25px;
+                width: 60px;
+                height: 60px;
+                font-size: 30px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Splash Screen -->
+    <!-- Splash Screen para PWA -->
     <div class="app-splash" id="splashScreen">
         <img src="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png" 
              alt="Dr. Marcelo Medeiros"
              class="splash-logo"
-             onerror="this.src='https://via.placeholder.com/150/4A90E2/ffffff?text=Dr.M'">
+             onerror="this.src='https://via.placeholder.com/150/0d9488/ffffff?text=Dr.Marcelo'">
         <div class="spinner-border text-white" style="width: 3rem; height: 3rem;" role="status">
             <span class="visually-hidden">Carregando...</span>
         </div>
-        <div class="splash-text">Dr. Marcelo Medeiros<br>Psiquiatria Online</div>
+        <div class="splash-text">Dr. Marcelo Medeiros<br>Anamnese Psiquiátrica</div>
+        
+        <!-- Fallback para splash screen -->
+        <div class="splash-error" id="splashError">
+            <p>Carregamento demorado...</p>
+            <button onclick="hideSplash()">Continuar</button>
+        </div>
     </div>
     
-    <!-- Banner PWA -->
+    <!-- Banner de Instalação PWA -->
     <div class="pwa-install-banner" id="installBanner">
         <button class="pwa-close" onclick="hideInstallBanner()">×</button>
         <div class="d-flex align-items-center">
             <img src="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png" 
-                 alt="Ícone"
-                 style="width: 50px; height: 50px; border-radius: 10px; margin-right: 15px; border: 2px solid var(--primary-blue);"
-                 onerror="this.src='https://via.placeholder.com/50/4A90E2/ffffff?text=App'">
+                 alt="Ícone do App"
+                 style="width: 50px; height: 50px; border-radius: 10px; margin-right: 15px; border: 2px solid var(--teal-primary);"
+                 onerror="this.src='https://via.placeholder.com/50/0d9488/ffffff?text=Dr.M'">
             <div>
-                <h6 class="mb-1 fw-bold">Instalar App</h6>
-                <p class="mb-2 small text-muted">Acesso rápido e offline</p>
+                <h6 class="mb-1 fw-bold">Instalar App de Anamnese</h6>
+                <p class="mb-2 small text-muted">Funciona offline como aplicativo nativo</p>
                 <button class="install-app-btn" onclick="installPWA()">
-                    <i class="fas fa-download"></i> Instalar
+                    <i class="fas fa-download"></i> Instalar App
                 </button>
             </div>
         </div>
     </div>
 
     <!-- WhatsApp Flutuante -->
-    <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20gostaria%20de%20agendar%20uma%20consulta" 
-       class="whatsapp-float" target="_blank" title="Fale no WhatsApp">
+    <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20gostaria%20de%20agendar%20uma%20consulta%20online%20de%2030%20minutos%20(R$%2099,90)" 
+       class="whatsapp-float" target="_blank" title="Agende pelo WhatsApp">
        <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- CABEÇALHO -->
+    <!-- Cabeçalho com sua foto -->
     <header class="app-header">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-3 text-center mb-3 mb-md-0">
+                <div class="col-md-3 text-center">
                     <img src="https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png" 
                          class="doctor-photo" 
                          alt="Dr. Marcelo Medeiros"
-                         onerror="this.src='https://via.placeholder.com/130/4A90E2/ffffff?text=Dr.M'">
+                         onerror="this.src='https://via.placeholder.com/150/0d9488/ffffff?text=Dr.Marcelo'">
                 </div>
-                <div class="col-md-6 text-center text-md-start">
-                    <h1 class="h2 fw-900 mb-2">
+                <div class="col-md-6">
+                    <h1 class="h3 fw-900 mb-2" style="color: var(--dark-teal);">
                         Dr. Marcelo Medeiros
                     </h1>
-                    <p class="mb-2 fw-600" style="font-size: 1.1rem;">
+                    <p class="mb-1 fw-600" style="color: #4b5563;">
                         Psiquiatria Online | CRM 47960
                     </p>
-                    <p class="mb-3 small" style="opacity: 0.9;">
+                    <p class="mb-0 small text-muted">
                         Pós-graduação em Psiquiatria pelo Hospital Albert Einstein
                     </p>
-                    <div>
-                        <span class="badge-credencial me-2"><i class="fas fa-certificate me-1"></i> CRM 47960</span>
-                        <span class="badge-credencial"><i class="fas fa-video me-1"></i> Atendimento Online</span>
+                    <div class="mt-2">
+                        <span class="badge-credencial me-2">CRM 47960</span>
+                        <span class="badge-credencial">Atendimento Online</span>
                     </div>
                 </div>
-                <div class="col-md-3 text-center text-md-end mt-3 mt-md-0">
-                    <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20gostaria%20de%20agendar%20uma%20consulta" 
+                <div class="col-md-3 text-end">
+                    <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20gostaria%20de%20agendar%20uma%20consulta%20online%20de%2030%20minutos%20(R$%2099,90)" 
                        class="whatsapp-btn" target="_blank">
                         <i class="fab fa-whatsapp me-2"></i> Agendar
                     </a>
@@ -728,224 +597,59 @@
         </div>
     </header>
 
-    <!-- BENEFÍCIOS -->
+    <!-- Seção de Serviços -->
     <section class="py-5">
         <div class="container">
-            <div class="row">
-                <div class="col-md-3 col-6 mb-3">
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
-                        <h6 class="fw-bold">Atendimento Seguro</h6>
-                        <p class="small text-muted mb-0">Sigilo profissional</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-3">
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-clock"></i></div>
-                        <h6 class="fw-bold">Flexível</h6>
-                        <p class="small text-muted mb-0">No seu horário</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-3">
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-home"></i></div>
-                        <h6 class="fw-bold">Conforto</h6>
-                        <p class="small text-muted mb-0">De casa</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 mb-3">
-                    <div class="benefit-card">
-                        <div class="benefit-icon"><i class="fas fa-user-md"></i></div>
-                        <h6 class="fw-bold">Especializado</h6>
-                        <p class="small text-muted mb-0">Pós-graduação</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SERVIÇOS -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center h2 fw-900 mb-5" style="color: var(--primary-blue);">
-                <i class="fas fa-briefcase-medical me-2"></i> Serviços Disponíveis
+            <h2 class="text-center h2 fw-900 mb-5" style="color: var(--dark-teal);">
+                Serviços Psiquiátricos
             </h2>
             
             <div class="row">
-                <div class="col-md-4 mb-4">
+                <div class="col-md-4">
                     <div class="service-card" onclick="selectService('consulta')">
-                        <div class="service-icon">
-                            <i class="fas fa-video"></i>
-                        </div>
+                        <i class="fas fa-video fa-3x mb-3" style="color: var(--teal-primary);"></i>
                         <h3 class="h5 fw-800 mb-3">Consulta Online</h3>
-                        <div class="price-label">A partir de</div>
                         <div class="price-tag">R$ 99,90</div>
-                        <p class="text-muted mb-3" style="font-size: 0.95rem;">
-                            <i class="fas fa-check-circle me-2" style="color: var(--success-green);"></i> 30 minutos por videochamada<br>
-                            <i class="fas fa-check-circle me-2" style="color: var(--success-green);"></i> Diagnóstico especializado<br>
-                            <i class="fas fa-check-circle me-2" style="color: var(--success-green);"></i> Acompanhamento completo
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-clock me-1"></i> 30 minutos por videochamada<br>
+                            <i class="fas fa-stethoscope me-1"></i> Diagnóstico especializado<br>
+                            <i class="fas fa-file-medical me-1"></i> Acompanhamento completo
                         </p>
-                        <button class="whatsapp-btn" style="padding: 12px 28px; font-size: 0.95rem;">
-                            <i class="fas fa-mouse-pointer me-2"></i> Selecionar
+                        <button class="whatsapp-btn" style="padding: 10px 25px; font-size: 0.9rem;">
+                            Selecionar
                         </button>
                     </div>
                 </div>
                 
-                <div class="col-md-4 mb-4">
+                <div class="col-md-4">
                     <div class="service-card" onclick="selectService('laudoSemRQE')">
-                        <div class="service-icon">
-                            <i class="fas fa-file-contract"></i>
-                        </div>
-                        <h3 class="h5 fw-800 mb-3">Laudo + Consulta</h3>
-                        <div class="price-label">Valor único</div>
+                        <i class="fas fa-file-contract fa-3x mb-3" style="color: var(--teal-primary);"></i>
+                        <h3 class="h5 fw-800 mb-3">Laudo sem RQE + Consulta</h3>
                         <div class="price-tag">R$ 180,00</div>
-                        <p class="text-muted mb-3" style="font-size: 0.95rem;">
-                            <i class="fas fa-check-circle me-2" style="color: var(--success-green);"></i> Laudo sem RQE<br>
-                            <i class="fas fa-check-circle me-2" style="color: var(--success-green);"></i> Consulta Online incluída<br>
-                            <i class="fas fa-check-circle me-2" style="color: var(--success-green);"></i> Documento oficial
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-certificate me-1"></i> Laudo sem RQE + Consulta Online<br>
+                            <i class="fas fa-clipboard-check me-1"></i> Elaboração detalhada<br>
+                            <i class="fas fa-shield-alt me-1"></i> Documento oficial
                         </p>
-                        <button class="whatsapp-btn" style="padding: 12px 28px; font-size: 0.95rem;">
-                            <i class="fas fa-mouse-pointer me-2"></i> Selecionar
+                        <button class="whatsapp-btn" style="padding: 10px 25px; font-size: 0.9rem;">
+                            Selecionar
                         </button>
                     </div>
                 </div>
                 
-                <div class="col-md-4 mb-4">
+                <div class="col-md-4">
                     <div class="service-card" onclick="selectService('laudoComRQE')">
-                        <div class="service-icon">
-                            <i class="fas fa-file-signature"></i>
-                        </div>
+                        <i class="fas fa-file-signature fa-3x mb-3" style="color: var(--teal-primary);"></i>
                         <h3 class="h5 fw-800 mb-3">Laudo com RQE</h3>
-                        <div class="price-label">Completo</div>
                         <div class="price-tag">R$ 250,00</div>
-                        <p class="text-muted mb-3" style="font-size: 0.95rem;">
-                            <i class="fas fa-check-circle me-2" style="color: var(--success-green);"></i> Com Registro de Qualificação<br>
-                            <i class="fas fa-check-circle me-2" style="color: var(--success-green);"></i> Avaliação completa<br>
-                            <i class="fas fa-check-circle me-2" style="color: var(--success-green);"></i> Para fins legais
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-award me-1"></i> Com Registro de Qualificação<br>
+                            <i class="fas fa-search me-1"></i> Avaliação completa<br>
+                            <i class="fas fa-gavel me-1"></i> Para fins legais
                         </p>
-                        <button class="whatsapp-btn" style="padding: 12px 28px; font-size: 0.95rem;">
-                            <i class="fas fa-mouse-pointer me-2"></i> Selecionar
+                        <button class="whatsapp-btn" style="padding: 10px 25px; font-size: 0.9rem;">
+                            Selecionar
                         </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEÇÃO EDUCATIVA -->
-    <section class="py-5 bg-white">
-        <div class="container">
-            <div class="info-section">
-                <h2 class="text-center h2 fw-900 mb-4" style="color: var(--primary-blue);">
-                    <i class="fas fa-brain me-2"></i> Saúde Mental: Informações Importantes
-                </h2>
-                <p class="text-center text-muted mb-5">Entenda melhor as condições de saúde mental e seus tratamentos</p>
-                
-                <div class="row mb-4">
-                    <div class="col-md-4 mb-3">
-                        <div class="info-card">
-                            <div class="info-icon" style="color: var(--primary-blue);">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </div>
-                            <h5 class="fw-bold mb-2">Ansiedade</h5>
-                            <p class="small mb-0">Preocupação excessiva, tensão, insônia e sintomas físicos. Tratável com terapia e medicação adequada.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="info-card">
-                            <div class="info-icon" style="color: #6B7280;">
-                                <i class="fas fa-cloud-rain"></i>
-                            </div>
-                            <h5 class="fw-bold mb-2">Depressão</h5>
-                            <p class="small mb-0">Tristeza persistente, perda de interesse, fadiga. Responde bem ao tratamento psiquiátrico.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <div class="info-card">
-                            <div class="info-icon" style="color: #F59E0B;">
-                                <i class="fas fa-bolt"></i>
-                            </div>
-                            <h5 class="fw-bold mb-2">Transtorno Bipolar</h5>
-                            <p class="small mb-0">Alternância entre euforia e depressão. Requer acompanhamento especializado contínuo.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Accordion de Informações -->
-                <div class="accordion" id="accordionInfo">
-                    <div class="accordion-item mb-3">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
-                                <i class="fas fa-pills me-2"></i> Como funcionam os tratamentos psiquiátricos?
-                            </button>
-                        </h2>
-                        <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#accordionInfo">
-                            <div class="accordion-body">
-                                <p><strong>Os tratamentos psiquiátricos combinam:</strong></p>
-                                <ul>
-                                    <li><strong>Medicação:</strong> Ajusta neurotransmissores cerebrais, aliviando sintomas</li>
-                                    <li><strong>Psicoterapia:</strong> Trabalha pensamentos e comportamentos</li>
-                                    <li><strong>Mudanças de hábitos:</strong> Sono, alimentação, exercícios</li>
-                                    <li><strong>Acompanhamento:</strong> Ajustes periódicos para melhor resultado</li>
-                                </ul>
-                                <p class="mb-0"><small><i class="fas fa-info-circle me-1"></i> Cada caso é único e requer avaliação individual.</small></p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="accordion-item mb-3">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
-                                <i class="fas fa-clock me-2"></i> Quanto tempo leva para melhorar?
-                            </button>
-                        </h2>
-                        <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#accordionInfo">
-                            <div class="accordion-body">
-                                <p><strong>Os prazos variam:</strong></p>
-                                <ul>
-                                    <li><strong>Primeiras semanas:</strong> Ajuste da medicação, primeiros sinais de melhora</li>
-                                    <li><strong>1-3 meses:</strong> Melhora significativa dos sintomas na maioria dos casos</li>
-                                    <li><strong>6 meses+:</strong> Estabilização e manutenção do tratamento</li>
-                                </ul>
-                                <div class="alert alert-info mb-0">
-                                    <i class="fas fa-lightbulb me-2"></i> <strong>Importante:</strong> Não interrompa medicações sem orientação médica. Mudanças precisam ser acompanhadas.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
-                                <i class="fas fa-shield-alt me-2"></i> Quando procurar ajuda?
-                            </button>
-                        </h2>
-                        <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#accordionInfo">
-                            <div class="accordion-body">
-                                <p><strong>Procure ajuda se você apresenta:</strong></p>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <ul>
-                                            <li>Tristeza ou ansiedade persistente (>2 semanas)</li>
-                                            <li>Alterações no sono ou apetite</li>
-                                            <li>Perda de interesse em atividades</li>
-                                            <li>Dificuldade de concentração</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <ul>
-                                            <li>Pensamentos sobre morte ou suicídio</li>
-                                            <li>Uso problemático de substâncias</li>
-                                            <li>Mudanças bruscas de humor</li>
-                                            <li>Impacto no trabalho/relacionamentos</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="alert alert-danger mb-0">
-                                    <i class="fas fa-exclamation-triangle me-2"></i> <strong>Emergência:</strong> Se tiver pensamentos suicidas, procure emergência ou ligue 188 (CVV)
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -953,79 +657,83 @@
     </section>
 
     <!-- FORMULÁRIO DE ANAMNESE -->
-    <section class="py-5">
+    <section class="py-4">
         <div class="container">
             <div class="form-container">
-                <h2 class="text-center h3 fw-900 mb-4" style="color: var(--primary-blue);">
-                    <i class="fas fa-clipboard-list me-2"></i> Formulário de Anamnese Psiquiátrica
+                <h2 class="text-center h3 fw-900 mb-4" style="color: var(--dark-teal);">
+                    📋 Formulário de Anamnese Psiquiátrica
                 </h2>
                 
                 <div id="form-container">
+                    <!-- Formulário será injetado aqui pelo JavaScript -->
                     <div class="text-center text-muted" id="form-placeholder">
-                        <i class="fas fa-hand-pointer fa-3x mb-3" style="color: var(--soft-blue);"></i>
-                        <p class="fw-bold">Selecione um serviço acima para iniciar o formulário</p>
-                        <p class="small"><i class="fas fa-exclamation-circle me-1"></i> Campos marcados com * são obrigatórios</p>
+                        <i class="fas fa-clipboard-list fa-3x mb-3" style="color: #d1d5db;"></i>
+                        <p>Selecione um serviço acima para iniciar o formulário</p>
+                        <p class="small"><i class="fas fa-exclamation-circle me-1"></i> Todos os campos marcados com * são obrigatórios</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- INSTRUÇÕES -->
-    <section class="py-5" style="background: white;">
+    <!-- Instruções -->
+    <section class="py-5 bg-light">
         <div class="container text-center">
-            <h3 class="h4 fw-800 mb-4" style="color: var(--primary-blue);">
-                <i class="fas fa-info-circle me-2"></i> Como Funciona
+            <h3 class="h4 fw-800 mb-4" style="color: var(--dark-teal);">
+                ⚠️ Instruções Importantes
             </h3>
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="alert alert-info">
-                        <h5 class="fw-bold mb-3">Passo a Passo:</h5>
                         <p class="mb-2"><strong>1.</strong> Selecione o serviço desejado acima</p>
-                        <p class="mb-2"><strong>2.</strong> Preencha TODOS os campos obrigatórios (*)</p>
-                        <p class="mb-2"><strong>3.</strong> Clique no botão WhatsApp para enviar</p>
-                        <p class="mb-0"><strong>4.</strong> Receba o link de pagamento e agende sua consulta</p>
+                        <p class="mb-2"><strong>2.</strong> Preencha <strong>TODOS</strong> os campos obrigatórios da anamnese (*)</p>
+                        <p class="mb-2"><strong>3.</strong> Ao final, clique no botão do WhatsApp para enviar</p>
+                        <p class="mb-0"><strong>4.</strong> Eu enviarei os dados para pagamento (PIX/Stripe) via WhatsApp</p>
                     </div>
-                    <div class="alert alert-success">
-                        <p class="mb-0"><i class="fas fa-lock me-2"></i> <strong>Segurança:</strong> Seus dados são sigilosos e protegidos pelo sigilo médico</p>
+                    <div class="alert alert-warning">
+                        <p class="mb-0"><strong>⚠️ ATENÇÃO:</strong> O formulário completo é OBRIGATÓRIO para agendamento</p>
                     </div>
-                    <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20tenho%20dúvidas" 
+                    <a href="https://wa.me/554491339060?text=Olá,%20Dr.%20Marcelo,%20tenho%20dúvidas%20sobre%20as%20consultas%20online" 
                        class="whatsapp-btn mt-3" target="_blank">
                         <i class="fab fa-whatsapp me-2"></i> Tirar Dúvidas
                     </a>
+                    
+                    <!-- Botão de Instalação PWA -->
+                    <div class="mt-4">
+                        <button onclick="showInstallInstructions()" class="btn" style="background: #f0f9ff; border: 2px solid var(--teal-primary); color: var(--dark-teal);">
+                            <i class="fas fa-mobile-alt me-2"></i> Como instalar este app no celular
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- RODAPÉ -->
-    <footer style="background: linear-gradient(135deg, var(--dark-blue), var(--primary-blue)); color: white; padding: 40px 0;">
+    <!-- Rodapé -->
+    <footer class="bg-dark text-white py-4">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h3 class="h5 fw-900 mb-2">Dr. Marcelo Medeiros - CRM 47960</h3>
-                    <p class="small mb-2" style="opacity: 0.9;">
-                        Psiquiatria Online | Pós-graduação Hospital Albert Einstein
-                    </p>
-                    <p class="small mb-0" style="opacity: 0.8;">
-                        Atendimento conforme resoluções do CFM e Código de Ética Médica
+                    <h3 class="h5 fw-900 mb-2">Dr. Marcelo Medeiros</h3>
+                    <p class="small text-white-50 mb-0">
+                        Atendimento online conforme resoluções do CFM e Código de Ética Médica
                     </p>
                 </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <div class="col-md-4 text-md-end">
                     <a href="mailto:marcelomedeirossaudeefitness@gmail.com" 
-                       class="text-white d-block mb-2 small">
-                        <i class="fas fa-envelope me-2"></i> E-mail profissional
+                       class="text-white d-block mb-1 small">
+                        <i class="fas fa-envelope me-1"></i> E-mail profissional
                     </a>
                     <a href="https://wa.me/554491339060" 
                        class="text-white d-block small">
-                        <i class="fab fa-whatsapp me-2"></i> WhatsApp
+                        <i class="fab fa-whatsapp me-1"></i> WhatsApp para dúvidas
                     </a>
                 </div>
             </div>
-            <hr class="my-3" style="opacity: 0.3;">
-            <p class="text-center small mb-0" style="opacity: 0.8;">
+            <hr class="my-3 opacity-25">
+            <p class="text-center small text-white-50 mb-0">
                 <i class="fas fa-exclamation-triangle me-1"></i> 
-                Emergências: Pronto-socorro ou 188 (CVV - Centro de Valorização da Vida)
+                Para emergências, procure um pronto-socorro ou ligue 188 (CVV)
             </p>
         </div>
     </footer>
@@ -1035,78 +743,261 @@
     
     <script>
         // =============================
-        // DIAGNÓSTICO
+        // DIAGNÓSTICO INICIAL
         // =============================
         console.log('🚀 App iniciando...');
-        
+        console.log('URL:', window.location.href);
+        console.log('Service Worker:', 'serviceWorker' in navigator);
+
+        // Monitorar erros
         window.addEventListener('error', function(e) {
-            console.error('❌ Erro:', e.error);
+            console.error('❌ Erro global:', e.error);
+            console.error('❌ Em:', e.filename, 'linha', e.lineno);
         });
 
         // =============================
-        // FUNÇÕES PWA
+        // FUNÇÕES GERAIS
         // =============================
         function hideSplash() {
             const splash = document.getElementById('splashScreen');
             if (splash) {
                 splash.style.opacity = '0';
-                setTimeout(() => splash.style.display = 'none', 500);
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 500);
             }
         }
 
-        // Service Worker
+        // =============================
+        // REGISTRAR SERVICE WORKER COM TRY-CATCH
+        // =============================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/minha-receita-psiquiatrica.apk/sw.js')
-                    .then(reg => console.log('✅ Service Worker registrado'))
-                    .catch(err => console.log('❌ SW erro:', err));
+                // Verifica se estamos na URL correta
+                const swPath = '/minha-receita-psiquiatrica.apk/sw.js';
+                const currentPath = window.location.pathname;
+                
+                console.log('📍 Registrando Service Worker...');
+                console.log('📁 Caminho atual:', currentPath);
+                console.log('📁 Caminho SW:', swPath);
+                
+                navigator.serviceWorker.register(swPath)
+                    .then(registration => {
+                        console.log('✅ Service Worker registrado com sucesso!');
+                        console.log('🔧 Scope:', registration.scope);
+                        console.log('🚀 Estado:', registration.active ? 'Ativo' : 'Inativo');
+                        
+                        // Forçar atualização
+                        registration.update();
+                        
+                        // Verificar se há uma nova versão
+                        registration.addEventListener('updatefound', () => {
+                            console.log('🔄 Nova versão do Service Worker encontrada!');
+                            const newWorker = registration.installing;
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                console.log('📊 Estado do novo worker:', newWorker.state);
+                                
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('🆕 Nova versão pronta! Recarregando...');
+                                    window.location.reload();
+                                }
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.log('❌ Falha ao registrar Service Worker:', error);
+                        console.log('🔧 Dica: Verifique se o arquivo sw.js existe em:', swPath);
+                        
+                        // Continuar sem Service Worker se falhar
+                        hideSplash();
+                    });
             });
         }
         
+        // =============================
+        // CONFIGURAÇÕES PWA
+        // =============================
         let deferredPrompt;
-        let isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        let isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                          window.navigator.standalone === true;
         
+        // Controlador do splash screen
         window.addEventListener('load', function() {
-            setTimeout(hideSplash, 1000);
+            const splash = document.getElementById('splashScreen');
             
-            if (!isStandalone) {
-                setTimeout(() => showInstallBanner(), 2000);
-            }
+            // Verificar se tudo carregou corretamente
+            Promise.all([
+                // Verificar se imagens carregaram
+                new Promise(resolve => {
+                    const img = new Image();
+                    img.src = 'https://i.ibb.co/CsTtFZ52/FOTO-AAAAA.png';
+                    img.onload = resolve;
+                    img.onerror = resolve; // Continua mesmo com erro
+                }),
+                // Esperar fonts carregarem
+                document.fonts.ready || Promise.resolve()
+            ]).then(() => {
+                // Esconder splash após tudo carregar
+                if (splash) {
+                    setTimeout(() => {
+                        splash.style.opacity = '0';
+                        setTimeout(() => {
+                            splash.style.display = 'none';
+                        }, 500);
+                    }, 1000); // Reduzido de 1.5s para 1s
+                }
+                
+                // Mostrar banner de instalação se não estiver instalado
+                if (!isStandalone) {
+                    setTimeout(() => {
+                        showInstallBanner();
+                    }, 2000);
+                }
+            }).catch(() => {
+                // Fallback: esconder após 2 segundos mesmo com erro
+                setTimeout(() => {
+                    if (splash) {
+                        splash.style.opacity = '0';
+                        setTimeout(() => {
+                            splash.style.display = 'none';
+                        }, 500);
+                    }
+                }, 2000);
+            });
         });
 
+        // Timeout de segurança para splash screen
+        setTimeout(() => {
+            const splash = document.getElementById('splashScreen');
+            const errorMsg = document.getElementById('splashError');
+            if (splash && splash.style.display !== 'none') {
+                if (errorMsg) errorMsg.style.display = 'block';
+                // Auto-hide após 8 segundos
+                setTimeout(hideSplash, 8000);
+            }
+        }, 5000);
+
+        // Detectar evento de instalação PWA
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            setTimeout(showInstallBanner, 3000);
+            console.log('📱 PWA: Evento de instalação detectado');
+            
+            // Mostrar banner após 3 segundos
+            setTimeout(() => {
+                showInstallBanner();
+            }, 3000);
         });
         
+        // Função para instalar PWA
         function installPWA() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choice) => {
-                    if (choice.outcome === 'accepted') {
-                        console.log('✅ PWA instalado');
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('✅ Usuário aceitou instalar o PWA');
                         hideInstallBanner();
                     }
                     deferredPrompt = null;
                 });
             } else {
-                alert('Use o menu do navegador para instalar o app');
+                // Fallback: mostrar instruções
+                showInstallInstructions();
             }
         }
         
+        // Mostrar banner de instalação
         function showInstallBanner() {
             if (!isStandalone) {
                 const banner = document.getElementById('installBanner');
-                if (banner) banner.style.display = 'block';
+                if (banner) {
+                    banner.style.display = 'block';
+                    console.log('📱 PWA: Mostrando banner de instalação');
+                }
             }
         }
         
+        // Esconder banner de instalação
         function hideInstallBanner() {
             const banner = document.getElementById('installBanner');
-            if (banner) banner.style.display = 'none';
+            if (banner) {
+                banner.style.display = 'none';
+            }
         }
+        
+        // Mostrar instruções de instalação
+        function showInstallInstructions() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isAndroid = /android/i.test(navigator.userAgent);
+            
+            let message = '';
+            let icon = '📱';
+            
+            if (isIOS) {
+                message = `${icon} *iPhone/iPad:*
 
+1. Toque no ícone de compartilhar (📤) na barra do Safari
+2. Role para baixo no menu
+3. Toque em "Adicionar à tela de início"
+4. Toque "Adicionar" no canto superior direito
+
+✅ O app aparecerá na sua tela inicial como um aplicativo normal!`;
+                icon = '📱';
+            } else if (isAndroid) {
+                message = `${icon} *Android:*
+
+1. Toque nos 3 pontos (⋮) no canto superior do Chrome
+2. Selecione "Adicionar à tela inicial"
+3. Toque em "Adicionar"
+4. Confirme se deseja instalar
+
+✅ O ícone do app será adicionado à sua área de trabalho!`;
+                icon = '🤖';
+            } else {
+                message = `${icon} *Computador:*
+
+No *Chrome/Edge:*
+1. Clique no ícone de instalação (📥) na barra de endereços
+2. Clique em "Instalar"
+
+No *Safari:*
+1. Arquivo → "Adicionar à tela de início"
+
+✅ O app será instalado como um aplicativo desktop!`;
+                icon = '💻';
+            }
+            
+            // Criar modal bonito
+            const modalHtml = `
+                <div class="modal-overlay" id="installModal">
+                    <div class="modal-content">
+                        <div class="text-center mb-4">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">${icon}</div>
+                            <h2 class="h4 fw-bold" style="color: #374151;">Como Instalar o App</h2>
+                            <p class="text-muted">Siga os passos para adicionar à sua área de trabalho</p>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; white-space: pre-line; text-align: left; font-size: 0.95rem;">
+                            ${message}
+                        </div>
+                        
+                        <button onclick="document.getElementById('installModal').remove()" class="btn w-100" style="background: #0d9488; color: white; padding: 12px; font-weight: bold; border-radius: 10px;">
+                            Entendi, Obrigado!
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+        
+        // Detectar se está em modo standalone (já instalado)
+        if (isStandalone) {
+            console.log('✅ App rodando em modo standalone (instalado)');
+            document.body.classList.add('standalone-mode');
+        }
+        
         // =============================
         // DADOS DO APP
         // =============================
@@ -1114,6 +1005,7 @@
         let currentStep = 1;
         const totalSteps = 5;
         
+        // SERVICOS ATUALIZADOS
         const services = {
             consulta: {
                 id: 'consulta',
@@ -1135,29 +1027,64 @@
             }
         };
 
+        // Dados do formulário
         let formData = {
-            nome: '', idade: '', telefone: '', email: '', servico: '',
-            estadoAtual: '', estabilidadeTratamento: '',
-            sintomasAnsiosos: [], sintomasDepressivos: [], sintomasHumor: [],
-            pensamentosMorte: '', percepRealidade: '',
-            queixaPrincipal: '', historicoPsiquiatrico: '', medicacaoAtual: '', comorbidades: ''
+            nome: '',
+            idade: '',
+            telefone: '',
+            email: '',
+            servico: '',
+            estadoAtual: '',
+            estabilidadeTratamento: '',
+            sintomasAnsiosos: [],
+            sintomasDepressivos: [],
+            sintomasHumor: [],
+            pensamentosMorte: '',
+            percepRealidade: '',
+            queixaPrincipal: '',
+            historicoPsiquiatrico: '',
+            medicacaoAtual: '',
+            comorbidades: ''
         };
 
+        // Listas para checkboxes
         const sintomasAnsiososList = [
-            'Preocupação excessiva', 'Tensão muscular', 'Dificuldade de relaxar',
-            'Insônia', 'Irritabilidade', 'Falta de ar', 'Palpitações', 'Sudorese', 'Tremores', 'Medos irracionais'
+            'Preocupação excessiva',
+            'Tensão muscular',
+            'Dificuldade de relaxar',
+            'Insônia',
+            'Irritabilidade',
+            'Falta de ar',
+            'Palpitações',
+            'Sudorese',
+            'Tremores',
+            'Medos irracionais'
         ];
 
         const sintomasDepressivosList = [
-            'Tristeza persistente', 'Perda de interesse', 'Fadiga constante',
-            'Alterações de apetite', 'Alterações de sono', 'Dificuldade de concentração',
-            'Sentimentos de culpa', 'Agitação ou lentidão', 'Pensamentos de morte', 'Choro frequente'
+            'Tristeza persistente',
+            'Perda de interesse',
+            'Fadiga constante',
+            'Alterações de apetite',
+            'Alterações de sono',
+            'Dificuldade de concentração',
+            'Sentimentos de culpa',
+            'Agitação ou lentidão',
+            'Pensamentos de morte',
+            'Choro frequente'
         ];
 
         const sintomasHumorList = [
-            'Euforia', 'Irritabilidade', 'Aceleração pensamento',
-            'Redução necessidade sono', 'Grandiosidade', 'Aumento atividade',
-            'Comportamentos impulsivos', 'Distraibilidade', 'Agitação psicomotora', 'Hiperatividade sexual'
+            'Euforia',
+            'Irritabilidade',
+            'Aceleração pensamento',
+            'Redução necessidade sono',
+            'Grandiosidade',
+            'Aumento atividade',
+            'Comportamentos impulsivos',
+            'Distraibilidade',
+            'Agitação psicomotora',
+            'Hiperatividade sexual'
         ];
 
         // =============================
@@ -1167,14 +1094,22 @@
             selectedService = services[serviceId];
             formData.servico = selectedService.nome;
             
+            // Remover placeholder
             const placeholder = document.getElementById('form-placeholder');
-            if (placeholder) placeholder.style.display = 'none';
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
             
+            // Injetar formulário
             document.getElementById('form-container').innerHTML = generateForm();
+            
+            // Iniciar no passo 1
             showStep(1);
+            
+            // Scroll para formulário
             document.getElementById('form-container').scrollIntoView({ behavior: 'smooth' });
             
-            console.log('✅ Serviço:', selectedService.nome);
+            console.log('✅ Serviço selecionado:', selectedService.nome);
         }
 
         function generateForm() {
@@ -1187,9 +1122,9 @@
                     Passo 1 de ${totalSteps}
                 </div>
                 
-                <!-- Passo 1 -->
+                <!-- Passo 1: Dados Pessoais -->
                 <div class="form-step active" id="step1">
-                    <h4 class="mb-4" style="color: var(--primary-blue);"><i class="fas fa-user me-2"></i> Dados Pessoais</h4>
+                    <h4 class="mb-4" style="color: var(--dark-teal);">📝 Dados Pessoais</h4>
                     
                     <label class="form-label required-field">Nome Completo</label>
                     <input type="text" class="form-control" id="nome" placeholder="Digite seu nome completo" required>
@@ -1209,54 +1144,57 @@
                     
                     <div class="button-group">
                         <button class="btn btn-back" disabled>Voltar</button>
-                        <button class="btn btn-next" onclick="validateStep1()">Próximo <i class="fas fa-arrow-right ms-2"></i></button>
+                        <button class="btn btn-next" onclick="validateStep1()">Próximo</button>
                     </div>
                 </div>
                 
-                <!-- Passo 2 -->
+                <!-- Passo 2: Estado Atual -->
                 <div class="form-step" id="step2">
-                    <h4 class="mb-4" style="color: var(--primary-blue);"><i class="fas fa-brain me-2"></i> Estado Atual</h4>
+                    <h4 class="mb-4" style="color: var(--dark-teal);">🧠 Estado Atual</h4>
                     
                     <label class="form-label required-field">Como está seu estado emocional atual?</label>
                     <textarea class="form-control" id="estadoAtual" rows="3" placeholder="Descreva como tem se sentido ultimamente..." required></textarea>
                     <div class="validation-error" id="estadoAtualError">Este campo é obrigatório</div>
                     
                     <label class="form-label">Já faz algum tratamento? Está estabilizado?</label>
-                    <textarea class="form-control" id="estabilidadeTratamento" rows="3" placeholder="Informe se já faz tratamento..."></textarea>
+                    <textarea class="form-control" id="estabilidadeTratamento" rows="3" placeholder="Informe se já faz tratamento e como está..."></textarea>
                     
                     <div class="button-group">
-                        <button class="btn btn-back" onclick="previousStep()"><i class="fas fa-arrow-left me-2"></i> Voltar</button>
-                        <button class="btn btn-next" onclick="validateStep2()">Próximo <i class="fas fa-arrow-right ms-2"></i></button>
+                        <button class="btn btn-back" onclick="previousStep()">Voltar</button>
+                        <button class="btn btn-next" onclick="validateStep2()">Próximo</button>
                     </div>
                 </div>
                 
-                <!-- Passo 3 -->
+                <!-- Passo 3: Sintomas -->
                 <div class="form-step" id="step3">
-                    <h4 class="mb-4" style="color: var(--primary-blue);"><i class="fas fa-heartbeat me-2"></i> Sintomas</h4>
+                    <h4 class="mb-4" style="color: var(--dark-teal);">⚠️ Sintomas</h4>
                     
                     <label class="form-label">Sintomas Ansiosos (marque os que se aplicam)</label>
-                    <div class="checkbox-group">
-                        ${sintomasAnsiososList.map(s => `
+                    <div class="checkbox-group" id="sintomasAnsiososGroup">
+                        ${sintomasAnsiososList.map((sintoma, index) => `
                             <label class="checkbox-item">
-                                <input type="checkbox" name="sintomasAnsiosos" value="${s}"> ${s}
+                                <input type="checkbox" name="sintomasAnsiosos" value="${sintoma}">
+                                ${sintoma}
                             </label>
                         `).join('')}
                     </div>
                     
                     <label class="form-label">Sintomas Depressivos (marque os que se aplicam)</label>
-                    <div class="checkbox-group">
-                        ${sintomasDepressivosList.map(s => `
+                    <div class="checkbox-group" id="sintomasDepressivosGroup">
+                        ${sintomasDepressivosList.map((sintoma, index) => `
                             <label class="checkbox-item">
-                                <input type="checkbox" name="sintomasDepressivos" value="${s}"> ${s}
+                                <input type="checkbox" name="sintomasDepressivos" value="${sintoma}">
+                                ${sintoma}
                             </label>
                         `).join('')}
                     </div>
                     
                     <label class="form-label">Alterações de Humor (marque os que se aplicam)</label>
-                    <div class="checkbox-group">
-                        ${sintomasHumorList.map(s => `
+                    <div class="checkbox-group" id="sintomasHumorGroup">
+                        ${sintomasHumorList.map((sintoma, index) => `
                             <label class="checkbox-item">
-                                <input type="checkbox" name="sintomasHumor" value="${s}"> ${s}
+                                <input type="checkbox" name="sintomasHumor" value="${sintoma}">
+                                ${sintoma}
                             </label>
                         `).join('')}
                     </div>
@@ -1282,69 +1220,83 @@
                     <div class="validation-error" id="percepRealidadeError">Este campo é obrigatório</div>
                     
                     <div class="button-group">
-                        <button class="btn btn-back" onclick="previousStep()"><i class="fas fa-arrow-left me-2"></i> Voltar</button>
-                        <button class="btn btn-next" onclick="validateStep3()">Próximo <i class="fas fa-arrow-right ms-2"></i></button>
+                        <button class="btn btn-back" onclick="previousStep()">Voltar</button>
+                        <button class="btn btn-next" onclick="validateStep3()">Próximo</button>
                     </div>
                 </div>
                 
-                <!-- Passo 4 -->
+                <!-- Passo 4: Histórico -->
                 <div class="form-step" id="step4">
-                    <h4 class="mb-4" style="color: var(--primary-blue);"><i class="fas fa-clipboard-list me-2"></i> Histórico</h4>
+                    <h4 class="mb-4" style="color: var(--dark-teal);">📋 Histórico</h4>
                     
-                    <label class="form-label required-field">Qual é a queixa principal?</label>
-                    <textarea class="form-control" id="queixaPrincipal" rows="3" placeholder="Descreva o motivo principal..." required></textarea>
+                    <label class="form-label required-field">Qual é a queixa principal que o traz à consulta?</label>
+                    <textarea class="form-control" id="queixaPrincipal" rows="3" placeholder="Descreva o motivo principal da consulta..." required></textarea>
                     <div class="validation-error" id="queixaPrincipalError">Este campo é obrigatório</div>
                     
                     <label class="form-label">Histórico psiquiátrico anterior</label>
-                    <textarea class="form-control" id="historicoPsiquiatrico" rows="3" placeholder="Já fez tratamento antes?"></textarea>
+                    <textarea class="form-control" id="historicoPsiquiatrico" rows="3" placeholder="Já fez tratamento antes? Tem diagnóstico prévio?"></textarea>
                     
                     <label class="form-label">Medicação atual (se houver)</label>
-                    <textarea class="form-control" id="medicacaoAtual" rows="2" placeholder="Liste medicações..."></textarea>
+                    <textarea class="form-control" id="medicacaoAtual" rows="2" placeholder="Liste medicações que está tomando atualmente..."></textarea>
                     
-                    <label class="form-label">Comorbidades (outras condições)</label>
-                    <textarea class="form-control" id="comorbidades" rows="2" placeholder="Ex: diabetes, hipertensão..."></textarea>
+                    <label class="form-label">Comorbidades (outras condições de saúde)</label>
+                    <textarea class="form-control" id="comorbidades" rows="2" placeholder="Ex: diabetes, hipertensão, etc..."></textarea>
                     
                     <div class="button-group">
-                        <button class="btn btn-back" onclick="previousStep()"><i class="fas fa-arrow-left me-2"></i> Voltar</button>
-                        <button class="btn btn-next" onclick="validateStep4()">Próximo <i class="fas fa-arrow-right ms-2"></i></button>
+                        <button class="btn btn-back" onclick="previousStep()">Voltar</button>
+                        <button class="btn btn-next" onclick="validateStep4()">Próximo</button>
                     </div>
                 </div>
                 
-                <!-- Passo 5 -->
+                <!-- Passo 5: Resumo e Confirmação -->
                 <div class="form-step" id="step5">
-                    <h4 class="mb-4" style="color: var(--primary-blue);"><i class="fas fa-check-circle me-2"></i> Resumo</h4>
+                    <h4 class="mb-4" style="color: var(--dark-teal);">✅ Resumo do Pedido</h4>
                     
                     <div class="order-summary">
                         <div class="summary-item">
-                            <span><strong>Serviço:</strong></span>
-                            <span>${selectedService.nome}</span>
+                            <span>Serviço selecionado:</span>
+                            <span><strong>${selectedService.nome}</strong></span>
                         </div>
                         <div class="summary-item">
-                            <span><strong>Valor:</strong></span>
-                            <span style="color: var(--primary-blue); font-weight: 700;">R$ ${selectedService.valor}</span>
+                            <span>Valor:</span>
+                            <span><strong style="color: var(--dark-teal);">R$ ${selectedService.valor}</strong></span>
                         </div>
                         <div class="summary-total">
-                            <span>Total:</span>
+                            <span>Total a pagar:</span>
                             <span>R$ ${selectedService.valor}</span>
                         </div>
                     </div>
                     
                     <div class="alert alert-info">
-                        <h6 class="fw-bold"><i class="fas fa-info-circle me-2"></i> Resumo:</h6>
-                        <p id="resumoDados" style="font-size: 0.9rem; margin: 0;"></p>
+                        <p><strong>📋 Resumo das informações:</strong></p>
+                        <p id="resumoDados" style="font-size: 0.9rem; margin-bottom: 0;"></p>
                     </div>
                     
-                    <div class="alert alert-success">
-                        <h6 class="fw-bold"><i class="fas fa-check-circle me-2"></i> Próximos passos:</h6>
-                        <p class="mb-1">1. Clique no botão WhatsApp abaixo</p>
-                        <p class="mb-1">2. Receba o link de pagamento</p>
-                        <p class="mb-0">3. Agende sua consulta após confirmação</p>
+                    <div class="alert alert-warning">
+                        <p><strong>⚠️ IMPORTANTE:</strong></p>
+                        <p>1. Clique no botão abaixo para enviar via WhatsApp</p>
+                        <p>2. Eu receberei seus dados e enviarei o link para pagamento</p>
+                        <p>3. Após confirmação do pagamento, agendaremos a consulta</p>
+                    </div>
+                    
+                    <div class="whatsapp-loading" id="whatsappLoading">
+                        <div class="spinner-border text-success" role="status">
+                            <span class="visually-hidden">Carregando...</span>
+                        </div>
+                        <p class="mt-2">Preparando mensagem para WhatsApp...</p>
+                    </div>
+                    
+                    <div class="whatsapp-fallback" id="whatsappFallback">
+                        <p class="text-muted">Se o WhatsApp não abrir automaticamente, clique abaixo:</p>
+                        <a id="whatsappFallbackLink" href="#" target="_blank" class="btn btn-whatsapp w-100">
+                            <i class="fab fa-whatsapp me-2"></i> Abrir WhatsApp Manualmente
+                        </a>
                     </div>
                     
                     <div class="button-group">
-                        <button class="btn btn-back" onclick="previousStep()"><i class="fas fa-arrow-left me-2"></i> Voltar</button>
+                        <button class="btn btn-back" onclick="previousStep()">Voltar</button>
                         <button class="btn btn-whatsapp" onclick="sendToWhatsApp()">
-                            <i class="fab fa-whatsapp me-2"></i> Enviar via WhatsApp
+                            <i class="fab fa-whatsapp me-2"></i> Enviar para WhatsApp
                         </button>
                     </div>
                 </div>
@@ -1352,15 +1304,17 @@
         }
 
         // =============================
-        // VALIDAÇÃO
+        // FUNÇÕES DE VALIDAÇÃO
         // =============================
         function validateStep1() {
             let valid = true;
+            
             const nome = document.getElementById('nome');
             const idade = document.getElementById('idade');
             const telefone = document.getElementById('telefone');
             const email = document.getElementById('email');
             
+            // Validar nome
             if (!nome.value.trim()) {
                 showError('nomeError', true);
                 nome.classList.add('field-invalid');
@@ -1371,6 +1325,7 @@
                 formData.nome = nome.value.trim();
             }
             
+            // Validar idade
             if (!idade.value || idade.value < 1 || idade.value > 120) {
                 showError('idadeError', true);
                 idade.classList.add('field-invalid');
@@ -1381,6 +1336,7 @@
                 formData.idade = idade.value;
             }
             
+            // Validar telefone
             const phoneRegex = /^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$/;
             if (!telefone.value.trim() || !phoneRegex.test(telefone.value.replace(/\s/g, ''))) {
                 showError('telefoneError', true);
@@ -1392,6 +1348,7 @@
                 formData.telefone = telefone.value.trim();
             }
             
+            // Validar email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!email.value.trim() || !emailRegex.test(email.value)) {
                 showError('emailError', true);
@@ -1406,7 +1363,11 @@
             if (valid) {
                 showStep(2);
             } else {
-                document.querySelector('.field-invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // Scroll para o primeiro erro
+                const firstError = document.querySelector('.field-invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
         }
 
@@ -1422,8 +1383,10 @@
             
             showError('estadoAtualError', false);
             estadoAtual.classList.remove('field-invalid');
+            
             formData.estadoAtual = estadoAtual.value.trim();
             formData.estabilidadeTratamento = document.getElementById('estabilidadeTratamento').value.trim();
+            
             showStep(3);
         }
 
@@ -1432,6 +1395,7 @@
             const percepRealidade = document.getElementById('percepRealidade');
             let valid = true;
             
+            // Validar pensamentos de morte
             if (!pensamentosMorte.value) {
                 showError('pensamentosMorteError', true);
                 pensamentosMorte.classList.add('field-invalid');
@@ -1442,6 +1406,7 @@
                 formData.pensamentosMorte = pensamentosMorte.value;
             }
             
+            // Validar percepção da realidade
             if (!percepRealidade.value) {
                 showError('percepRealidadeError', true);
                 percepRealidade.classList.add('field-invalid');
@@ -1452,6 +1417,7 @@
                 formData.percepRealidade = percepRealidade.value;
             }
             
+            // Coletar sintomas
             formData.sintomasAnsiosos = Array.from(document.querySelectorAll('input[name="sintomasAnsiosos"]:checked')).map(cb => cb.value);
             formData.sintomasDepressivos = Array.from(document.querySelectorAll('input[name="sintomasDepressivos"]:checked')).map(cb => cb.value);
             formData.sintomasHumor = Array.from(document.querySelectorAll('input[name="sintomasHumor"]:checked')).map(cb => cb.value);
@@ -1459,7 +1425,10 @@
             if (valid) {
                 showStep(4);
             } else {
-                document.querySelector('.field-invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const firstError = document.querySelector('.field-invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
         }
 
@@ -1475,102 +1444,190 @@
             
             showError('queixaPrincipalError', false);
             queixaPrincipal.classList.remove('field-invalid');
+            
             formData.queixaPrincipal = queixaPrincipal.value.trim();
             formData.historicoPsiquiatrico = document.getElementById('historicoPsiquiatrico').value.trim();
             formData.medicacaoAtual = document.getElementById('medicacaoAtual').value.trim();
             formData.comorbidades = document.getElementById('comorbidades').value.trim();
             
+            // Atualizar resumo
             updateSummary();
             showStep(5);
         }
 
         function showError(errorId, show) {
-            const el = document.getElementById(errorId);
-            if (el) el.style.display = show ? 'block' : 'none';
+            const errorElement = document.getElementById(errorId);
+            if (errorElement) {
+                errorElement.style.display = show ? 'block' : 'none';
+            }
         }
 
         function showStep(step) {
+            // Atualizar passo atual
             currentStep = step;
             
+            // Esconder todos os passos
             for (let i = 1; i <= totalSteps; i++) {
-                document.getElementById('step' + i)?.classList.remove('active');
+                const stepElement = document.getElementById('step' + i);
+                if (stepElement) {
+                    stepElement.classList.remove('active');
+                }
             }
             
-            document.getElementById('step' + step)?.classList.add('active');
+            // Mostrar passo atual
+            const currentStepElement = document.getElementById('step' + step);
+            if (currentStepElement) {
+                currentStepElement.classList.add('active');
+            }
             
+            // Atualizar progresso
             const progressBar = document.getElementById('progressBar');
-            if (progressBar) progressBar.style.width = `${(step/totalSteps)*100}%`;
+            if (progressBar) {
+                progressBar.style.width = `${(step/totalSteps)*100}%`;
+            }
             
-            const indicator = document.getElementById('stepIndicator');
-            if (indicator) indicator.textContent = `Passo ${step} de ${totalSteps}`;
+            // Atualizar indicador
+            const stepIndicator = document.getElementById('stepIndicator');
+            if (stepIndicator) {
+                stepIndicator.textContent = `Passo ${step} de ${totalSteps}`;
+            }
             
-            document.getElementById('form-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Scroll para o topo do formulário
+            const formContainer = document.getElementById('form-container');
+            if (formContainer) {
+                formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
 
         function previousStep() {
-            if (currentStep > 1) showStep(currentStep - 1);
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
         }
 
         function updateSummary() {
-            const resumo = document.getElementById('resumoDados');
-            if (resumo) {
-                resumo.innerHTML = `
-                    <strong>Nome:</strong> ${formData.nome}<br>
-                    <strong>Idade:</strong> ${formData.idade} anos<br>
-                    <strong>Telefone:</strong> ${formData.telefone}<br>
-                    <strong>Queixa:</strong> ${formData.queixaPrincipal.substring(0, 100)}...
-                `;
+            const resumoElement = document.getElementById('resumoDados');
+            if (resumoElement) {
+                let resumo = '';
+                resumo += `<strong>Nome:</strong> ${formData.nome || 'Não informado'}<br>`;
+                resumo += `<strong>Idade:</strong> ${formData.idade || 'Não informada'}<br>`;
+                resumo += `<strong>Telefone:</strong> ${formData.telefone || 'Não informado'}<br>`;
+                resumo += `<strong>E-mail:</strong> ${formData.email || 'Não informado'}<br>`;
+                resumo += `<strong>Queixa principal:</strong> ${formData.queixaPrincipal ? formData.queixaPrincipal.substring(0, 100) + '...' : 'Não informada'}<br>`;
+                resumo += `<strong>Pensamentos de morte:</strong> ${formData.pensamentosMorte || 'Não informado'}`;
+                
+                resumoElement.innerHTML = resumo;
             }
         }
 
         function sendToWhatsApp() {
-            let msg = `*SOLICITAÇÃO DE CONSULTA*%0A%0A`;
-            msg += `*Serviço:* ${selectedService.nome}%0A`;
-            msg += `*Valor:* R$ ${selectedService.valor}%0A%0A`;
-            msg += `*DADOS PESSOAIS*%0A`;
-            msg += `Nome: ${formData.nome}%0A`;
-            msg += `Idade: ${formData.idade}%0A`;
-            msg += `Telefone: ${formData.telefone}%0A`;
-            msg += `E-mail: ${formData.email}%0A%0A`;
-            msg += `*ESTADO ATUAL*%0A${formData.estadoAtual}%0A%0A`;
+            // Mostrar loading
+            const loadingElement = document.getElementById('whatsappLoading');
+            const fallbackElement = document.getElementById('whatsappFallback');
             
+            if (loadingElement) loadingElement.style.display = 'block';
+            if (fallbackElement) fallbackElement.style.display = 'none';
+            
+            // Construir mensagem
+            let message = `*NOVA SOLICITAÇÃO DE CONSULTA*%0A%0A`;
+            message += `*Serviço:* ${selectedService.nome}%0A`;
+            message += `*Valor:* R$ ${selectedService.valor}%0A%0A`;
+            
+            message += `*DADOS PESSOAIS*%0A`;
+            message += `Nome: ${formData.nome}%0A`;
+            message += `Idade: ${formData.idade}%0A`;
+            message += `Telefone: ${formData.telefone}%0A`;
+            message += `E-mail: ${formData.email}%0A%0A`;
+            
+            message += `*ESTADO ATUAL*%0A`;
+            message += `${formData.estadoAtual}%0A`;
+            if (formData.estabilidadeTratamento) {
+                message += `Tratamento atual: ${formData.estabilidadeTratamento}%0A`;
+            }
+            message += `%0A`;
+            
+            message += `*SINTOMAS*%0A`;
             if (formData.sintomasAnsiosos.length > 0) {
-                msg += `*Sintomas Ansiosos:* ${formData.sintomasAnsiosos.join(', ')}%0A`;
+                message += `Ansiosos: ${formData.sintomasAnsiosos.join(', ')}%0A`;
             }
             if (formData.sintomasDepressivos.length > 0) {
-                msg += `*Sintomas Depressivos:* ${formData.sintomasDepressivos.join(', ')}%0A`;
+                message += `Depressivos: ${formData.sintomasDepressivos.join(', ')}%0A`;
             }
             if (formData.sintomasHumor.length > 0) {
-                msg += `*Alterações Humor:* ${formData.sintomasHumor.join(', ')}%0A`;
+                message += `Humor: ${formData.sintomasHumor.join(', ')}%0A`;
             }
+            message += `Pensamentos morte: ${formData.pensamentosMorte}%0A`;
+            message += `Percepção realidade: ${formData.percepRealidade}%0A%0A`;
             
-            msg += `*Pensamentos morte:* ${formData.pensamentosMorte}%0A`;
-            msg += `*Percepção realidade:* ${formData.percepRealidade}%0A%0A`;
-            msg += `*QUEIXA PRINCIPAL*%0A${formData.queixaPrincipal}%0A%0A`;
+            message += `*QUEIXA PRINCIPAL*%0A`;
+            message += `${formData.queixaPrincipal}%0A%0A`;
             
             if (formData.historicoPsiquiatrico) {
-                msg += `*HISTÓRICO*%0A${formData.historicoPsiquiatrico}%0A%0A`;
+                message += `*HISTÓRICO*%0A`;
+                message += `${formData.historicoPsiquiatrico}%0A%0A`;
             }
+            
             if (formData.medicacaoAtual) {
-                msg += `*MEDICAÇÃO*%0A${formData.medicacaoAtual}%0A%0A`;
+                message += `*MEDICAÇÃO ATUAL*%0A`;
+                message += `${formData.medicacaoAtual}%0A%0A`;
             }
             
-            msg += `---%0AEnviado via App de Anamnese`;
+            if (formData.comorbidades) {
+                message += `*COMORBIDADES*%0A`;
+                message += `${formData.comorbidades}%0A%0A`;
+            }
             
-            const url = `https://wa.me/554491339060?text=${msg}`;
-            window.open(url, '_blank');
+            message += `---%0A`;
+            message += `Enviado via App de Anamnese Psiquiátrica`;
             
+            // Criar URL do WhatsApp
+            const whatsappNumber = '554491339060';
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+            
+            // Configurar fallback
+            const fallbackLink = document.getElementById('whatsappFallbackLink');
+            if (fallbackLink) {
+                fallbackLink.href = whatsappUrl;
+            }
+            
+            // Abrir WhatsApp após breve delay
             setTimeout(() => {
-                alert('✅ WhatsApp aberto! Envie a mensagem para finalizar o agendamento.');
-            }, 1000);
+                if (loadingElement) loadingElement.style.display = 'none';
+                if (fallbackElement) fallbackElement.style.display = 'block';
+                
+                window.open(whatsappUrl, '_blank');
+                
+                // Mostrar confirmação
+                alert('✅ Mensagem preparada! O WhatsApp será aberto para envio. Se não abrir automaticamente, use o botão "Abrir WhatsApp Manualmente".');
+            }, 1500);
         }
 
         // =============================
-        // INIT
+        // INICIALIZAÇÃO
         // =============================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('✅ App pronto');
+            console.log('✅ DOM carregado');
+            
+            // Verificar imagens
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                img.onerror = function() {
+                    console.error('❌ Falha ao carregar imagem:', this.src);
+                };
+            });
         });
+
+        // Verificar Service Worker após carregamento
+        setTimeout(() => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    console.log('📋 Service Workers registrados:', registrations.length);
+                    registrations.forEach(reg => {
+                        console.log('🔧 Scope:', reg.scope, 'Estado:', reg.active ? 'Ativo' : 'Inativo');
+                    });
+                });
+            }
+        }, 2000);
     </script>
 </body>
 </html>
